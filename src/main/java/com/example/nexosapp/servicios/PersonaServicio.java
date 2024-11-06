@@ -25,12 +25,15 @@ public class PersonaServicio {
 
         for (Persona p : personas) {
             PersonaDTO dto = new PersonaDTO();
+            dto.setDni(p.getDni());
             dto.setNombre(p.getNombre());
             dto.setApellido(p.getApellido());
             dto.setFechaNacimiento(p.getFechaNacimiento());
             dto.setSexo(p.getSexo());
+            dto.setAltura(p.getAltura());
             dto.setComplexion(p.getComplexion());
             dto.setDescripcion(p.getDescripcion());
+            personasDTO.add(dto);
         }
         return personasDTO;
     }
