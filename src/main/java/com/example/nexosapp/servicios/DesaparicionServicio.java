@@ -33,7 +33,7 @@ public class DesaparicionServicio {
         try {
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
-            if (getDesaparicionId(id)!= null){
+            if (desaparicion!= null){
                 mensaje = "No se ha podido eliminar la desaparición.";
             } else {
                 mensaje = "Eliminado correctamente.";

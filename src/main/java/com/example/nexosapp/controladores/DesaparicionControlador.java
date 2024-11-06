@@ -16,7 +16,7 @@ public class DesaparicionControlador {
     private DesaparicionServicio desaparicionServicio;
 
     @GetMapping("/listar")
-    public List<Desaparicion> getAllClientes(){
+    public List<Desaparicion> getAllDesapariciones(){
         return desaparicionServicio.getDesapariciones();
     }
 
