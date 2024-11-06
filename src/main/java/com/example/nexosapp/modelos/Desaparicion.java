@@ -1,5 +1,6 @@
 package com.example.nexosapp.modelos;
 
+import com.example.nexosapp.enumerados.ESTADO;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +28,9 @@ public class Desaparicion {
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
-    @Column(name = "estado", nullable = false)
-    private Integer estado;
+    @Column(name = "estado")
+    @Enumerated(EnumType.ORDINAL)
+    private ESTADO estado;
 
     @Column(name = "aprobada" )
     private Boolean aprobada;
