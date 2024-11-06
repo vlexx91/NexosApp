@@ -1,11 +1,40 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.modelos.Usuario;
+import com.example.nexosapp.servicios.UsuarioService;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/usuario")
 @AllArgsConstructor
+
 public class UsuarioControlador {
+
+    private UsuarioService usuarioService;
+
+    @GetMapping("/getAll")
+    public List<Usuario> getAll(){
+
+        return usuarioService.getUsuarios();
+    }
+
+    @GetMapping
+    public Usuario getById(@RequestParam Integer id){
+        return usuarioService.getUsuarioId(id);
+    }
+
+    @PostMapping("/guardar")
+    public Usuario guardar(@RequestBody Usuario usuario){
+        return usuarioService.guardar(usuario);
+    }
+
+    @DeleteMapping
+    public String eliminar(@RequestParam Integer id){
+        return usuarioService.eliminaUsuarioId(id);
+    }
+
+
 }
