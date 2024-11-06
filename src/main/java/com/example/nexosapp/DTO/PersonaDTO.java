@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -13,7 +14,7 @@ public class PersonaDTO {
     private String dni;
     private String nombre;
     private String apellido;
-    private Timestamp fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String sexo;
     private float altura;
     private String complexion;
