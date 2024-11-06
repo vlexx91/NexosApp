@@ -1,4 +1,4 @@
-package com.example.nexosapp.Servicios;
+package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.PersonaCrearDTO;
 import com.example.nexosapp.DTO.PersonaDTO;

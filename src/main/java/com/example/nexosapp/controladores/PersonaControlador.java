@@ -1,8 +1,8 @@
-package com.example.nexosapp.Controladores;
+package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.PersonaCrearDTO;
 import com.example.nexosapp.DTO.PersonaDTO;
-import com.example.nexosapp.Servicios.PersonaServicio;
+import com.example.nexosapp.servicios.PersonaServicio;
 import com.example.nexosapp.modelos.Persona;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
