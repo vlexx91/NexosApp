@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "persona", schema ="nexo_app", catalog = "postgres")
 @Getter
@@ -24,7 +26,7 @@ public class Persona {
     @Column(name = "apellido", nullable = false)
     private String apellido;
     @Column(name = "fecha_nacimiento", nullable = false)
-    private Timestamp fechaNacimiento;
+    private LocalDate fechaNacimiento;
     @Column(name = "sexo", nullable = false)
     private String sexo;
     @Column(name = "altura", nullable = false)
