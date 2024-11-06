@@ -44,4 +44,3 @@ public class Desaparicion {
     @JoinColumn(name = "id_lugar")
     private Lugar lugar;
 }
-// conectar tablas id
