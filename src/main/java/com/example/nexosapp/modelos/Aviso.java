@@ -10,10 +10,10 @@ import java.time.LocalDate;
 //etiquetas de lombok
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"usuario"})
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"usuario"})
 public class Aviso {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Aviso {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 

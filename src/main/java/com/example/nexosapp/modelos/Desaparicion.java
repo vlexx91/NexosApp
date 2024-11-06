@@ -33,13 +33,15 @@ public class Desaparicion {
     @Column(name = "aprobada" )
     private Boolean aprobada;
 
-//    @Column(name = "id_persona", nullable = false)
-//    private Persona persona;
-//
-//    @Column(name = "id_usuario", nullable = false)
-//    private Usuario usuario;
-//
-//    @Column(name = "id_lugar", nullable = false)
-//    private Lugar lugar;
+    @ManyToOne
+    @JoinColumn(name = "id_persona")
+    private Persona persona;
+
+    @ManyToOne
+    @JoinColumn(name = "id_usuario")
+    private Usuario usuario;
+    @ManyToOne
+    @JoinColumn(name = "id_lugar")
+    private Lugar lugar;
 }
 // conectar tablas id
