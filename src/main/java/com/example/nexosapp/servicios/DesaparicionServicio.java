@@ -5,11 +5,13 @@ import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Lugar;
+import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 @AllArgsConstructor
@@ -18,6 +20,7 @@ public class DesaparicionServicio {
     private DesaparicionMapeador desaparicionMapeador;
     private LugarMapeador lugarMapeador;
     private LugarServicio lugarServicio;
+    private OpenCageService openCageService;
 
 
     public List<Desaparicion> getDesapariciones(){
@@ -54,9 +57,9 @@ public class DesaparicionServicio {
 
     public Desaparicion guardarDesaparicion(DesaparicionDTO dto){
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
-        Lugar lugar = lugarMapeador.toEntity(dto.getLugarDTO());
-        lugarServicio.guardar(lugar);
-        desaparicion.setLugar(lugar);
+        Map<String,Double> coordenadas = openCageService.getLatLon(desaparicion.getLugar().getCalle()+ ", "+ desaparicion.getLugar().getLocalidad() + ", " + desaparicion.getLugar().getProvincia() + ", España");
+        desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
+        desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
         desaparicionRepositorio.save(desaparicion);
         return desaparicion;
     }
