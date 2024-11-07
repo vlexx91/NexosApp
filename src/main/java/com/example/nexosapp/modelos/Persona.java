@@ -1,11 +1,9 @@
 package com.example.nexosapp.modelos;
-
 import com.example.nexosapp.enumerados.Complexion;
 import com.example.nexosapp.enumerados.Sexo;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Entity
