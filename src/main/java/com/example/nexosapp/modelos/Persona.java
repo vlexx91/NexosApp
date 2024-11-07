@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.Set;
 
 @Entity
 @Table(name = "persona", schema ="nexo_app", catalog = "postgres")
@@ -35,4 +36,10 @@ public class Persona {
     private String complexion;
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Foto.class)
+    @JoinTable(name = "foto_persona", schema = "nexo_app", catalog = "postgres",
+            joinColumns = {@JoinColumn(name = "id_persona", nullable = false)} ,
+            inverseJoinColumns ={@JoinColumn(name = "id_foto", nullable = false)})
+    private Set<Foto> fotos;
 }
