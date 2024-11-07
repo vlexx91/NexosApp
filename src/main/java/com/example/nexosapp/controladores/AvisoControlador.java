@@ -1,8 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.modelos.Aviso;
-import com.example.nexosapp.modelos.Desaparicion;
-import com.example.nexosapp.servicios.AvisoSercicio;
+import com.example.nexosapp.servicios.AvisoServicio;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class AvisoControlador {
 
-    private AvisoSercicio avisoSercicio;
+    private AvisoServicio avisoSercicio;
 
     @GetMapping("/listar")
     public List<Aviso> getAllClientes(){
