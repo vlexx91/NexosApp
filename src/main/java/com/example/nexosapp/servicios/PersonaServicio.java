@@ -16,23 +16,13 @@ public class PersonaServicio {
     private PersonaRepositorio personaRepositorio;
 
     /**
+     * Obtener todas las personas
      *
      * @return
      */
-    public List<PersonaDTO> getAll() {
+    public List<Persona> getAll() {
         List<Persona> personas = personaRepositorio.findAll();
-        List<PersonaDTO> personasDTO = new ArrayList<>();
-
-        for (Persona p : personas) {
-            PersonaDTO dto = new PersonaDTO();
-            dto.setNombre(p.getNombre());
-            dto.setApellido(p.getApellido());
-            dto.setFechaNacimiento(p.getFechaNacimiento());
-            dto.setSexo(p.getSexo());
-            dto.setComplexion(p.getComplexion());
-            dto.setDescripcion(p.getDescripcion());
-        }
-        return personasDTO;
+        return personas;
     }
 
     /**
@@ -45,23 +35,16 @@ public class PersonaServicio {
     }
 
     /**
-     *
-     * @param dto
+     * Guardar persona
+     * @param persona
      * @return
      */
-    public Persona guardar(PersonaCrearDTO dto) {
-        Persona personaGuardada = new Persona();
-        personaGuardada.setNombre(dto.getNombre());
-        personaGuardada.setApellido(dto.getApellido());
-        personaGuardada.setFechaNacimiento(dto.getFechaNacimiento());
-        personaGuardada.setSexo(dto.getSexo());
-        personaGuardada.setComplexion(dto.getComplexion());
-        personaGuardada.setDescripcion(dto.getDescripcion());
-        return personaRepositorio.save(personaGuardada);
+    public Persona guardar(Persona persona) {
+        return personaRepositorio.save(persona);
     }
 
     /**
-     *
+     * eliminar persona a traves del id
      * @param id
      * @return
      */
@@ -89,7 +72,7 @@ public class PersonaServicio {
     }
 
     /**
-     *
+     * eliminar persona
      * @param persona
      */
     public void eliminar(Persona persona){

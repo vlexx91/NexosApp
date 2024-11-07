@@ -1,9 +1,9 @@
 package com.example.nexosapp.modelos;
-
+import com.example.nexosapp.enumerados.Complexion;
+import com.example.nexosapp.enumerados.Sexo;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Set;
 
@@ -29,11 +29,13 @@ public class Persona {
     @Column(name = "fecha_nacimiento", nullable = false)
     private LocalDate fechaNacimiento;
     @Column(name = "sexo", nullable = false)
-    private String sexo;
+    @Enumerated(EnumType.ORDINAL)
+    private Sexo sexo;
     @Column(name = "altura", nullable = false)
     private float altura;
     @Column(name = "complexion", nullable = false)
-    private String complexion;
+    @Enumerated(EnumType.ORDINAL)
+    private Complexion complexion;
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
 

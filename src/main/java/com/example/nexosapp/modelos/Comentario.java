@@ -28,5 +28,8 @@ public class Comentario {
     private String email;
     @Column(name = "telefono")
     private Integer telefono;
-    //private Desaparicion desaparicion;
+
+    @ManyToOne
+    @JoinColumn(name = "id_desaparicion")
+    private Desaparicion desaparicion;
 }
