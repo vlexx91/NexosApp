@@ -4,6 +4,8 @@ import com.example.nexosapp.enumerados.ROL;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "usuario", schema = "nexo_app", catalog = "postgres")
 @Getter
@@ -35,5 +37,11 @@ public class Usuario {
 
     @Column(name = "verificado")
     private Boolean verificado;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Desaparicion.class)
+    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
+            joinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)} ,
+            inverseJoinColumns ={@JoinColumn(name = "id_usuario", nullable = false)})
+    private Set<Usuario> usuarios;
 
 }
