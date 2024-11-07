@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name="comentario", schema="nexo_app",catalog = "postgres")
@@ -32,4 +34,9 @@ public class Comentario {
     @ManyToOne
     @JoinColumn(name = "id_desaparicion")
     private Desaparicion desaparicion;
+
+    @ManyToMany
+    @JoinTable(name = "foto_comentario", joinColumns = @JoinColumn(name = "comentario_id"),
+            inverseJoinColumns = @JoinColumn(name = "foto_id"))
+    private Set<Foto> fotos = new HashSet<>();
 }
