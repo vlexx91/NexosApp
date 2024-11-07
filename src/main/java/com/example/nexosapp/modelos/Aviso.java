@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "aviso", schema = "nexo_app", catalog = "postgres")
@@ -30,4 +32,7 @@ public class Aviso {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+    @ManyToMany
+    @JoinTable(name = "foto_aviso", joinColumns = {@JoinColumn(name = "id_aviso", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_foto", nullable = false)})
+    private Set<Foto> fotos;
 }
