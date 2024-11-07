@@ -15,7 +15,7 @@ public class PersonaDTO {
     private String dni;
     private String nombre;
     private String apellido;
-    private LocalDate fechaNacimiento;
+    private String fechaNacimiento;
     private Sexo sexo;
     private float altura;
     private Complexion complexion;
