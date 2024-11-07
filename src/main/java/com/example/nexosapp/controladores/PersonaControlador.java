@@ -16,9 +16,9 @@ public class PersonaControlador {
     private final PersonaServicio personaServicio;
 
     @GetMapping("/all")
-    public List<PersonaDTO> getAllPersonas(){
-        List<PersonaDTO> personaDTOS = personaServicio.getAll();
-        return personaDTOS;
+    public List<Persona> getAllPersonas(){
+        List<Persona> personas = personaServicio.getAll();
+        return personas;
     }
 
     @GetMapping()
@@ -26,18 +26,14 @@ public class PersonaControlador {
         Persona persona = personaServicio.getById(id);
         return persona;
     }
-    @GetMapping("/id/{id}")
-    public Persona getByIdPath(@PathVariable Integer id){
-        Persona persona = personaServicio.getById(id);
-        return persona;
-    }
+
     @PostMapping()
-    public Persona guardar(@RequestBody PersonaCrearDTO monitor){
-        Persona personaGuardado = personaServicio.guardar(monitor);
+    public Persona guardar(@RequestBody Persona persona){
+        Persona personaGuardado = personaServicio.guardar(persona);
         return personaGuardado;
     }
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id) {
-        return personaServicio .eliminar(id);
+        return personaServicio.eliminar(id);
     }
 }
