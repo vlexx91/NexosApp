@@ -1,5 +1,6 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.DesaparicionDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import lombok.AllArgsConstructor;
@@ -27,6 +28,11 @@ public class DesaparicionControlador {
     @PostMapping()
     public Desaparicion guardar(@RequestBody Desaparicion desaparicion){
         return desaparicionServicio.guardar(desaparicion);
+    }
+
+    @PostMapping("/guardar")
+    public Desaparicion guardarDesaparicion(@RequestBody DesaparicionDTO desaparicion){
+        return desaparicionServicio.guardarDesaparicion(desaparicion);
     }
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id) {

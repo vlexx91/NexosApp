@@ -29,9 +29,9 @@ public class Lugar {
     private String calle;
 
     @Column(name = "lat")
-    private String latitud;
+    private Double latitud;
 
     @Column(name = "lon")
-    private String longitud;
+    private Double longitud;
 
 }
