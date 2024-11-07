@@ -34,7 +34,7 @@ public class Comentario {
     @JoinColumn(name = "id_desaparicion")
     private Desaparicion desaparicion;
 
-    @ManyToMany
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Foto.class)
     @JoinTable(name = "foto_comentario", joinColumns = {@JoinColumn(name = "id_comentario", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_foto", nullable = false)})
     private Set<Foto> fotos;
 }
