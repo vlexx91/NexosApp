@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LugarLatLongDTO {
-
+    private String provincia;
+    private String localidad;
+    private String calle;
     private Double latitud;
     private Double longitud;
 }

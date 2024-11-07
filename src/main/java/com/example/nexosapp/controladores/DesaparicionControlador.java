@@ -1,6 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.DesaparicionDTO;
+import com.example.nexosapp.DTO.DesaparionMostrarMasDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import lombok.AllArgsConstructor;
@@ -37,5 +38,10 @@ public class DesaparicionControlador {
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id) {
         return desaparicionServicio.eliminar(id);
+    }
+
+    @GetMapping("/mostrarMas")
+    public List<DesaparionMostrarMasDTO> mostrarMas(){
+        return desaparicionServicio.mostrarMas();
     }
 }
