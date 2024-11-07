@@ -1,6 +1,10 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.DesaparicionDTO;
+import com.example.nexosapp.mapeadores.DesaparicionMapeador;
+import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.Desaparicion;
+import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -11,6 +15,10 @@ import java.util.List;
 @AllArgsConstructor
 public class DesaparicionServicio {
     private DesaparicionRepositorio desaparicionRepositorio;
+    private DesaparicionMapeador desaparicionMapeador;
+    private LugarMapeador lugarMapeador;
+    private LugarServicio lugarServicio;
+
 
     public List<Desaparicion> getDesapariciones(){
         return desaparicionRepositorio.findAll();
@@ -42,6 +50,15 @@ public class DesaparicionServicio {
             mensaje = "No se ha podido eliminar la desaparición.";
         }
         return mensaje;
+    }
+
+    public Desaparicion guardarDesaparicion(DesaparicionDTO dto){
+        Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
+        Lugar lugar = lugarMapeador.toEntity(dto.getLugarDTO());
+        lugarServicio.guardar(lugar);
+        desaparicion.setLugar(lugar);
+        desaparicionRepositorio.save(desaparicion);
+        return desaparicion;
     }
 }
 
