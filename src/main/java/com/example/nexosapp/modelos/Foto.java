@@ -24,6 +24,4 @@ public class Foto {
     @Column(name = "es_cara",nullable = false)
     private Boolean esCara;
 
-    @ManyToMany(mappedBy = "fotos")
-    private Set<Comentario> comentarios = new HashSet<>();
 }
