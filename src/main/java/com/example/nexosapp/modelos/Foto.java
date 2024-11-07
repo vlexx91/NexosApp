@@ -3,6 +3,9 @@ package com.example.nexosapp.modelos;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name="foto", schema="nexo_app",catalog = "postgres")
 @Getter
@@ -20,4 +23,7 @@ public class Foto {
     private String url;
     @Column(name = "es_cara",nullable = false)
     private Boolean esCara;
+
+    @ManyToMany(mappedBy = "fotos")
+    private Set<Comentario> comentarios = new HashSet<>();
 }
