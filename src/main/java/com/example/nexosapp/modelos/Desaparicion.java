@@ -43,7 +43,7 @@ public class Desaparicion {
     @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_lugar")
     private Lugar lugar;
 
