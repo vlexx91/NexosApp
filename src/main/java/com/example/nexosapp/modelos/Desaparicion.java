@@ -6,6 +6,7 @@ import lombok.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Table(name = "desaparicion", schema = "nexo_app", catalog = "postgres")
@@ -45,4 +46,10 @@ public class Desaparicion {
     @ManyToOne
     @JoinColumn(name = "id_lugar")
     private Lugar lugar;
+
+    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Usuario.class)
+    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
+            joinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)} ,
+            inverseJoinColumns ={@JoinColumn(name = "id_usuario", nullable = false)})
+    private Set<Usuario> usuarios;
 }
