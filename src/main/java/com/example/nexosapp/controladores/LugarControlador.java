@@ -1,5 +1,6 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.MapaPrincipalDTO;
 import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.servicios.LugarServicio;
 import lombok.AllArgsConstructor;
@@ -58,4 +59,11 @@ public class LugarControlador {
             return "imposible eliminar lugar";
         }
     }
+
+    @GetMapping("/mapaPrincipal")
+    public List<MapaPrincipalDTO> getMapaPrincipal(){
+        return lugarServicio.mapaPrincipal();
+    }
+
+
 }
