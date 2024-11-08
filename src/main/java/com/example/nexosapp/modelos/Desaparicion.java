@@ -40,9 +40,7 @@ public class Desaparicion {
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private Persona persona;
 
-    @ManyToOne
-    @JoinColumn(name = "id_usuario")
-    private Usuario usuario;
+
     @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_lugar")
     private Lugar lugar;
