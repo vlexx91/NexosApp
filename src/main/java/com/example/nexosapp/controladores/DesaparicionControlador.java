@@ -5,10 +5,13 @@ import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.DTO.DesaparionMostrarMasDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.DesaparicionServicio;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleState;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -33,8 +36,10 @@ public class DesaparicionControlador {
     }
 
     @PostMapping("/guardar")
-    public Desaparicion guardarDesaparicion(@RequestBody DesaparicionDTO desaparicion){
-        return desaparicionServicio.guardarDesaparicion(desaparicion);
+    public Desaparicion guardarDesaparicion( @RequestParam("desaparicion") String desaparicionJson, @RequestParam("files") List<MultipartFile> files) throws IOException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
+        return desaparicionServicio.guardarDesaparicion(desaparicionDTO, files);
     }
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id) {

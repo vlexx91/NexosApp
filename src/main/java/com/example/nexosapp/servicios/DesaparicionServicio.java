@@ -6,14 +6,18 @@ import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Lugar;
+import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.io.IOException;
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -23,6 +27,7 @@ public class DesaparicionServicio {
     private LugarMapeador lugarMapeador;
     private LugarServicio lugarServicio;
     private OpenCageService openCageService;
+    private CloudinaryService cloudinaryService;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -81,11 +86,20 @@ public class DesaparicionServicio {
      * @param dto
      * @return
      */
-    public Desaparicion guardarDesaparicion(DesaparicionDTO dto){
+    public Desaparicion guardarDesaparicion(DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
         Map<String,Double> coordenadas = openCageService.getLatLon(desaparicion.getLugar().getCalle()+ ", "+ desaparicion.getLugar().getLocalidad() + ", " + desaparicion.getLugar().getProvincia() + ", España");
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
+        Set<Foto> listaFotos = new HashSet<>();
+        for (MultipartFile f : files){
+            Foto foto = new Foto();
+            foto.setUrl(cloudinaryService.uploadImage(f));
+            foto.setEsCara(false);
+            listaFotos.add(foto);
+
+        }
+        desaparicion.getPersona().setFotos(listaFotos);
         desaparicionRepositorio.save(desaparicion);
         return desaparicion;
     }

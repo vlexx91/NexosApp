@@ -4,7 +4,9 @@ import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.servicios.FotoServicio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -27,11 +29,12 @@ public class FotoControlador {
         return foto;
     }
 
-    @PostMapping()
-    public Foto guardar(@RequestBody Foto foto){
-        Foto fotoNueva = fotoServicio.guardar(foto);
+    @PostMapping("/crear")
+    public Foto guardar(@RequestParam("file") MultipartFile file) throws IOException {
+        Foto fotoNueva = fotoServicio.guardar(file);
         return fotoNueva;
     }
+
 
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id){
