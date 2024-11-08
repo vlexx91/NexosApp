@@ -1,10 +1,13 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.modelos.Foto;
+import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.repositorios.FotoRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -13,13 +16,17 @@ public class FotoServicio {
 
 
     private FotoRepositorio fotoRepositorio;
+    private CloudinaryService cloudinaryService;
 
     /**
      * Guarda una foto en la base de datos, sea nueva o actualiza una existente
      * @param foto
      */
-    public Foto guardar(Foto foto){
-         return fotoRepositorio.save(foto);
+    public Foto guardar(MultipartFile file) throws IOException {
+        Foto foto = new Foto();
+        foto.setUrl(cloudinaryService.uploadImage(file));
+        foto.setEsCara(Boolean.TRUE);
+        return fotoRepositorio.save(foto);
     }
 
     /**
