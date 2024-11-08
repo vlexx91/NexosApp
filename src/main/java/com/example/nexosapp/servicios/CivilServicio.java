@@ -1,6 +1,8 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.CivilDTO;
 import com.example.nexosapp.modelos.Civil;
+import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -65,4 +67,15 @@ public class CivilServicio {
         }
         return mensaje;
     }
+    public Civil actualizarCivil(Integer id, CivilDTO dto) {
+        Civil civil = civilRepositorio.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+        civil.setNombre(dto.getNombre());
+        civil.setApellido(dto.getApellido());
+        civil.setTelefono(dto.getTelefono());
+
+        return civilRepositorio.save(civil);
+    }
+
 }
