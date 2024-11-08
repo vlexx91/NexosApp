@@ -3,6 +3,7 @@ package com.example.nexosapp.controladores;
 import com.example.nexosapp.DTO.DesaparicionDTO;
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.DTO.DesaparionMostrarMasDTO;
+import com.example.nexosapp.DTO.EditarDesaparicionDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -55,6 +56,12 @@ public class DesaparicionControlador {
     public List<DesaparicionPrincipalDTO> principal(){
         return desaparicionServicio.paginaPrincipal();
     }
+
+    @PostMapping("/editarAutoridad")
+    public Desaparicion editarDesaparicionAutoridad(@RequestParam Integer id, @RequestBody EditarDesaparicionDTO editarDesaparicionDTO){
+        return desaparicionServicio.editarDesaparicion(id, editarDesaparicionDTO);
+    }
+
 }
 
 

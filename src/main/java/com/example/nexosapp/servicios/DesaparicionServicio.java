@@ -157,5 +157,30 @@ public class DesaparicionServicio {
         });
         return devolucion;
     }
+
+    /**
+     * Metodo para editar una desaparición
+     */
+
+    public Desaparicion editarDesaparicion(Integer id, EditarDesaparicionDTO editarDesaparicionDTO){
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+
+        if (desaparicion == null){
+            return null;
+        }
+
+        Lugar lugar = new Lugar();
+        lugar.setProvincia(editarDesaparicionDTO.getLugarLatLongDTO().getProvincia());
+        lugar.setLocalidad(editarDesaparicionDTO.getLugarLatLongDTO().getLocalidad());
+        lugar.setCalle(editarDesaparicionDTO.getLugarLatLongDTO().getCalle());
+        lugar.setLatitud(editarDesaparicionDTO.getLugarLatLongDTO().getLatitud());
+        lugar.setLongitud(editarDesaparicionDTO.getLugarLatLongDTO().getLongitud());
+
+        desaparicion.setEstado(editarDesaparicionDTO.getEstado());
+        desaparicion.setLugar(lugar);
+
+        return desaparicionRepositorio.save(desaparicion);
+
+    }
 }
 
