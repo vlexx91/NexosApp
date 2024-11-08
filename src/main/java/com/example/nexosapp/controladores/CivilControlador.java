@@ -1,8 +1,10 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.CivilDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.servicios.CivilServicio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -30,5 +32,11 @@ public class CivilControlador {
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id) {
         return civilServicio.eliminar(id);
+    }
+
+    @PutMapping("/civiles/{id}")
+    public ResponseEntity<Civil> actualizarCivil(@PathVariable Integer id, @RequestBody CivilDTO civilDTO) {
+        Civil civilActualizado = civilServicio.actualizarCivil(id, civilDTO);
+        return ResponseEntity.ok(civilActualizado);
     }
 }
