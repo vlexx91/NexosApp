@@ -98,9 +98,9 @@ public class DesaparicionServicio {
 
     public List<DesaparionMostrarMasDTO> mostrarMas(){
         List<Desaparicion> desapariciones = desaparicionRepositorio.findAll();
-        List<String> fotos = new ArrayList<>();
         List<DesaparionMostrarMasDTO> devolucion = new ArrayList<>();
         for (Desaparicion desaparicion : desapariciones){
+            List<String> fotos = new ArrayList<>();
             DesaparionMostrarMasDTO d = new DesaparionMostrarMasDTO();
             d.setId(desaparicion.getId());
             d.setNombre(desaparicion.getPersona().getNombre());
