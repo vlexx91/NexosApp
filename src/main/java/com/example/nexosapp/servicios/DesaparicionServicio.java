@@ -91,13 +91,15 @@ public class DesaparicionServicio {
         Map<String,Double> coordenadas = openCageService.getLatLon(desaparicion.getLugar().getCalle()+ ", "+ desaparicion.getLugar().getLocalidad() + ", " + desaparicion.getLugar().getProvincia() + ", España");
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
+        Set<Foto> listaFotos = new HashSet<>();
         for (MultipartFile f : files){
             Foto foto = new Foto();
             foto.setUrl(cloudinaryService.uploadImage(f));
             foto.setEsCara(false);
-            desaparicion.getPersona().getFotos().add(foto);
+            listaFotos.add(foto);
 
         }
+        desaparicion.getPersona().setFotos(listaFotos);
         desaparicionRepositorio.save(desaparicion);
         return desaparicion;
     }
