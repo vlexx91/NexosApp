@@ -26,7 +26,7 @@ public interface PersonaMapeador {
 
     @Named("ParseoFecha")
     default LocalDate ParseoFecha(String fecha){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy/MM/dd");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fechaNacimiento = LocalDate.parse(fecha, formatter);
         return fechaNacimiento;
     }
