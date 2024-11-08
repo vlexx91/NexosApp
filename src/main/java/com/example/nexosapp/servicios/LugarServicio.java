@@ -1,12 +1,16 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.MapaPrincipalDTO;
+import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.repositorios.LugarRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -15,6 +19,12 @@ public class LugarServicio {
 
     @Autowired
     private LugarRepositorio lugarRepositorio;
+
+
+
+    @Autowired
+    @Lazy
+    private DesaparicionServicio desaparicionServicio;
 
     /**
      * Obtener todos los lugares
@@ -69,5 +79,22 @@ public class LugarServicio {
         }
 
         return mensaje;
+    }
+
+    public List<MapaPrincipalDTO>mapaPrincipal(){
+
+        List<MapaPrincipalDTO> devolucion = new ArrayList<>();
+        List<Desaparicion> listaLugares =desaparicionServicio.getDesapariciones();
+        listaLugares.forEach(l->{
+            MapaPrincipalDTO dto = new MapaPrincipalDTO(
+              l.getId(),
+              l.getPersona().getNombre(),
+              l.getDescripcion(),
+              l.getLugar().getLatitud(),
+              l.getLugar().getLongitud()
+            );
+            devolucion.add(dto);
+        });
+        return devolucion;
     }
 }

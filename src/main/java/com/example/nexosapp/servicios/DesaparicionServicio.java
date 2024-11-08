@@ -125,7 +125,7 @@ public class DesaparicionServicio {
      * @return List<DesaparicionPrincipalDTO>
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findAll();
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByOrderByFechaDesc();
         List<DesaparicionPrincipalDTO> devolucion = new ArrayList<>();
 
         desapariciones.forEach(d->{
