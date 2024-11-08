@@ -1,8 +1,6 @@
 package com.example.nexosapp.servicios;
 
-import com.example.nexosapp.DTO.DesaparicionDTO;
-import com.example.nexosapp.DTO.DesaparionMostrarMasDTO;
-import com.example.nexosapp.DTO.LugarLatLongDTO;
+import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.Desaparicion;
@@ -95,7 +93,7 @@ public class DesaparicionServicio {
     /**
      * Metodo que a partir de todas las desapariciones, devuelve una lista con una
      * dto preparada paara mostrarla en la página mostrar mas
-     * @return
+     * @return List<DesaparionMostrarMasDTO>
      */
 
     public List<DesaparionMostrarMasDTO> mostrarMas(){
@@ -109,16 +107,40 @@ public class DesaparicionServicio {
             d.setApellido(desaparicion.getPersona().getApellido());
             d.setDescripcion(desaparicion.getDescripcion());
             d.setFecha(desaparicion.getFecha().toString());
-            LugarLatLongDTO l = new LugarLatLongDTO(desaparicion.getLugar().getProvincia()
+            LugarDTO l = new LugarDTO(desaparicion.getLugar().getProvincia()
                     ,desaparicion.getLugar().getLocalidad()
-                    ,desaparicion.getLugar().getCalle()
-                    ,desaparicion.getLugar().getLongitud()
-                    , desaparicion.getLugar().getLatitud());
+                    ,desaparicion.getLugar().getCalle());
             d.setLugar(l);
-            desaparicion.getPersona().getFotos().stream().map(f->fotos.add(f.getUrl()));
+            desaparicion.getPersona().getFotos().forEach(f->fotos.add(f.getUrl()));
             d.setFotos(fotos);
             devolucion.add(d);
         }
+        return devolucion;
+    }
+
+    /**
+     * Metodo que a partir de todas las desapariciones, devuelve una lista con una
+     * dto preparada paara mostrarla en la página principal
+     *
+     * @return List<DesaparicionPrincipalDTO>
+     */
+    public List<DesaparicionPrincipalDTO> paginaPrincipal(){
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findAll();
+        List<DesaparicionPrincipalDTO> devolucion = new ArrayList<>();
+
+        desapariciones.forEach(d->{
+            DesaparicionPrincipalDTO des = new DesaparicionPrincipalDTO();
+            des.setId(d.getId());
+            des.setNombre(d.getPersona().getNombre());
+            des.setApellidos(d.getPersona().getApellido());
+            des.setFecha(d.getFecha().toString());
+            des.setUrlFotoCara(d.getPersona().getFotos()
+                    .stream()
+                    .filter(Foto::getEsCara)
+                    .findFirst()
+                    .get().getUrl());
+            devolucion.add(des);
+        });
         return devolucion;
     }
 }

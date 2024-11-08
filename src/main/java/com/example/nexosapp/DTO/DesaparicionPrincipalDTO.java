@@ -15,5 +15,5 @@ public class DesaparicionPrincipalDTO {
     private String urlFotoCara;
     private String nombre;
     private String apellidos;
-    private LocalDate fecha;
+    private String fecha;
 }

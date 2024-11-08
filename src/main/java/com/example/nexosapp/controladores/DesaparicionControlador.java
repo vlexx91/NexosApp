@@ -1,6 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.DesaparicionDTO;
+import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.DTO.DesaparionMostrarMasDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.DesaparicionServicio;
@@ -44,4 +45,12 @@ public class DesaparicionControlador {
     public List<DesaparionMostrarMasDTO> mostrarMas(){
         return desaparicionServicio.mostrarMas();
     }
+
+    @GetMapping("/principal")
+    public List<DesaparicionPrincipalDTO> principal(){
+        return desaparicionServicio.paginaPrincipal();
+    }
 }
+
+
+

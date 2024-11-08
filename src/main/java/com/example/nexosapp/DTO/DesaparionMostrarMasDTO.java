@@ -18,5 +18,5 @@ public class DesaparionMostrarMasDTO {
     private String apellido;
     private String fecha;
     private String descripcion;
-    private LugarLatLongDTO lugar;
+    private LugarDTO lugar;
 }
