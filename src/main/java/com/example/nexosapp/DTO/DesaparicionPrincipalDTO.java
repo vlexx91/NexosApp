@@ -5,16 +5,15 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class DesaparicionPrincipalDTO {
     private Integer id;
-    private FotoUrlDTO foto;
+    private String urlFotoCara;
     private String nombre;
-    private String apellido;
-    private Timestamp fecha;
-    private String descripcion;
-    private LugarDTO lugar;
+    private String apellidos;
+    private String fecha;
 }
