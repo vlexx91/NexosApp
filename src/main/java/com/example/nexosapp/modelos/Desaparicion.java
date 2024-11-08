@@ -37,6 +37,10 @@ public class Desaparicion {
     private Boolean aprobada;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id")
+    private Usuario usuario;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private Persona persona;
 
