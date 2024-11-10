@@ -67,10 +67,10 @@ public class DesaparicionControlador {
     }
 
     @PostMapping("/verificar")
-    public String verificarDesaparicion(@RequestBody Autoridad autoridad, @RequestParam Integer id) {
+    public String verificarDesaparicion(@RequestBody Autoridad autoridad, @RequestParam Integer id, @RequestParam boolean aprobada) {
         try {
-            return desaparicionServicio.verificarDesaparicion(autoridad, id);
-        } catch (IllegalArgumentException e) {
+            return desaparicionServicio.verificarDesaparicion(autoridad, id, aprobada);
+        } catch (IllegalArgumentException | SecurityException e) {
             return e.getMessage();
         }
     }

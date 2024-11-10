@@ -10,6 +10,7 @@ import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -190,19 +191,17 @@ public class DesaparicionServicio {
      * Método para verificar una desaparición
      */
 
-//    public void verificarDesaparicion(Autoridad autoridad, Integer id) {
-//        Desaparicion desaparicion = desaparicionRepositorio.findById(id)
-//                .orElseThrow(() -> new IllegalArgumentException("Desaparicion no encontrada"));
-//        autoridad.verificarDesaparicion(desaparicion);
-//        desaparicionRepositorio.save(desaparicion);
-//    }
-
-    public String verificarDesaparicion(Autoridad autoridad, Integer id) {
+    public String verificarDesaparicion(Autoridad autoridad, Integer id, boolean aprobada) {
+        // busco la desaparicion por id
         Desaparicion desaparicion = desaparicionRepositorio.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Desaparicion no encontrada"));
-        autoridad.verificarDesaparicion(desaparicion);
+                .orElseThrow(() -> new IllegalArgumentException("Desaparición no encontrada"));
+
+        // la autoridad decide si es falsa o no
+        autoridad.verificarDesaparicion(desaparicion, aprobada);
         desaparicionRepositorio.save(desaparicion);
-        return "Desaparicion seguida con exito";
+
+        // mensaje segun la decision
+        return aprobada ? "Desaparición aprobada con éxito" : "Desaparición rechazada con éxito";
     }
 }
 

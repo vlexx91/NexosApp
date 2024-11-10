@@ -16,13 +16,13 @@ public class Autoridad {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Integer id;
-    @Column(name = "identificador",nullable = false)
+    @Column(name = "identificador", nullable = false)
     private String identificador;
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
 
-    public void verificarDesaparicion(Desaparicion desaparicion) {
-        desaparicion.setAprobada(true);
+    public void verificarDesaparicion(Desaparicion desaparicion, boolean aprobada) {
+        desaparicion.setAprobada(aprobada);
     }
 }
