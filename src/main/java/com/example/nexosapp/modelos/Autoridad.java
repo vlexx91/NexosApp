@@ -21,4 +21,8 @@ public class Autoridad {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
+
+    public void verificarDesaparicion(Desaparicion desaparicion) {
+        desaparicion.setAprobada(true);
+    }
 }

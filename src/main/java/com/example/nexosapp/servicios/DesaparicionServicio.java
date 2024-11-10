@@ -3,6 +3,7 @@ package com.example.nexosapp.servicios;
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
+import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Lugar;
@@ -28,6 +29,7 @@ public class DesaparicionServicio {
     private LugarServicio lugarServicio;
     private OpenCageService openCageService;
     private CloudinaryService cloudinaryService;
+    private AutoridadServicio autoridadServicio;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -160,6 +162,7 @@ public class DesaparicionServicio {
 
     /**
      * Metodo para editar una desaparición
+     * @return Desaparicion
      */
 
     public Desaparicion editarDesaparicion(Integer id, EditarDesaparicionDTO editarDesaparicionDTO){
@@ -181,6 +184,25 @@ public class DesaparicionServicio {
 
         return desaparicionRepositorio.save(desaparicion);
 
+    }
+
+    /**
+     * Método para verificar una desaparición
+     */
+
+//    public void verificarDesaparicion(Autoridad autoridad, Integer id) {
+//        Desaparicion desaparicion = desaparicionRepositorio.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("Desaparicion no encontrada"));
+//        autoridad.verificarDesaparicion(desaparicion);
+//        desaparicionRepositorio.save(desaparicion);
+//    }
+
+    public String verificarDesaparicion(Autoridad autoridad, Integer id) {
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Desaparicion no encontrada"));
+        autoridad.verificarDesaparicion(desaparicion);
+        desaparicionRepositorio.save(desaparicion);
+        return "Desaparicion seguida con exito";
     }
 }
 
