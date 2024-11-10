@@ -166,14 +166,16 @@ public class DesaparicionServicio {
      * @return Desaparicion
      */
 
-    public Desaparicion editarDesaparicion(Integer id, EditarDesaparicionDTO editarDesaparicionDTO){
+    public Desaparicion editarDesaparicion(Integer id, EditarDesaparicionDTO editarDesaparicionDTO) {
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
 
-        if (desaparicion == null){
+        if (desaparicion == null) {
             return null;
         }
 
-        Lugar lugar = new Lugar();
+        // obtiene el lugar actual si ya existe si no crea uno nuevo
+        Lugar lugar = desaparicion.getLugar() != null ? desaparicion.getLugar() : new Lugar();
+
         lugar.setProvincia(editarDesaparicionDTO.getLugarLatLongDTO().getProvincia());
         lugar.setLocalidad(editarDesaparicionDTO.getLugarLatLongDTO().getLocalidad());
         lugar.setCalle(editarDesaparicionDTO.getLugarLatLongDTO().getCalle());
@@ -184,11 +186,13 @@ public class DesaparicionServicio {
         desaparicion.setLugar(lugar);
 
         return desaparicionRepositorio.save(desaparicion);
-
     }
+
 
     /**
      * Método para verificar una desaparición
+     * @param autoridad
+     * @return String mensaje
      */
 
     public String verificarDesaparicion(Autoridad autoridad, Integer id, boolean aprobada) {
