@@ -193,8 +193,7 @@ public class DesaparicionServicio {
 
     public String verificarDesaparicion(Autoridad autoridad, Integer id, boolean aprobada) {
         // busco la desaparicion por id
-        Desaparicion desaparicion = desaparicionRepositorio.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Desaparición no encontrada"));
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElseThrow(() -> new IllegalArgumentException("Desaparición no encontrada"));
 
         // la autoridad decide si es falsa o no
         autoridad.verificarDesaparicion(desaparicion, aprobada);
