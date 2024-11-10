@@ -1,18 +1,28 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.ComentarioDTO;
 import com.example.nexosapp.modelos.Comentario;
 import com.example.nexosapp.modelos.Foto;
+import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.repositorios.ComentarioRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @AllArgsConstructor
 public class ComentarioServicio {
 
     private ComentarioRepositorio comentarioRepositorio;
+    private DesaparicionServicio desaparicionServicio;
+    private CloudinaryService cloudinaryService;
 
     /**
      * Obtiene todas los comentarios de la base de datos
@@ -65,6 +75,35 @@ public class ComentarioServicio {
      */
     public void eliminar(Comentario comentario) {
         comentarioRepositorio.delete(comentario);
+    }
+
+    /**
+     * Crea un comentario en la base de datos
+     * @param comentarioDTO
+     * @param files
+     * @return
+     * @throws IOException
+     */
+    public Comentario crearComentario(ComentarioDTO comentarioDTO, List<MultipartFile> files) throws IOException {
+        Comentario comentario = new Comentario();
+        comentario.setNombre(comentarioDTO.getNombre());
+        comentario.setTexto(comentarioDTO.getTexto());
+        comentario.setEmail(comentarioDTO.getEmail());
+        comentario.setTelefono(comentarioDTO.getTelefono());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fecha = LocalDate.parse(LocalDate.now().toString(), formatter);
+        comentario.setFecha(fecha);
+        comentario.setDesaparicion(desaparicionServicio.getDesaparicionId(comentarioDTO.getDesaparicionId()));
+        Set<Foto> listaFotos = new HashSet<>();
+        for (MultipartFile f : files){
+            Foto foto = new Foto();
+            foto.setUrl(cloudinaryService.uploadImage(f));
+            foto.setEsCara(false);
+            listaFotos.add(foto);
+        }
+        comentario.setFotos(listaFotos);
+        comentarioRepositorio.save(comentario);
+        return comentario;
     }
 
 

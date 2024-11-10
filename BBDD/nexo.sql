@@ -1,3 +1,4 @@
+drop table if exists usuario_desaparicion;
 drop table if exists foto_comentario;
 drop table if exists foto_persona;
 drop table if exists foto_aviso;
@@ -124,7 +125,7 @@ create table if not exists usuario_desaparicion(
     id_usuario int not null,
     id_desaparicion int not null,
     constraint fk_usuario_usuario_desaparicion foreign key (id_usuario) references usuario(id),
-    constraint fk_desaparicion_usuario_desaparicion foreign key (id_desaparicion) references usuario(id)
+    constraint fk_desaparicion_usuario_desaparicion foreign key (id_desaparicion) references desaparicion(id)
 );
 
 

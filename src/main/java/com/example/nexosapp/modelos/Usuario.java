@@ -44,6 +44,6 @@ public class Usuario {
     @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
             joinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)} ,
             inverseJoinColumns ={@JoinColumn(name = "id_usuario", nullable = false)})
-    private Set<Usuario> usuarios;
+    private Set<Desaparicion> desapariciones;
 
 }

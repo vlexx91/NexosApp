@@ -9,6 +9,7 @@ import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
+import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -28,6 +29,7 @@ public class DesaparicionServicio {
     private LugarServicio lugarServicio;
     private OpenCageService openCageService;
     private CloudinaryService cloudinaryService;
+    private UsuarioRepositorio usuarioRepositorio;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -97,7 +99,6 @@ public class DesaparicionServicio {
             foto.setUrl(cloudinaryService.uploadImage(f));
             foto.setEsCara(false);
             listaFotos.add(foto);
-
         }
         desaparicion.getPersona().setFotos(listaFotos);
         desaparicionRepositorio.save(desaparicion);
