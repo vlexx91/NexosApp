@@ -3,6 +3,7 @@ package com.example.nexosapp.servicios;
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
+import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Lugar;
