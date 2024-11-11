@@ -23,5 +23,4 @@ public class Foto {
     private String url;
     @Column(name = "es_cara",nullable = false, columnDefinition = "BOOLEAN DEFAULT FALSE")
     private Boolean esCara;
-
 }
