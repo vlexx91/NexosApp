@@ -109,11 +109,16 @@ public class DesaparicionServicio {
         for (MultipartFile f : files){
             Foto foto = new Foto();
             foto.setUrl(cloudinaryService.uploadImage(f));
-            foto.setEsCara(false);
+            if (files.indexOf(f) == 0){
+                foto.setEsCara(true);
+            }else {
+                foto.setEsCara(false);
+            }
             listaFotos.add(foto);
 
         }
         desaparicion.getPersona().setFotos(listaFotos);
+        desaparicion.setEliminada(false);
         desaparicionRepositorio.save(desaparicion);
         return desaparicion;
     }
@@ -153,7 +158,7 @@ public class DesaparicionServicio {
      * @return List<DesaparicionPrincipalDTO>
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByOrderByFechaDescAndEliminadaIsFalse();
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseOrderByFechaDesc();
         List<DesaparicionPrincipalDTO> devolucion = new ArrayList<>();
 
         desapariciones.forEach(d->{
