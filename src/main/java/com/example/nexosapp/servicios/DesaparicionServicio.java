@@ -6,6 +6,7 @@ import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Lugar;
+import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
@@ -70,10 +71,11 @@ public class DesaparicionServicio {
             return "No existe ese usuario";
         }
         try {
+            desaparicion.getUsuario().getDesapariciones().clear();
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
             if (desaparicion!= null){
-                mensaje = "No se ha podido eliminar la desaparición.";
+                mensaje = "No se ha podido eliminar la desaparición correcmente.";
             } else {
                 mensaje = "Eliminado correctamente.";
             }
@@ -81,6 +83,15 @@ public class DesaparicionServicio {
             mensaje = "No se ha podido eliminar la desaparición.";
         }
         return mensaje;
+    }
+
+    public String eliminarDesaparicion(Integer id){
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+        if (desaparicion == null){
+            return "No existe esa desaparición";
+        }
+        desaparicion.setEliminada(true);
+        return "Desaparición eliminada";
     }
 
     /**
@@ -112,7 +123,7 @@ public class DesaparicionServicio {
      */
 
     public List<DesaparionMostrarMasDTO> mostrarMas(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findAll();
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findAllByEliminadaIsFalse();
         List<DesaparionMostrarMasDTO> devolucion = new ArrayList<>();
         for (Desaparicion desaparicion : desapariciones){
             List<String> fotos = new ArrayList<>();
@@ -140,7 +151,7 @@ public class DesaparicionServicio {
      * @return List<DesaparicionPrincipalDTO>
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByOrderByFechaDesc();
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByOrderByFechaDescAndEliminadaIsFalse();
         List<DesaparicionPrincipalDTO> devolucion = new ArrayList<>();
 
         desapariciones.forEach(d->{

@@ -40,10 +40,9 @@ public class Usuario {
     private Boolean verificado;
 
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Desaparicion.class)
-    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
-            joinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)} ,
-            inverseJoinColumns ={@JoinColumn(name = "id_usuario", nullable = false)})
+@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
+            joinColumns = {@JoinColumn(name = "id_usuario", nullable = false)},
+            inverseJoinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)})
     private Set<Desaparicion> desapariciones;
 
 }
