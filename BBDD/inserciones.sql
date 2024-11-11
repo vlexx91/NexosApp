@@ -1,7 +1,7 @@
 -- lugar --
 INSERT INTO nexo_app.lugar (id, provincia, localidad, calle, lat, lon) VALUES (1, 'Madrid', 'Madrid', 'Gran Vía, 14', '40.4197149', '-3.6991374');
 INSERT INTO nexo_app.lugar (id, provincia, localidad, calle, lat, lon) VALUES (2, 'Barcelona', 'Sitges', 'Passeig Marítim, 22', '41.2639887', '1.9387488');
-INSERT INTO nexo_app.lugar (id, provincia, localidad, calle, lat, lon) VALUES (3, 'León', 'Ponferrada', 'Avenida de la Puebla, 45', '42.5469955', '-6.5931197');
+INSERT INTO nexo_app.lugar (id,provincia, localidad, calle, lat, lon) VALUES ( 3,'León', 'Ponferrada', 'Avenida de la Puebla, 45', '42.5469955', '-6.5931197');
 INSERT INTO nexo_app.lugar (id, provincia, localidad, calle, lat, lon) VALUES (4, 'Valencia', 'Valencia', 'Calle Colón, 58', '38.5369486', '-0.8223743');
 INSERT INTO nexo_app.lugar (id, provincia, localidad, calle, lat, lon) VALUES (5, 'Sevilla', 'Dos Hermanas', 'Avenida de España, 32', '37.2917231', '-5.9270226');
 INSERT INTO nexo_app.lugar (id, provincia, localidad, calle, lat, lon) VALUES (6, 'Granada', 'Granada', 'Calle Reyes Católicos, 18', '37.1979588', '-4.0460516');
@@ -116,4 +116,3 @@ INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (
 INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (3, 3);
 INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (3, 8);
 INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (4, 9);
-
