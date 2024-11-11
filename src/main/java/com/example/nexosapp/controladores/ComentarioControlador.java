@@ -46,7 +46,7 @@ public class ComentarioControlador {
     }
 
     @PostMapping("/crear")
-    public Comentario crearComentario(@RequestParam("comentario") String comentarioJson, @RequestParam("files") List<MultipartFile> files) throws IOException {
+    public Comentario crearComentario(@RequestParam("comentario") String comentarioJson, @RequestParam(value = "files",required = false) List<MultipartFile> files) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         ComentarioDTO comentarioDTO = objectMapper.readValue(comentarioJson, ComentarioDTO.class);
         return comentarioServicio.crearComentario(comentarioDTO, files);

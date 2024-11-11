@@ -105,6 +105,7 @@ public class DesaparicionServicio {
         Map<String,Double> coordenadas = openCageService.getLatLon(desaparicion.getLugar().getCalle()+ ", "+ desaparicion.getLugar().getLocalidad() + ", " + desaparicion.getLugar().getProvincia() + ", España");
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
+        desaparicion.getUsuario().getDesaparicionCreada().add(desaparicion);
         Set<Foto> listaFotos = new HashSet<>();
         for (MultipartFile f : files){
             Foto foto = new Foto();

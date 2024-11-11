@@ -94,14 +94,19 @@ public class ComentarioServicio {
         LocalDate fecha = LocalDate.parse(LocalDate.now().toString(), formatter);
         comentario.setFecha(fecha);
         comentario.setDesaparicion(desaparicionServicio.getDesaparicionId(comentarioDTO.getDesaparicionId()));
-        Set<Foto> listaFotos = new HashSet<>();
-        for (MultipartFile f : files){
-            Foto foto = new Foto();
-            foto.setUrl(cloudinaryService.uploadImage(f));
-            foto.setEsCara(false);
-            listaFotos.add(foto);
+        if (files != null && files.stream().anyMatch(file -> !file.isEmpty())) {
+            Set<Foto> listaFotos = new HashSet<>();
+            for (MultipartFile file : files) {
+                if (!file.isEmpty()) {
+                    Foto foto = new Foto();
+                    foto.setUrl(cloudinaryService.uploadImage(file));
+                    foto.setEsCara(false);
+                    listaFotos.add(foto);
+                }
+            }
+            comentario.setFotos(listaFotos);
         }
-        comentario.setFotos(listaFotos);
+
         comentarioRepositorio.save(comentario);
         return comentario;
     }

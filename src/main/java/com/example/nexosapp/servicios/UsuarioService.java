@@ -1,6 +1,8 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Usuario;
+import com.example.nexosapp.repositorios.CivilRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,9 @@ public class UsuarioService {
 
    @Autowired
     private UsuarioRepositorio usuarioRepositorio;
+
+   @Autowired
+    private CivilRepositorio civilRepositorio;
 
     /**
      * Obtener todos los Usuarios
@@ -46,9 +51,15 @@ public class UsuarioService {
      * @return
      */
 
-    public String eliminaUsuarioId(Integer id) {
+    public String eliminaUsuarioIdCivil(Integer id) {
         String mensaje;
         Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
+
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+
+        if (civil != null) {
+            civilRepositorio.delete(civil);
+        }
 
         if (usuario == null) {
             mensaje = "Ese usuario no existe";

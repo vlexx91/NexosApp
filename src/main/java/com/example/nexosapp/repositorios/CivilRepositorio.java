@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface CivilRepositorio extends JpaRepository<Civil, Integer> {
+    Civil findTopByUsuarioId(Integer id);
 }

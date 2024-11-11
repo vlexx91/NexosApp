@@ -1,6 +1,7 @@
 package com.example.nexosapp.modelos;
 
 import com.example.nexosapp.enumerados.ROL;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -11,10 +12,10 @@ import java.util.Set;
 @Table(name = "usuario", schema = "nexo_app", catalog = "postgres")
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"desaparicionCreada", "desapariciones"})
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
+@ToString(exclude = {"desaparicionCreada", "desapariciones"})
 public class Usuario {
 
 
@@ -38,6 +39,10 @@ public class Usuario {
 
     @Column(name = "verificado")
     private Boolean verificado;
+
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
+    private Set<Desaparicion> desaparicionCreada;
 
 
 @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",

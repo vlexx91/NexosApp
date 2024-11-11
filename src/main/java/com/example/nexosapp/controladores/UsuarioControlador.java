@@ -31,9 +31,9 @@ public class UsuarioControlador {
         return usuarioService.guardar(usuario);
     }
 
-    @DeleteMapping
+    @DeleteMapping("/eliminar/civil")
     public String eliminar(@RequestParam Integer id){
-        return usuarioService.eliminaUsuarioId(id);
+        return usuarioService.eliminaUsuarioIdCivil(id);
     }
 
 

@@ -41,6 +41,8 @@ public class AvisoServicio {
                 aviso.getFotos().remove(f);
             }
             avisoRepositorio.saveAndFlush(aviso);
+            avisoRepositorio.deleteById(id);
+            aviso = getAvisoId(id);
             if (aviso!= null){
                 mensaje = "No se ha podido eliminar el aviso.";
             } else {
