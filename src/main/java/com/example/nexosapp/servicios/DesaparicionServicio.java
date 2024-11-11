@@ -206,5 +206,13 @@ public class DesaparicionServicio {
         // mensaje segun la decision
         return aprobada ? "Desaparición aprobada con éxito" : "Desaparición rechazada con éxito";
     }
+
+    /**
+     * Método que devuelve una lista de desapariciones pendientes (no verificadas)
+     */
+
+    public List<Desaparicion> getDesaparicionesPendientes() {
+        return desaparicionRepositorio.desaparicionesPendientes();
+    }
 }
 

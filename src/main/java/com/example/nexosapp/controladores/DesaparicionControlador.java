@@ -75,6 +75,11 @@ public class DesaparicionControlador {
         }
     }
 
+    @GetMapping("/pendientes")
+    public List<Desaparicion> getDesaparicionesPendientes(){
+        return desaparicionServicio.getDesaparicionesPendientes();
+    }
+
 }
 
 
