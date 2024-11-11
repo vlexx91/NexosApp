@@ -34,7 +34,7 @@ public class CivilControlador {
         return civilServicio.eliminar(id);
     }
 
-    @PutMapping("/civiles/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Civil> actualizarCivil(@PathVariable Integer id, @RequestBody CivilDTO civilDTO) {
         Civil civilActualizado = civilServicio.actualizarCivil(id, civilDTO);
         return ResponseEntity.ok(civilActualizado);
