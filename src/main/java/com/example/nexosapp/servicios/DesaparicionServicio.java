@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.*;
+import com.example.nexosapp.enumerados.ESTADO;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.*;
@@ -161,7 +162,7 @@ public class DesaparicionServicio {
      * @return List<DesaparicionPrincipalDTO>
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseOrderByFechaDesc();
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseAndEstadoOrderByFechaDesc(ESTADO.DESAPARECIDO);
         return extraerPrincipalDTO(desapariciones);
     }
 
