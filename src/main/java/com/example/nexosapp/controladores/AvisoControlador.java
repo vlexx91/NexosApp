@@ -42,12 +42,11 @@ public class AvisoControlador {
 
     @GetMapping("/mostrarAvisos")
     public List<AvisoDTO> getAll(){
-        List<AvisoDTO> aviso = avisoSercicio.getAll();
-        return aviso;
+        return avisoSercicio.getAll();
     }
 
     @PostMapping("/crearAviso")
-    public Aviso guardarAviso(@RequestParam("aviso") String avisoJson, @RequestParam("files") List<MultipartFile> files) throws IOException {
+    public Aviso guardarAviso(@RequestParam("aviso") String avisoJson, @RequestParam(value = "files",required = false) List<MultipartFile> files) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         CrearAvisoDTO crearAvisoDTO = objectMapper.readValue(avisoJson, CrearAvisoDTO.class);
         return avisoSercicio.nuevoAviso(crearAvisoDTO, files);
