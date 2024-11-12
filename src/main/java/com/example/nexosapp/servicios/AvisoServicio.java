@@ -102,16 +102,6 @@ public class AvisoServicio {
         avisosave.setTexto(avisoDTO.getTexto());
         avisosave.setUsuario(usuarioService.getUsuarioId(avisoDTO.getId_usuario()));
 
-//        Set<Foto> listaFotos = new HashSet<>();
-//        for (MultipartFile f : files){
-//            Foto foto = new Foto();
-//            foto.setUrl(cloudinaryService.uploadImage(f));
-//            foto.setEsCara(false);
-//            listaFotos.add(foto);
-//
-//        }
-//        avisosave.setFotos(listaFotos);
-
         if (files != null && files.stream().anyMatch(file -> !file.isEmpty())) {
             Set<Foto> listaFotos = new HashSet<>();
             for (MultipartFile file : files) {
