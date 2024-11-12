@@ -13,10 +13,10 @@ import java.util.Set;
 //etiquetas de lombok
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"persona", "usuario", "lugar"})
 @AllArgsConstructor
 @NoArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"persona", "usuario", "lugar",})
 public class Desaparicion {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,11 +36,14 @@ public class Desaparicion {
     @Column(name = "aprobada" )
     private Boolean aprobada;
 
+    @Column(name = "eliminada")
+    private Boolean eliminada;
+
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "id_persona", referencedColumnName = "id")
     private Persona persona;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 

@@ -4,8 +4,6 @@ import com.example.nexosapp.DTO.MapaPrincipalDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.repositorios.LugarRepositorio;
-import com.example.nexosapp.repositorios.UsuarioRepositorio;
-import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -51,6 +49,7 @@ public class LugarServicio {
     public Lugar guardar(Lugar lugar){
         return lugarRepositorio.save(lugar);
     }
+
 
     /**
      * Eliminar un lugar por ID

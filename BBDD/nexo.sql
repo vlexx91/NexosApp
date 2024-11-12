@@ -1,3 +1,4 @@
+drop table if exists usuario_desaparicion;
 drop table if exists foto_comentario;
 drop table if exists foto_persona;
 drop table if exists foto_aviso;
@@ -79,6 +80,7 @@ create table if not exists desaparicion(
 	descripcion varchar(500) not null,
 	estado int,
 	aprobada bool default(false),
+    eliminada bool default(false),
 	id_persona int,
 	id_usuario int,
 	id_lugar int,

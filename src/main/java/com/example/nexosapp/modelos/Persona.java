@@ -39,7 +39,7 @@ public class Persona {
     @Column(name = "descripcion", nullable = false)
     private String descripcion;
 
-    @ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY, targetEntity = Foto.class)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, targetEntity = Foto.class)
     @JoinTable(name = "foto_persona", schema = "nexo_app", catalog = "postgres",
             joinColumns = {@JoinColumn(name = "id_persona", nullable = false)} ,
             inverseJoinColumns ={@JoinColumn(name = "id_foto", nullable = false)})

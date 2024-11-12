@@ -6,7 +6,9 @@ import com.example.nexosapp.DTO.FotoUrlDTO;
 import com.example.nexosapp.modelos.Aviso;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.recursos.CloudinaryService;
+import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.repositorios.AvisoRepositorio;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,6 +24,7 @@ import java.util.Set;
 @Service
 @AllArgsConstructor
 public class AvisoServicio {
+    private final FotoServicio fotoServicio;
     private AvisoRepositorio avisoRepositorio;
 
     private UsuarioService usuarioService;
@@ -40,6 +43,8 @@ public class AvisoServicio {
         return avisoRepositorio.save(aviso);
     }
 
+
+
     public String eliminar(Integer id) {
         String mensaje;
         Aviso aviso = getAvisoId(id);
@@ -47,6 +52,11 @@ public class AvisoServicio {
             return "No existe ese aviso";
         }
         try {
+
+            for(Foto f : aviso.getFotos()){
+                aviso.getFotos().remove(f);
+            }
+            avisoRepositorio.saveAndFlush(aviso);
             avisoRepositorio.deleteById(id);
             aviso = getAvisoId(id);
             if (aviso!= null){

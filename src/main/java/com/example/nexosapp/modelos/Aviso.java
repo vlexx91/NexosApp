@@ -12,7 +12,7 @@ import java.util.Set;
 //etiquetas de lombok
 @Getter
 @Setter
-@ToString
+@ToString(exclude = {"usuario"})
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(exclude = {"usuario"})
@@ -32,9 +32,6 @@ public class Aviso {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
-//    @ManyToMany
-//    @JoinTable(name = "foto_aviso", joinColumns = {@JoinColumn(name = "id_aviso", nullable = false)}, inverseJoinColumns = {@JoinColumn(name = "id_foto", nullable = false)})
-//    private Set<Foto> fotos;
 
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Foto.class)
     @JoinTable(
@@ -45,3 +42,4 @@ public class Aviso {
     )
     private Set<Foto> fotos;
 }
+
