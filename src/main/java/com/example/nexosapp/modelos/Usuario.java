@@ -3,7 +3,11 @@ package com.example.nexosapp.modelos;
 import com.example.nexosapp.enumerados.ROL;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -11,11 +15,11 @@ import java.util.Set;
 @Table(name = "usuario", schema = "nexo_app", catalog = "postgres")
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"token"})
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString
-public class Usuario {
+@ToString(exclude = {"token"})
+public class Usuario implements UserDetails {
 
 
     @Id
@@ -39,10 +43,46 @@ public class Usuario {
     @Column(name = "verificado")
     private Boolean verificado;
 
+    @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
+    private Token token;
 
-@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
             joinColumns = {@JoinColumn(name = "id_usuario", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)})
     private Set<Desaparicion> desapariciones;
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of(new SimpleGrantedAuthority(this.rol.name()));
+    }
+
+    @Override
+    public String getPassword() {
+        return this.contrasenya;
+    }
+
+    @Override
+    public String getUsername() {
+        return this.usuario;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return UserDetails.super.isAccountNonExpired();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return UserDetails.super.isAccountNonLocked();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return UserDetails.super.isCredentialsNonExpired();
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return UserDetails.super.isEnabled();
+    }
 }

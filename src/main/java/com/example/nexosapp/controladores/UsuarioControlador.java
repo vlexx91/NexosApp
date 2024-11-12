@@ -30,6 +30,10 @@ public class UsuarioControlador {
     public Usuario guardar(@RequestBody Usuario usuario){
         return usuarioService.guardar(usuario);
     }
+//    @PostMapping("/registro")
+//    public String guardar(@RequestBody UsuarioDTO usuarioDTO){
+//        return usuarioService.guardarUsario(usuarioDTO);
+//    }
 
     @DeleteMapping
     public String eliminar(@RequestParam Integer id){

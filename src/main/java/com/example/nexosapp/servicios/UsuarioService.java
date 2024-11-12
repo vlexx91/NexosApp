@@ -2,16 +2,23 @@ package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class UsuarioService {
+@AllArgsConstructor
+public class UsuarioService implements UserDetailsService {
 
-   @Autowired
+    private PasswordEncoder passwordEncoder;
+
     private UsuarioRepositorio usuarioRepositorio;
+
 
     /**
      * Obtener todos los Usuarios
@@ -71,6 +78,37 @@ public class UsuarioService {
         return mensaje;
     }
 
+    /**
+     * Obtiene el usurio por su username
+     * @param username
+     * @return Usuario
+     */
+    public Usuario buscarPorUsername(String username) {
+        return usuarioRepositorio.findTopByUsuario(username).orElse(null);
+    }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        return null;
+    }
+    public boolean validarContrasenya(Usuario usuario, String passwordSinEncriptar){
+        return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
+    }
+//    public String guardarUsario(UsuarioDTO usuarioDTO){
+//        if (usuarioDTO.getContrasenya() !=usuarioDTO.getRepContrasenya()){
+//            return "Las contraseñas no coinciden";
+//        }
+//        if (usuarioRepositorio.findTopByUsuario(usuarioDTO.getUsuario())!=null){
+//            return "Nombre de usuario ya existe";
+//        }
+//        Usuario usuario = new Usuario();
+//        usuario.setUsuario(usuarioDTO.getUsuario());
+//        usuario.setContrasenya(passwordEncoder.encode(usuarioDTO.getContrasenya()));
+//        usuario.setEmail(usuarioDTO.getEmail());
+//        usuario.setRol(ROL.CIVIL);
+//        usuario.setVerificado(false);
+//        usuarioRepositorio.save(usuario);
+//        return "Usuario creado correctamente";
+//    }
 }
 

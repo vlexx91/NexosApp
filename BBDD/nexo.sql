@@ -129,6 +129,14 @@ create table if not exists usuario_desaparicion(
     constraint fk_desaparicion_usuario_desaparicion foreign key (id_desaparicion) references desaparicion(id)
 );
 
+create table if not exists token_acceso(
+    id serial primary key,
+    token varchar(1000) not null,
+    fecha_expiracion timeStamp(6) not null,
+    id_usuario int not null,
+    constraint fk_usuario_token_acceso foreign key (id_usuario) references usuario(id)
+    );
+
 
 
 
