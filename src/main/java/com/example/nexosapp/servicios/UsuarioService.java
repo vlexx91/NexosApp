@@ -1,8 +1,10 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.modelos.Civil;
+import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.CivilRepositorio;
+import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,9 @@ public class UsuarioService {
 
    @Autowired
     private CivilRepositorio civilRepositorio;
+
+   @Autowired
+   private DesaparicionRepositorio desaparicionRepositorio;
 
     /**
      * Obtener todos los Usuarios
@@ -57,6 +62,15 @@ public class UsuarioService {
 
         Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
+        for (Desaparicion d : usuario.getDesaparicionCreada()){
+            List<Usuario> usuarios = usuarioRepositorio.findByDesapariciones_Id(d.getId());
+            for (Usuario u : usuarios){
+                u.getDesapariciones().remove(d);
+                usuarioRepositorio.save(u);
+            }
+
+        }
+
         if (civil != null) {
             civilRepositorio.delete(civil);
         }
@@ -79,6 +93,25 @@ public class UsuarioService {
             mensaje = "No se ha podido eliminar el usuario";
         }
 
+        return mensaje;
+    }
+
+    public String anyadirSeguimiento(Integer  idUsuario, Integer idDesaparicion){
+        String mensaje;
+        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
+        Desaparicion desaparicion = desaparicionRepositorio.getReferenceById(idDesaparicion);
+        if (usuario == null) {
+            mensaje = "Ese usuario no existe";
+            return mensaje;
+        }
+        if (desaparicion == null) {
+            mensaje = "Esa desaparicion no existe";
+            return mensaje;
+        }else {
+            usuario.getDesapariciones().add(desaparicion);
+            usuarioRepositorio.save(usuario);
+            mensaje = "Desaparicion añadida";
+        }
         return mensaje;
     }
 

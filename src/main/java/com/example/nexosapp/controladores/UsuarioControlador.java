@@ -36,5 +36,10 @@ public class UsuarioControlador {
         return usuarioService.eliminaUsuarioIdCivil(id);
     }
 
+    @PostMapping("/seguimiento/anyadir")
+    public String anyadirSeguimiento(@RequestParam Integer idUsuario, @RequestParam Integer idDesaparicion){
+        return usuarioService.anyadirSeguimiento(idUsuario, idDesaparicion);
+    }
+
 
 }

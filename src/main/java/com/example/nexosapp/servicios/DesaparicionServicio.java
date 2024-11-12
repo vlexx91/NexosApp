@@ -3,10 +3,7 @@ package com.example.nexosapp.servicios;
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
-import com.example.nexosapp.modelos.Autoridad;
-import com.example.nexosapp.modelos.Desaparicion;
-import com.example.nexosapp.modelos.Foto;
-import com.example.nexosapp.modelos.Lugar;
+import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
@@ -72,7 +69,12 @@ public class DesaparicionServicio {
             return "No existe ese usuario";
         }
         try {
-            desaparicion.getUsuario().getDesapariciones().clear();
+            //aqui primero limpio las desapariciones que sigue el usuario y luego elimino de las relaciones de segimiento de otros  usuarios con esa desaparicion
+            List<Usuario> usuarios = usuarioRepositorio.findByDesapariciones_Id(id);
+            for (Usuario u : usuarios){
+                u.getDesapariciones().remove(desaparicion);
+                usuarioRepositorio.save(u);
+            }
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
             if (desaparicion!= null){
