@@ -3,8 +3,11 @@ package com.example.nexosapp.servicios;
 import com.example.nexosapp.modelos.Aviso;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.repositorios.AvisoRepositorio;
+import com.example.nexosapp.seguridad.JWTservice;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -14,6 +17,7 @@ import java.util.List;
 public class AvisoServicio {
     private final FotoServicio fotoServicio;
     private AvisoRepositorio avisoRepositorio;
+    private JWTservice jwTservice;
 
     public List<Aviso> getAvisos(){
         return avisoRepositorio.findAll();
@@ -24,6 +28,15 @@ public class AvisoServicio {
     }
 
     public Aviso guardar(Aviso aviso){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        // Asegurarse de que hay una autenticación válida
+        if (authentication == null || !authentication.isAuthenticated()) {
+            throw new IllegalStateException("Usuario no autenticado");
+        }
+        // Extraer el token del encabezado Authorization
+        String token = authentication.getCredentials().toString();
+        // Usar el servicio JWT para obtener el idUsuario del token
+        Integer idUsuario = jwTservice.extractTokenData(token).getIdUsuario();
         return avisoRepositorio.save(aviso);
     }
 

@@ -35,12 +35,14 @@ public class SecurityConfig {
                         req
                                 .requestMatchers("/swagger-ui/**","/v3/api-docs/**").permitAll()
                                 .requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/admin/**").hasAnyAuthority(ROL.ADMIN.name())
-                                .anyRequest().authenticated()
+                                // .requestMatchers("/admin/**").hasAnyAuthority(ROL.ADMIN.name())
+                                .anyRequest().permitAll()
+                                //.anyRequest().authenticated()
                 )
                 .sessionManagement(session -> session.sessionCreationPolicy(STATELESS))
-                .authenticationProvider(authenticationProvider)
-                .addFilterBefore(jwtFilterChain, UsernamePasswordAuthenticationFilter.class)
+                .authenticationProvider(authenticationProvider);
+                // .addFilterBefore(jwtFilterChain, UsernamePasswordAuthenticationFilter.class)
+                //inhabilita el filtro.
         ;
 
         return http.build();

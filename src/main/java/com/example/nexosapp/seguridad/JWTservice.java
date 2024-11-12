@@ -29,6 +29,7 @@ public class JWTservice {
     public String generateToken(Usuario usuario){
         TokenDataDTO tokenDataDTO = TokenDataDTO
                 .builder()
+                .idUsuario(usuario.getId())
                 .username(usuario.getUsername())
                 .rol(usuario.getRol().name())
                 .fecha_creacion(System.currentTimeMillis())
@@ -63,6 +64,7 @@ public class JWTservice {
         Claims claims = extractDatosToken(token);
         Map<String, Object> mapa =  (LinkedHashMap<String,Object>) claims.get("tokenDataDTO");
         return TokenDataDTO.builder()
+                .idUsuario((Integer) mapa.get("idUsuario"))
                 .username((String) mapa.get("username"))
                 .fecha_creacion((Long) mapa.get("fecha_creacion"))
                 .fecha_expiracion((Long) mapa.get("fecha_expiracion"))

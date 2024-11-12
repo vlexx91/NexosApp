@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Builder
 public class TokenDataDTO {
+    private Integer idUsuario;
     private String username;
     private String rol;
     private Long fecha_creacion;
