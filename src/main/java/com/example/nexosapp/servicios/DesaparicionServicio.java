@@ -162,6 +162,16 @@ public class DesaparicionServicio {
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
         List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseOrderByFechaDesc();
+        return extraerPrincipalDTO(desapariciones);
+    }
+
+    /**
+     * Metodo que a partir de todas las desapariciones, devuelve una lista con una
+     * dto preparada paara mostrarla en la página principal o en seguimiento
+     *
+     * @return List<DesaparicionPrincipalDTO>
+     */
+    static List<DesaparicionPrincipalDTO> extraerPrincipalDTO(List<Desaparicion> desapariciones) {
         List<DesaparicionPrincipalDTO> devolucion = new ArrayList<>();
 
         desapariciones.forEach(d->{
@@ -233,5 +243,7 @@ public class DesaparicionServicio {
     public List<Desaparicion> getDesaparicionesPendientes() {
         return desaparicionRepositorio.desaparicionesPendientes();
     }
+
+
 }
 

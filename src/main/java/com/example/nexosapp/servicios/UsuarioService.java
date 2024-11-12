@@ -1,5 +1,6 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
@@ -9,7 +10,11 @@ import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+
+import static com.example.nexosapp.servicios.DesaparicionServicio.extraerPrincipalDTO;
 
 @Service
 public class UsuarioService {
@@ -62,14 +67,7 @@ public class UsuarioService {
 
         Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
-        for (Desaparicion d : usuario.getDesaparicionCreada()){
-            List<Usuario> usuarios = usuarioRepositorio.findByDesapariciones_Id(d.getId());
-            for (Usuario u : usuarios){
-                u.getDesapariciones().remove(d);
-                usuarioRepositorio.save(u);
-            }
 
-        }
 
         if (civil != null) {
             civilRepositorio.delete(civil);
@@ -78,6 +76,15 @@ public class UsuarioService {
         if (usuario == null) {
             mensaje = "Ese usuario no existe";
             return mensaje;
+        }
+
+        for (Desaparicion d : usuario.getDesaparicionCreada()){
+            List<Usuario> usuarios = usuarioRepositorio.findByDesapariciones_Id(d.getId());
+            for (Usuario u : usuarios){
+                u.getDesapariciones().remove(d);
+                usuarioRepositorio.save(u);
+            }
+
         }
 
         try {
@@ -96,6 +103,13 @@ public class UsuarioService {
         return mensaje;
     }
 
+    /**
+     * Añadir una desaparicion a un usuario, osea a su lista de seguimiento
+     * @param idUsuario
+     * @param idDesaparicion
+     * @return
+     */
+
     public String anyadirSeguimiento(Integer  idUsuario, Integer idDesaparicion){
         String mensaje;
         Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
@@ -113,6 +127,19 @@ public class UsuarioService {
             mensaje = "Desaparicion añadida";
         }
         return mensaje;
+    }
+
+    /**
+     * Método que devuelve una lista de desapariciones que sigue un usuario
+     */
+
+    public List<DesaparicionPrincipalDTO> desaparicionesSeguidas(Integer id){
+        Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
+        if (usuario == null){
+            return null;
+        }
+        Set<Desaparicion> desapariciones = usuario.getDesapariciones();
+        return extraerPrincipalDTO(new ArrayList<>(desapariciones));
     }
 
 
