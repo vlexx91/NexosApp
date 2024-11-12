@@ -124,7 +124,7 @@ create table if not exists usuario_desaparicion(
     id_usuario int not null,
     id_desaparicion int not null,
     constraint fk_usuario_usuario_desaparicion foreign key (id_usuario) references usuario(id),
-    constraint fk_desaparicion_usuario_desaparicion foreign key (id_desaparicion) references usuario(id)
+    constraint fk_desaparicion_usuario_desaparicion foreign key (id_desaparicion) references desaparicion(id)
 );
 
 
