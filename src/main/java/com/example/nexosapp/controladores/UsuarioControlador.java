@@ -1,5 +1,6 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.servicios.UsuarioService;
 import lombok.AllArgsConstructor;
@@ -35,9 +36,19 @@ public class UsuarioControlador {
 //        return usuarioService.guardarUsario(usuarioDTO);
 //    }
 
-    @DeleteMapping
+    @DeleteMapping("/eliminar/civil")
     public String eliminar(@RequestParam Integer id){
-        return usuarioService.eliminaUsuarioId(id);
+        return usuarioService.eliminaUsuarioIdCivil(id);
+    }
+
+    @PostMapping("/seguimiento/anyadir")
+    public String anyadirSeguimiento(@RequestParam Integer idUsuario, @RequestParam Integer idDesaparicion){
+        return usuarioService.anyadirSeguimiento(idUsuario, idDesaparicion);
+    }
+
+    @GetMapping("/seguimiento")
+    public List<DesaparicionPrincipalDTO> getSeguimiento(@RequestParam Integer id){
+        return usuarioService.desaparicionesSeguidas(id);
     }
 
 

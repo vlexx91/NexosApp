@@ -1,12 +1,10 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.*;
+import com.example.nexosapp.enumerados.ESTADO;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
-import com.example.nexosapp.modelos.Autoridad;
-import com.example.nexosapp.modelos.Desaparicion;
-import com.example.nexosapp.modelos.Foto;
-import com.example.nexosapp.modelos.Lugar;
+import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
@@ -72,7 +70,12 @@ public class DesaparicionServicio {
             return "No existe ese usuario";
         }
         try {
-            desaparicion.getUsuario().getDesapariciones().clear();
+            //aqui primero limpio las desapariciones que sigue el usuario y luego elimino de las relaciones de segimiento de otros  usuarios con esa desaparicion
+            List<Usuario> usuarios = usuarioRepositorio.findByDesapariciones_Id(id);
+            for (Usuario u : usuarios){
+                u.getDesapariciones().remove(desaparicion);
+                usuarioRepositorio.save(u);
+            }
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
             if (desaparicion!= null){
@@ -105,6 +108,7 @@ public class DesaparicionServicio {
         Map<String,Double> coordenadas = openCageService.getLatLon(desaparicion.getLugar().getCalle()+ ", "+ desaparicion.getLugar().getLocalidad() + ", " + desaparicion.getLugar().getProvincia() + ", España");
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
+        desaparicion.getUsuario().getDesaparicionCreada().add(desaparicion);
         Set<Foto> listaFotos = new HashSet<>();
         for (MultipartFile f : files){
             Foto foto = new Foto();
@@ -158,7 +162,17 @@ public class DesaparicionServicio {
      * @return List<DesaparicionPrincipalDTO>
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseOrderByFechaDesc();
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseAndEstadoOrderByFechaDesc(ESTADO.DESAPARECIDO);
+        return extraerPrincipalDTO(desapariciones);
+    }
+
+    /**
+     * Metodo que a partir de todas las desapariciones, devuelve una lista con una
+     * dto preparada paara mostrarla en la página principal o en seguimiento
+     *
+     * @return List<DesaparicionPrincipalDTO>
+     */
+    static List<DesaparicionPrincipalDTO> extraerPrincipalDTO(List<Desaparicion> desapariciones) {
         List<DesaparicionPrincipalDTO> devolucion = new ArrayList<>();
 
         desapariciones.forEach(d->{
@@ -230,5 +244,7 @@ public class DesaparicionServicio {
     public List<Desaparicion> getDesaparicionesPendientes() {
         return desaparicionRepositorio.desaparicionesPendientes();
     }
+
+
 }
 

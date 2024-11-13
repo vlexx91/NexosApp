@@ -1,6 +1,7 @@
 package com.example.nexosapp.modelos;
 
 import com.example.nexosapp.enumerados.ROL;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -15,10 +16,10 @@ import java.util.Set;
 @Table(name = "usuario", schema = "nexo_app", catalog = "postgres")
 @Getter
 @Setter
-@EqualsAndHashCode(exclude = {"token"})
+@EqualsAndHashCode(exclude = {"token","desaparicionCreada", "desapariciones"})
 @AllArgsConstructor
 @NoArgsConstructor
-@ToString(exclude = {"token"})
+@ToString(exclude = {"token","desaparicionCreada", "desapariciones"})
 public class Usuario implements UserDetails {
 
 
@@ -43,10 +44,13 @@ public class Usuario implements UserDetails {
     @Column(name = "verificado")
     private Boolean verificado;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.REMOVE)
+    private Set<Desaparicion> desaparicionCreada;
     @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
     private Token token;
 
-    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
+@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
             joinColumns = {@JoinColumn(name = "id_usuario", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)})
     private Set<Desaparicion> desapariciones;

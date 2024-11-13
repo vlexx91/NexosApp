@@ -45,25 +45,25 @@ INSERT INTO nexo_app.foto (id, url, es_cara) VALUES (20, 'http://res.cloudinary.
 INSERT INTO nexo_app.foto (id, url, es_cara) VALUES (24, 'http://res.cloudinary.com/nexo/image/upload/v1731273510/e0mdkogujvszxui7qgke.jpg', false);
 
 -- usuario --
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (1, 'rafa', 'aa@aa', '1234', 1, true);
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (2, 'dani', 'aa@aa', '1234', 1, true);
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (3, 'alberto', 'aa@aa', '1234', 1, true);
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (4, 'ale', 'aa@aa', '1234', 1, true);
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (5, 'nahuel', 'aa@aa', '1234', 1, true);
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (6, 'admin', 'aa@aa', '1234', 0, true);
-INSERT INTO nexo_app.usuario (id, usuario, email, contrasenya, rol, verificado) VALUES (7, 'agente', 'aa@aa', '1234', 2, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ( 'rafa', 'aa@aa', '1234', 1, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ( 'dani', 'aa@aa', '1234', 1, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ( 'alberto', 'aa@aa', '1234', 1, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ( 'ale', 'aa@aa', '1234', 1, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ( 'nahuel', 'aa@aa', '1234', 1, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ('admin', 'aa@aa', '1234', 0, true);
+INSERT INTO nexo_app.usuario (usuario, email, contrasenya, rol, verificado) VALUES ('agente', 'aa@aa', '1234', 2, true);
 
 -- aviso --
 insert into aviso(texto,fecha,id_usuario)values('persona vista',CURRENT_TIMESTAMP,1);
 -- civil --
-INSERT INTO nexo_app.civil (id, dni, telefono, nombre, apellido, id_usuario) VALUES (1, '12345678a', 665126537, 'rafa', 'diez', 1);
-INSERT INTO nexo_app.civil (id, dni, telefono, nombre, apellido, id_usuario) VALUES (2, '12345678b', 123456789, 'daniel', 'nuñez', 2);
-INSERT INTO nexo_app.civil (id, dni, telefono, nombre, apellido, id_usuario) VALUES (3, '12345678c', 123456789, 'alberto', 'velázquez', 3);
-INSERT INTO nexo_app.civil (id, dni, telefono, nombre, apellido, id_usuario) VALUES (4, '12345678d', 123456789, 'alejandro', 'Martinenghi ', 4);
-INSERT INTO nexo_app.civil (id, dni, telefono, nombre, apellido, id_usuario) VALUES (5, '12345678e', 123456789, 'nahuel', 'castro', 5);
+INSERT INTO nexo_app.civil ( dni, telefono, nombre, apellido, id_usuario) VALUES ('12345678a', 665126537, 'rafa', 'diez', 1);
+INSERT INTO nexo_app.civil ( dni, telefono, nombre, apellido, id_usuario) VALUES ('12345678b', 123456789, 'daniel', 'nuñez', 2);
+INSERT INTO nexo_app.civil ( dni, telefono, nombre, apellido, id_usuario) VALUES ('12345678c', 123456789, 'alberto', 'velázquez', 3);
+INSERT INTO nexo_app.civil ( dni, telefono, nombre, apellido, id_usuario) VALUES ( '12345678d', 123456789, 'alejandro', 'Martinenghi ', 4);
+INSERT INTO nexo_app.civil ( dni, telefono, nombre, apellido, id_usuario) VALUES ( '12345678e', 123456789, 'nahuel', 'castro', 5);
 
 -- autoridad --
-INSERT INTO nexo_app.autoridad (id, identificador, id_usuario) VALUES (1, '123456', 7);
+INSERT INTO nexo_app.autoridad ( identificador, id_usuario) VALUES ( '123456', 7);
 
 -- desaparicion --
 INSERT INTO nexo_app.desaparicion (id, fecha, descripcion, estado, aprobada, id_persona, id_usuario, id_lugar) VALUES (1, '2024-09-15 00:00:00.000000', 'Persona desaparecida durante una excursión en las montañas.', 0, false, 1, 1, 1);

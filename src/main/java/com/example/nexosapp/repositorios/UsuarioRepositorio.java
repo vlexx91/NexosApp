@@ -6,7 +6,10 @@ import org.springframework.stereotype.Repository;
 
 import java.util.Optional;
 
+import java.util.List;
+
 @Repository
 public interface UsuarioRepositorio extends JpaRepository<Usuario,Integer> {
     Optional<Usuario> findTopByUsuario(String usuario);
+    List<Usuario> findByDesapariciones_Id(Integer desaparicionId);
 }
