@@ -32,9 +32,11 @@ public class Aviso {
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
+
     @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Foto.class)
     @JoinTable(
             name = "foto_aviso",
+            schema = "nexo_app",
             joinColumns = {@JoinColumn(name = "id_aviso", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_foto", nullable = false)}
     )
