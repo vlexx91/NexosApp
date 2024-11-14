@@ -1,3 +1,4 @@
+drop table if exists token_acceso;
 drop table if exists usuario_desaparicion;
 drop table if exists foto_comentario;
 drop table if exists foto_persona;
