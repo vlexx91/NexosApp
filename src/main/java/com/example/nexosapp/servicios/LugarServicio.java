@@ -80,6 +80,11 @@ public class LugarServicio {
         return mensaje;
     }
 
+    /**
+     * Obtener los lugares de todas las desapariciones y sus datos
+     * @return
+     */
+
     public List<MapaPrincipalDTO>mapaPrincipal(){
 
         List<MapaPrincipalDTO> devolucion = new ArrayList<>();
