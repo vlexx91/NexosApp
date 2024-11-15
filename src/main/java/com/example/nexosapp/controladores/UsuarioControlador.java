@@ -50,6 +50,4 @@ public class UsuarioControlador {
     public List<DesaparicionPrincipalDTO> getSeguimiento(@RequestParam Integer id){
         return usuarioService.desaparicionesSeguidas(id);
     }
-
-
 }
