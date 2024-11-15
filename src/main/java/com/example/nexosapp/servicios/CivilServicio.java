@@ -72,15 +72,34 @@ public class CivilServicio {
         }
         return mensaje;
     }
+
+    /**
+     * Funcion que edita los datos de un usuario tipo civil
+     * @param id
+     * @param dto
+     * @return
+     */
+
     public Civil actualizarCivil(Integer id, CivilDTO dto) {
-        Civil civil = civilRepositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
         civil.setNombre(dto.getNombre());
         civil.setApellido(dto.getApellido());
         civil.setTelefono(dto.getTelefono());
 
         return civilRepositorio.save(civil);
+    }
+
+    /**
+     * Funcion que obtiene los datos de un civil para editar
+     * @param id
+     * @return
+     */
+
+    public CivilDTO getCivilEditar(Integer id){
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+        CivilDTO dto = new CivilDTO(civil.getDni(), civil.getNombre(), civil.getApellido(), civil.getTelefono());
+        return dto;
     }
     /**
      * Crear civil y a su vez el usuario asociado a este, valida si la contraseña coincide y si el nombre usuario ya existe

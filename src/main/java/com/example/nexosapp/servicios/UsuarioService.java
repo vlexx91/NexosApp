@@ -71,8 +71,6 @@ public class UsuarioService implements UserDetailsService {
 
         Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
-
-
         if (civil != null) {
             civilRepositorio.delete(civil);
         }

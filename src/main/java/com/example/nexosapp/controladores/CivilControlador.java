@@ -4,10 +4,13 @@ import com.example.nexosapp.DTO.CivilDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.servicios.CivilServicio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/civil")
@@ -35,8 +38,15 @@ public class CivilControlador {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Civil> actualizarCivil(@PathVariable Integer id, @RequestBody CivilDTO civilDTO) {
-        Civil civilActualizado = civilServicio.actualizarCivil(id, civilDTO);
-        return ResponseEntity.ok(civilActualizado);
+    public ResponseEntity<Map<String, String>> actualizarCivil(@PathVariable Integer id, @RequestBody CivilDTO civilDTO) {
+        civilServicio.actualizarCivil(id, civilDTO);
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", "Civil actualizado correctamente");
+        return ResponseEntity.ok(respuesta);
+    }
+
+    @GetMapping("/editar")
+    public CivilDTO editar(@RequestParam Integer id){
+        return civilServicio.getCivilEditar(id);
     }
 }
