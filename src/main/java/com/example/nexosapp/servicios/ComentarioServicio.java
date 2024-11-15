@@ -15,6 +15,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -110,6 +111,32 @@ public class ComentarioServicio {
         comentarioRepositorio.save(comentario);
         return comentario;
     }
+
+    public List<ComentarioDTO> obtenerComentariosPorDesaparicionId(Integer desaparicionId) {
+        List<Comentario> comentarios = comentarioRepositorio.findByDesaparicionId(desaparicionId);
+
+        return comentarios.stream()
+                .map(this::convertirADTO)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * Convierte un objeto Comentario a ComentarioDTO.
+     *
+     * @param comentario Objeto Comentario.
+     * @return Objeto ComentarioDTO.
+     */
+    private ComentarioDTO convertirADTO(Comentario comentario) {
+        return new ComentarioDTO(
+                comentario.getTexto(),
+                comentario.getNombre(),
+                comentario.getEmail(),
+                comentario.getTelefono(),
+                comentario.getDesaparicion().getId()
+        );
+
+    }
+
 
 
 
