@@ -8,6 +8,7 @@ import com.example.nexosapp.servicios.ComentarioServicio;
 import com.example.nexosapp.servicios.FotoServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,5 +52,11 @@ public class ComentarioControlador {
         ComentarioDTO comentarioDTO = objectMapper.readValue(comentarioJson, ComentarioDTO.class);
         return comentarioServicio.crearComentario(comentarioDTO, files);
     }
+    @GetMapping("/desaparicion/{id}")
+    public ResponseEntity<List<ComentarioDTO>> obtenerComentariosPorDesaparicion(@PathVariable Integer id) {
+        List<ComentarioDTO> comentarios = comentarioServicio.obtenerComentariosPorDesaparicionId(id);
+        return ResponseEntity.ok(comentarios);
+    }
+
 
 }
