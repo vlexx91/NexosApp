@@ -244,7 +244,5 @@ public class DesaparicionServicio {
     public List<Desaparicion> getDesaparicionesPendientes() {
         return desaparicionRepositorio.desaparicionesPendientes();
     }
-
-
 }
 

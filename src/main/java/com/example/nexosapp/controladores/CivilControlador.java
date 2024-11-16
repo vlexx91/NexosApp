@@ -1,6 +1,8 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.CivilDTO;
+import com.example.nexosapp.DTO.DesaparicionListaDTO;
+import com.example.nexosapp.DTO.UsuarioMenuDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.servicios.CivilServicio;
 import lombok.AllArgsConstructor;
@@ -48,5 +50,15 @@ public class CivilControlador {
     @GetMapping("/editar")
     public CivilDTO editar(@RequestParam Integer id){
         return civilServicio.getCivilEditar(id);
+    }
+
+    @GetMapping("/listaDesapariciones")
+    public List<DesaparicionListaDTO> getDesaparicionesLista(@RequestParam Integer id){
+        return civilServicio.misDesapariciones(id);
+    }
+
+    @GetMapping("/menu")
+    public UsuarioMenuDTO getMenu(@RequestParam Integer id){
+        return civilServicio.menUsuario(id);
     }
 }
