@@ -141,6 +141,22 @@ public class CivilServicio {
     public List<DesaparicionListaDTO> misDesapariciones(Integer id){
         Usuario usuario = usuarioService.getUsuarioId(id);
         Set<Desaparicion> desapariciones = usuario.getDesaparicionCreada();
+        return getDesaparicionListaDTOS(desapariciones);
+    }
+
+    /**
+     * Método que devuelve una lista de desapariciones que sigue un usuario
+     * @param id
+     * @return
+     */
+
+    public List<DesaparicionListaDTO> seguimiento(Integer id){
+        Usuario usuario = usuarioService.getUsuarioId(id);
+        Set<Desaparicion> desapariciones = usuario.getDesapariciones();
+        return getDesaparicionListaDTOS(desapariciones);
+    }
+
+    private List<DesaparicionListaDTO> getDesaparicionListaDTOS(Set<Desaparicion> desapariciones) {
         desapariciones = desapariciones.stream().filter(d->!d.getAprobada()).collect(Collectors.toSet());
         List<DesaparicionListaDTO> devolucion = new ArrayList<>();
         desapariciones.forEach(d->{

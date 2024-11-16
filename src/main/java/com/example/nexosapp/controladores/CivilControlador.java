@@ -57,6 +57,11 @@ public class CivilControlador {
         return civilServicio.misDesapariciones(id);
     }
 
+    @GetMapping("/seguimiento")
+    public List<DesaparicionListaDTO> getSeguimiento(@RequestParam Integer id){
+        return civilServicio.seguimiento(id);
+    }
+
     @GetMapping("/menu")
     public UsuarioMenuDTO getMenu(@RequestParam Integer id){
         return civilServicio.menUsuario(id);

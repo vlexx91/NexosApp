@@ -132,19 +132,6 @@ public class UsuarioService implements UserDetailsService {
     }
 
     /**
-     * Método que devuelve una lista de desapariciones que sigue un usuario
-     */
-
-    public List<DesaparicionPrincipalDTO> desaparicionesSeguidas(Integer id){
-        Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
-        if (usuario == null){
-            return null;
-        }
-        Set<Desaparicion> desapariciones = usuario.getDesapariciones();
-        return extraerPrincipalDTO(new ArrayList<>(desapariciones));
-    }
-
-    /**
      * Obtiene el usurio por su username
      * @param username
      * @return Usuario
