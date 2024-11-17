@@ -156,6 +156,11 @@ public class CivilServicio {
         return getDesaparicionListaDTOS(desapariciones);
     }
 
+    /**
+     * Metodo que genera un dto para mostrar una desaparicion en front end a partir de un set de desapariciones
+     * @return
+     */
+
     private List<DesaparicionListaDTO> getDesaparicionListaDTOS(Set<Desaparicion> desapariciones) {
         desapariciones = desapariciones.stream().filter(d->!d.getAprobada()).collect(Collectors.toSet());
         List<DesaparicionListaDTO> devolucion = new ArrayList<>();
@@ -176,6 +181,12 @@ public class CivilServicio {
         });
         return devolucion;
     }
+
+    /**
+     * Método que devuelve un DTO con los datos del usuario para mostrarlo en su menu de usuario
+     * @param id
+     * @return
+     */
 
     public UsuarioMenuDTO menUsuario(Integer id){
         Civil civil = civilRepositorio.findTopByUsuarioId(id);

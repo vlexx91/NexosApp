@@ -1,5 +1,6 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.LugarLatLongDTO;
 import com.example.nexosapp.DTO.MapaPrincipalDTO;
 import com.example.nexosapp.modelos.Lugar;
 import com.example.nexosapp.servicios.LugarServicio;
@@ -63,6 +64,11 @@ public class LugarControlador {
     @GetMapping("/mapaPrincipal")
     public List<MapaPrincipalDTO> getMapaPrincipal(){
         return lugarServicio.mapaPrincipal();
+    }
+
+    @GetMapping("/mapa")
+    public LugarLatLongDTO getLugarDesaparicion(@RequestParam("id") Integer id){
+        return lugarServicio.getLugarDesaparicion(id);
     }
 
 
