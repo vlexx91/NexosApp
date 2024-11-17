@@ -8,6 +8,7 @@ import com.example.nexosapp.seguridad.JWTservice;
 import com.example.nexosapp.servicios.CivilServicio;
 import com.example.nexosapp.servicios.TokenServicio;
 import com.example.nexosapp.servicios.UsuarioService;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -71,7 +72,7 @@ public class AuthController {
                 .build();
     }
     @PostMapping("/register")
-    public AuthDTO register(@RequestBody CivilCrearDTO dto) {
+    public AuthDTO register(@RequestBody CivilCrearDTO dto) throws MessagingException {
 
         Civil civil = civilServicio.crearCivil(dto);
 

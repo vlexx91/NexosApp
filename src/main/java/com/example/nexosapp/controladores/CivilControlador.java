@@ -5,6 +5,7 @@ import com.example.nexosapp.DTO.DesaparicionListaDTO;
 import com.example.nexosapp.DTO.UsuarioMenuDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.servicios.CivilServicio;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -65,5 +66,10 @@ public class CivilControlador {
     @GetMapping("/menu")
     public UsuarioMenuDTO getMenu(@RequestParam Integer id){
         return civilServicio.menUsuario(id);
+    }
+
+    @PostMapping("/verificar")
+    public ResponseEntity verificar(@RequestParam Integer id) throws MessagingException {
+        return civilServicio.verificarUsuario(id);
     }
 }
