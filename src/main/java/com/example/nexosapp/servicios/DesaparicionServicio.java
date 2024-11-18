@@ -109,6 +109,8 @@ public class DesaparicionServicio {
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
         desaparicion.getUsuario().getDesaparicionCreada().add(desaparicion);
+        desaparicion.setAprobada(false);
+        desaparicion.setEstado(ESTADO.DESAPARECIDO);
         Set<Foto> listaFotos = new HashSet<>();
         for (MultipartFile f : files){
             Foto foto = new Foto();
