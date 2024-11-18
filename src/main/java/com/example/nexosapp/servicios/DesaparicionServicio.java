@@ -244,5 +244,31 @@ public class DesaparicionServicio {
     public List<Desaparicion> getDesaparicionesPendientes() {
         return desaparicionRepositorio.desaparicionesPendientes();
     }
+
+    /**
+     * Método que devuelve una desaparicion en funcion de su id
+     * @param id
+     * @return
+     */
+
+    public DesaparionMostrarMasDTO getDesaparicion(Integer id){
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+        if (desaparicion == null){
+            return null;
+        }
+        DesaparionMostrarMasDTO dto = new DesaparionMostrarMasDTO();
+        List<String> fotos = new ArrayList<>();
+        LugarDTO lugarDTO = new LugarDTO(desaparicion.getLugar().getProvincia(), desaparicion.getLugar().getLocalidad(), desaparicion.getLugar().getCalle());
+        desaparicion.getPersona().getFotos().forEach(f->fotos.add(f.getUrl()));
+       dto.setFotos(fotos);
+       dto.setId(desaparicion.getId());
+       dto.setNombre(desaparicion.getPersona().getNombre());
+       dto.setFecha(desaparicion.getFecha().toString());
+       dto.setApellido(desaparicion.getPersona().getApellido());
+       dto.setDescripcion(dto.getDescripcion());
+       dto.setLugar(lugarDTO);
+
+        return dto;
+    }
 }
 
