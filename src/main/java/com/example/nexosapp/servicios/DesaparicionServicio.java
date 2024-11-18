@@ -253,22 +253,26 @@ public class DesaparicionServicio {
      * @return
      */
 
-    public DesaparionMostrarMasDTO getDesaparicion(Integer id){
+    public DesaparicionIndividualDTO getDesaparicion(Integer id){
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
         if (desaparicion == null){
             return null;
         }
-        DesaparionMostrarMasDTO dto = new DesaparionMostrarMasDTO();
+        DesaparicionIndividualDTO dto = new DesaparicionIndividualDTO();
         List<String> fotos = new ArrayList<>();
-        LugarDTO lugarDTO = new LugarDTO(desaparicion.getLugar().getProvincia(), desaparicion.getLugar().getLocalidad(), desaparicion.getLugar().getCalle());
+        PersonaDTO persona = new PersonaDTO();
+        persona.setNombre(desaparicion.getPersona().getNombre());
+        persona.setApellido(desaparicion.getPersona().getApellido());
+        persona.setDescripcion(desaparicion.getPersona().getDescripcion());
+        persona.setFechaNacimiento(desaparicion.getPersona().getFechaNacimiento().toString());
+        persona.setAltura(desaparicion.getPersona().getAltura());
+        persona.setComplexion(desaparicion.getPersona().getComplexion());
+        persona.setSexo(desaparicion.getPersona().getSexo());
+        dto.setPersona(persona);
         desaparicion.getPersona().getFotos().forEach(f->fotos.add(f.getUrl()));
-       dto.setFotos(fotos);
-       dto.setId(desaparicion.getId());
-       dto.setNombre(desaparicion.getPersona().getNombre());
-       dto.setFecha(desaparicion.getFecha().toString());
-       dto.setApellido(desaparicion.getPersona().getApellido());
-       dto.setDescripcion(dto.getDescripcion());
-       dto.setLugar(lugarDTO);
+        dto.setFotos(fotos);
+        dto.setFecha(desaparicion.getFecha().toString());
+        dto.setDescripcion(desaparicion.getDescripcion());
 
         return dto;
     }

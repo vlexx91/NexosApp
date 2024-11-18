@@ -132,6 +132,32 @@ public class UsuarioService implements UserDetailsService {
     }
 
     /**
+     * Eliminar una desaparicion de un usuario, osea de su lista de seguimiento
+     * @param idUsuario
+     * @param idDesaparicion
+     * @return
+     */
+
+    public String eliminarSeguimiento(Integer idUsuario, Integer idDesaparicion) {
+        String mensaje;
+        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
+        Desaparicion desaparicion = desaparicionRepositorio.getReferenceById(idDesaparicion);
+        if (usuario == null) {
+            mensaje = "Ese usuario no existe";
+            return mensaje;
+        }
+        if (desaparicion == null) {
+            mensaje = "Esa desaparicion no existe";
+            return mensaje;
+        } else {
+            usuario.getDesapariciones().remove(desaparicion);
+            usuarioRepositorio.save(usuario);
+            mensaje = "Desaparicion eliminada";
+        }
+        return mensaje;
+    }
+
+    /**
      * Obtiene el usurio por su username
      * @param username
      * @return Usuario

@@ -1,9 +1,6 @@
 package com.example.nexosapp.controladores;
 
-import com.example.nexosapp.DTO.DesaparicionDTO;
-import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
-import com.example.nexosapp.DTO.DesaparionMostrarMasDTO;
-import com.example.nexosapp.DTO.EditarDesaparicionDTO;
+import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
@@ -81,7 +78,7 @@ public class DesaparicionControlador {
     }
 
     @GetMapping()
-    public DesaparionMostrarMasDTO getDesaparicionId(@RequestParam Integer id){
+    public DesaparicionIndividualDTO getDesaparicionId(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicion(id);
     }
 
