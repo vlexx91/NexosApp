@@ -31,7 +31,7 @@ public class DesaparicionControlador {
         return desaparicionServicio.getDesapariciones();
     }
 
-    @GetMapping()
+    @GetMapping("/getById")
     public Desaparicion getById(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicionId(id);
     }
@@ -78,6 +78,11 @@ public class DesaparicionControlador {
     @GetMapping("/pendientes")
     public List<Desaparicion> getDesaparicionesPendientes(){
         return desaparicionServicio.getDesaparicionesPendientes();
+    }
+
+    @GetMapping()
+    public DesaparionMostrarMasDTO getDesaparicionId(@RequestParam Integer id){
+        return desaparicionServicio.getDesaparicion(id);
     }
 
 
