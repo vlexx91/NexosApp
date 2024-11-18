@@ -1,16 +1,20 @@
 package com.example.nexosapp.servicios;
 
-import com.example.nexosapp.DTO.CivilCrearDTO;
-import com.example.nexosapp.DTO.CivilDTO;
+import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.enumerados.ROL;
 import com.example.nexosapp.modelos.Civil;
+import com.example.nexosapp.modelos.Desaparicion;
+import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -72,15 +76,34 @@ public class CivilServicio {
         }
         return mensaje;
     }
+
+    /**
+     * Funcion que edita los datos de un usuario tipo civil
+     * @param id
+     * @param dto
+     * @return
+     */
+
     public Civil actualizarCivil(Integer id, CivilDTO dto) {
-        Civil civil = civilRepositorio.findById(id)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
         civil.setNombre(dto.getNombre());
         civil.setApellido(dto.getApellido());
         civil.setTelefono(dto.getTelefono());
 
         return civilRepositorio.save(civil);
+    }
+
+    /**
+     * Funcion que obtiene los datos de un civil para editar
+     * @param id
+     * @return
+     */
+
+    public CivilDTO getCivilEditar(Integer id){
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+        CivilDTO dto = new CivilDTO(civil.getDni(), civil.getNombre(), civil.getApellido(), civil.getTelefono());
+        return dto;
     }
     /**
      * Crear civil y a su vez el usuario asociado a este, valida si la contraseña coincide y si el nombre usuario ya existe
@@ -108,6 +131,68 @@ public class CivilServicio {
         civil.setTelefono(Integer.valueOf(dto.getTelefono()));
         civil.setUsuario(usuario);
         return civilRepositorio.save(civil);
+    }
+
+    /**
+     * Método que devuelve una lista de desapariciones creadas por el usuario
+     * @param id
+     * @return
+     */
+    public List<DesaparicionListaDTO> misDesapariciones(Integer id){
+        Usuario usuario = usuarioService.getUsuarioId(id);
+        Set<Desaparicion> desapariciones = usuario.getDesaparicionCreada();
+        return getDesaparicionListaDTOS(desapariciones);
+    }
+
+    /**
+     * Método que devuelve una lista de desapariciones que sigue un usuario
+     * @param id
+     * @return
+     */
+
+    public List<DesaparicionListaDTO> seguimiento(Integer id){
+        Usuario usuario = usuarioService.getUsuarioId(id);
+        Set<Desaparicion> desapariciones = usuario.getDesapariciones();
+        return getDesaparicionListaDTOS(desapariciones);
+    }
+
+    /**
+     * Metodo que genera un dto para mostrar una desaparicion en front end a partir de un set de desapariciones
+     * @return
+     */
+
+    private List<DesaparicionListaDTO> getDesaparicionListaDTOS(Set<Desaparicion> desapariciones) {
+        desapariciones = desapariciones.stream().filter(d->!d.getAprobada()).collect(Collectors.toSet());
+        List<DesaparicionListaDTO> devolucion = new ArrayList<>();
+        desapariciones.forEach(d->{
+            DesaparicionListaDTO dto = new DesaparicionListaDTO();
+            dto.setId(d.getId());
+            dto.setComplexion(d.getPersona().getComplexion().toString());
+            dto.setNombre(d.getPersona().getNombre());
+            dto.setApellidos(d.getPersona().getApellido());
+            dto.setFechaNacimiento(d.getPersona().getFechaNacimiento().toString());
+            dto.setDescripcion(d.getDescripcion());
+            dto.setFecha(d.getFecha().toString());
+            dto.setSexo(d.getPersona().getSexo().toString());
+            dto.setEstado(d.getEstado().toString());
+            dto.setDireccion(d.getLugar().getCalle() + ", " + d.getLugar().getLocalidad() + ", " + d.getLugar().getProvincia());
+            dto.setUrlFotoCara(d.getPersona().getFotos().stream().filter(Foto::getEsCara).findFirst().get().getUrl());
+            devolucion.add(dto);
+        });
+        return devolucion;
+    }
+
+    /**
+     * Método que devuelve un DTO con los datos del usuario para mostrarlo en su menu de usuario
+     * @param id
+     * @return
+     */
+
+    public UsuarioMenuDTO menUsuario(Integer id){
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+        Usuario usuario = civil.getUsuario();
+        UsuarioMenuDTO dto = new UsuarioMenuDTO(usuario.getUsuario(), usuario.getEmail());
+        return dto;
     }
 
 }

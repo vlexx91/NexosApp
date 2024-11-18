@@ -71,8 +71,6 @@ public class UsuarioService implements UserDetailsService {
 
         Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
-
-
         if (civil != null) {
             civilRepositorio.delete(civil);
         }
@@ -131,19 +129,6 @@ public class UsuarioService implements UserDetailsService {
             mensaje = "Desaparicion añadida";
         }
         return mensaje;
-    }
-
-    /**
-     * Método que devuelve una lista de desapariciones que sigue un usuario
-     */
-
-    public List<DesaparicionPrincipalDTO> desaparicionesSeguidas(Integer id){
-        Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
-        if (usuario == null){
-            return null;
-        }
-        Set<Desaparicion> desapariciones = usuario.getDesapariciones();
-        return extraerPrincipalDTO(new ArrayList<>(desapariciones));
     }
 
     /**
