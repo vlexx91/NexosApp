@@ -9,11 +9,15 @@ import com.example.nexosapp.servicios.DesaparicionServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleState;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/desaparicion")
@@ -38,11 +42,32 @@ public class DesaparicionControlador {
     }
 
     @PostMapping("/guardar")
-    public Desaparicion guardarDesaparicion( @RequestParam("desaparicion") String desaparicionJson, @RequestParam("files") List<MultipartFile> files) throws IOException {
-        ObjectMapper objectMapper = new ObjectMapper();
-        DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
-        return desaparicionServicio.guardarDesaparicion(desaparicionDTO, files);
+    public ResponseEntity<Map<String, String>> guardarDesaparicion(
+            @RequestParam("desaparicion") String desaparicionJson,
+            @RequestParam("files") List<MultipartFile> files) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
+
+
+            desaparicionServicio.guardarDesaparicion(desaparicionDTO, files);
+
+            // Devuelve un JSON con el mensaje
+            Map<String, String> response = new HashMap<>();
+            response.put("message", "Desaparición creada");
+
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+        } catch (IOException e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Error al procesar los datos de la desaparición: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (Exception e) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Error al guardar la desaparición: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
     }
+
     @DeleteMapping()
     public String eliminar(@RequestParam Integer id) {
         return desaparicionServicio.eliminar(id);
