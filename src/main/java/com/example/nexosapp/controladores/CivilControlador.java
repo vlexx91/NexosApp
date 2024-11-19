@@ -5,6 +5,7 @@ import com.example.nexosapp.DTO.DesaparicionListaDTO;
 import com.example.nexosapp.DTO.UsuarioMenuDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.servicios.CivilServicio;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -39,31 +40,31 @@ public class CivilControlador {
         return civilServicio.eliminar(id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<Map<String, String>> actualizarCivil(@PathVariable Integer id, @RequestBody CivilDTO civilDTO) {
-        civilServicio.actualizarCivil(id, civilDTO);
+    @PutMapping()
+    public ResponseEntity<Map<String, String>> actualizarCivil(HttpServletRequest request, @RequestBody CivilDTO civilDTO) {
+        civilServicio.actualizarCivil(request, civilDTO);
         Map<String, String> respuesta = new HashMap<>();
         respuesta.put("mensaje", "Civil actualizado correctamente");
         return ResponseEntity.ok(respuesta);
     }
 
     @GetMapping("/editar")
-    public CivilDTO editar(@RequestParam Integer id){
-        return civilServicio.getCivilEditar(id);
+    public CivilDTO editar(HttpServletRequest request){
+        return civilServicio.getCivilEditar(request);
     }
 
     @GetMapping("/listaDesapariciones")
-    public List<DesaparicionListaDTO> getDesaparicionesLista(@RequestParam Integer id){
-        return civilServicio.misDesapariciones(id);
+    public List<DesaparicionListaDTO> getDesaparicionesLista(HttpServletRequest request){
+        return civilServicio.misDesapariciones(request);
     }
 
     @GetMapping("/seguimiento")
-    public List<DesaparicionListaDTO> getSeguimiento(@RequestParam Integer id){
-        return civilServicio.seguimiento(id);
+    public List<DesaparicionListaDTO> getSeguimiento(HttpServletRequest request){
+        return civilServicio.seguimiento(request);
     }
 
     @GetMapping("/menu")
-    public UsuarioMenuDTO getMenu(@RequestParam Integer id){
-        return civilServicio.menUsuario(id);
+    public UsuarioMenuDTO getMenu(HttpServletRequest request){
+        return civilServicio.menUsuario(request);
     }
 }

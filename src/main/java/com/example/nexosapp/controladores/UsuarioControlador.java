@@ -46,8 +46,8 @@ public class UsuarioControlador {
         return usuarioService.anyadirSeguimiento(idUsuario, idDesaparicion);
     }
 
-    @GetMapping("/seguimiento")
-    public List<DesaparicionPrincipalDTO> getSeguimiento(@RequestParam Integer id){
-        return usuarioService.desaparicionesSeguidas(id);
-    }
+//    @GetMapping("/seguimiento")
+//    public List<DesaparicionPrincipalDTO> getSeguimiento(@RequestParam Integer id){
+//        return usuarioService.desaparicionesSeguidas(id);
+//    }
 }
