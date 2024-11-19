@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.ComentarioDTO;
+import com.example.nexosapp.DTO.ComentarioListarDTO;
 import com.example.nexosapp.modelos.Comentario;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.recursos.CloudinaryService;
@@ -12,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -112,33 +114,20 @@ public class ComentarioServicio {
         return comentario;
     }
 
-    public List<ComentarioDTO> obtenerComentariosPorDesaparicionId(Integer desaparicionId) {
+    public List<ComentarioListarDTO> obtenerComentariosPorDesaparicionId(Integer desaparicionId) {
         List<Comentario> comentarios = comentarioRepositorio.findByDesaparicionId(desaparicionId);
+        List<ComentarioListarDTO> comentariosListarDTO = new ArrayList<>();
 
-        return comentarios.stream()
-                .map(this::convertirADTO)
-                .collect(Collectors.toList());
+        comentarios.forEach(comentario -> {
+            ComentarioListarDTO comentarioListarDTO = new ComentarioListarDTO();
+            comentarioListarDTO.setTexto(comentario.getTexto());
+            comentarioListarDTO.setNombre(comentario.getNombre());
+            comentarioListarDTO.setEmail(comentario.getEmail());
+            comentarioListarDTO.setTelefono(comentario.getTelefono());
+            comentarioListarDTO.setFotos(comentario.getFotos().stream().map(Foto::getUrl).collect(Collectors.toList()));
+            comentariosListarDTO.add(comentarioListarDTO);
+        });
+        return comentariosListarDTO;
     }
-
-    /**
-     * Convierte un objeto Comentario a ComentarioDTO.
-     *
-     * @param comentario Objeto Comentario.
-     * @return Objeto ComentarioDTO.
-     */
-    private ComentarioDTO convertirADTO(Comentario comentario) {
-        return new ComentarioDTO(
-                comentario.getTexto(),
-                comentario.getNombre(),
-                comentario.getEmail(),
-                comentario.getTelefono(),
-                comentario.getDesaparicion().getId()
-        );
-
-    }
-
-
-
-
 
 }

@@ -1,6 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.ComentarioDTO;
+import com.example.nexosapp.DTO.ComentarioListarDTO;
 import com.example.nexosapp.DTO.DesaparicionDTO;
 import com.example.nexosapp.modelos.Comentario;
 import com.example.nexosapp.modelos.Foto;
@@ -53,8 +54,8 @@ public class ComentarioControlador {
         return comentarioServicio.crearComentario(comentarioDTO, files);
     }
     @GetMapping("/desaparicion/{id}")
-    public ResponseEntity<List<ComentarioDTO>> obtenerComentariosPorDesaparicion(@PathVariable Integer id) {
-        List<ComentarioDTO> comentarios = comentarioServicio.obtenerComentariosPorDesaparicionId(id);
+    public ResponseEntity<List<ComentarioListarDTO>> obtenerComentariosPorDesaparicion(@PathVariable Integer id) {
+        List<ComentarioListarDTO> comentarios = comentarioServicio.obtenerComentariosPorDesaparicionId(id);
         return ResponseEntity.ok(comentarios);
     }
 

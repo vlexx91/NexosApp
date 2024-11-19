@@ -273,6 +273,7 @@ public class DesaparicionServicio {
         dto.setFotos(fotos);
         dto.setFecha(desaparicion.getFecha().toString());
         dto.setDescripcion(desaparicion.getDescripcion());
+        dto.setEstado(desaparicion.getEstado());
 
         return dto;
     }

@@ -1,5 +1,6 @@
 package com.example.nexosapp.DTO;
 
+import com.example.nexosapp.enumerados.ESTADO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,5 @@ public class DesaparicionIndividualDTO {
     private String fecha;
     private String descripcion;
     private PersonaDTO persona;
+    private ESTADO estado;
 }
