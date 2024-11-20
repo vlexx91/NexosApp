@@ -8,8 +8,13 @@ import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.recursos.EmailService;
 import com.example.nexosapp.repositorios.CivilRepositorio;
+import com.example.nexosapp.seguridad.JWTservice;
+import com.example.nexosapp.seguridad.filter.JWTFilter;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -26,6 +31,7 @@ public class CivilServicio {
     private CivilRepositorio civilRepositorio;
     private UsuarioService usuarioService;
     private PasswordEncoder passwordEncoder;
+    private JWTservice jwtService;
     private EmailService emailService;
 
     /**
@@ -82,15 +88,14 @@ public class CivilServicio {
     }
 
     /**
-     * Funcion que edita los datos de un usuario tipo civil menos el dni
+     * Funcion que edita los datos de un usuario tipo civil menos dni.
      * @param id
      * @param dto
      * @return
      */
 
-    public Civil actualizarCivil(Integer id, CivilDTO dto) {
-        Civil civil = civilRepositorio.findTopByUsuarioId(id);
-
+    public Civil actualizarCivil(HttpServletRequest request, CivilDTO dto) {
+        Civil civil = civilRepositorio.findTopByUsuarioId(jwtService.extraerDatosHeader(request).getIdUsuario());
         civil.setNombre(dto.getNombre());
         civil.setApellido(dto.getApellido());
         civil.setTelefono(dto.getTelefono());
@@ -104,8 +109,9 @@ public class CivilServicio {
      * @return
      */
 
-    public CivilDTO getCivilEditar(Integer id){
-        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+    public CivilDTO getCivilEditar(HttpServletRequest request){
+        Integer idUsuario = jwtService.extraerDatosHeader(request).getIdUsuario();
+        Civil civil = civilRepositorio.findTopByUsuarioId(idUsuario);
         CivilDTO dto = new CivilDTO(civil.getDni(), civil.getNombre(), civil.getApellido(), civil.getTelefono());
         return dto;
     }
@@ -154,8 +160,9 @@ public class CivilServicio {
      * @param id
      * @return
      */
-    public List<DesaparicionListaDTO> misDesapariciones(Integer id){
-        Usuario usuario = usuarioService.getUsuarioId(id);
+    public List<DesaparicionListaDTO> misDesapariciones(HttpServletRequest request){
+
+        Usuario usuario = usuarioService.getUsuarioId(jwtService.extraerDatosHeader(request).getIdUsuario());
         Set<Desaparicion> desapariciones = usuario.getDesaparicionCreada();
         return getDesaparicionListaDTOS(desapariciones);
     }
@@ -166,8 +173,8 @@ public class CivilServicio {
      * @return
      */
 
-    public List<DesaparicionListaDTO> seguimiento(Integer id){
-        Usuario usuario = usuarioService.getUsuarioId(id);
+    public List<DesaparicionListaDTO> seguimiento(HttpServletRequest request){
+        Usuario usuario = usuarioService.getUsuarioId(jwtService.extraerDatosHeader(request).getIdUsuario());
         Set<Desaparicion> desapariciones = usuario.getDesapariciones();
         return getDesaparicionListaDTOS(desapariciones);
     }
@@ -204,8 +211,8 @@ public class CivilServicio {
      * @return
      */
 
-    public UsuarioMenuDTO menUsuario(Integer id){
-        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+    public UsuarioMenuDTO menUsuario(HttpServletRequest request){
+        Civil civil = civilRepositorio.findTopByUsuarioId(jwtService.extraerDatosHeader(request).getIdUsuario());
         Usuario usuario = civil.getUsuario();
         UsuarioMenuDTO dto = new UsuarioMenuDTO(usuario.getUsuario(), usuario.getEmail());
         return dto;

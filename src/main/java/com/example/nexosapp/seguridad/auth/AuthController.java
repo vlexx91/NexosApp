@@ -31,6 +31,7 @@ public class AuthController {
         Usuario usuario = (Usuario) usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
         String apiKey = null;
         String mensaje;
+        Boolean vereificado = false;
 
         if (usuario != null) {
             if (usuarioService.validarContrasenya(usuario, usuarioDTO.getContrasenya())) {
@@ -64,11 +65,11 @@ public class AuthController {
         } else {
             mensaje = "Usuario No encontrado";
         }
-
         return AuthDTO
                 .builder()
                 .token(apiKey)
                 .info(mensaje)
+                .verificado(usuario.getVerificado())
                 .build();
     }
     @PostMapping("/register")

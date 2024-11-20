@@ -173,6 +173,7 @@ public class UsuarioService implements UserDetailsService {
     public boolean validarContrasenya(Usuario usuario, String passwordSinEncriptar){
         return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
     }
+
 //    public String guardarUsario(UsuarioDTO usuarioDTO){
 //        if (usuarioDTO.getContrasenya() !=usuarioDTO.getRepContrasenya()){
 //            return "Las contraseñas no coinciden";

@@ -253,15 +253,16 @@ public class DesaparicionServicio {
      * @return
      */
 
-    public DesaparicionIndividualDTO getDesaparicion(Integer id){
+    public DesaparicionSinVerificarDTO getDesaparicion(Integer id){
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
         if (desaparicion == null){
             return null;
         }
-        DesaparicionIndividualDTO dto = new DesaparicionIndividualDTO();
+        DesaparicionSinVerificarDTO dto = new DesaparicionSinVerificarDTO();
         List<String> fotos = new ArrayList<>();
         PersonaDTO persona = new PersonaDTO();
         persona.setNombre(desaparicion.getPersona().getNombre());
+        persona.setDni(desaparicion.getPersona().getDni());
         persona.setApellido(desaparicion.getPersona().getApellido());
         persona.setDescripcion(desaparicion.getPersona().getDescripcion());
         persona.setFechaNacimiento(desaparicion.getPersona().getFechaNacimiento().toString());
@@ -274,7 +275,8 @@ public class DesaparicionServicio {
         dto.setFecha(desaparicion.getFecha().toString());
         dto.setDescripcion(desaparicion.getDescripcion());
         dto.setEstado(desaparicion.getEstado());
-
+        LugarDTO lugar = lugarMapeador.toDTO(desaparicion.getLugar());
+        dto.setLugar(lugar);
         return dto;
     }
 
