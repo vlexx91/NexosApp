@@ -164,7 +164,7 @@ public class DesaparicionServicio {
      * @return List<DesaparicionPrincipalDTO>
      */
     public List<DesaparicionPrincipalDTO> paginaPrincipal(){
-        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseAndEstadoOrderByFechaDesc(ESTADO.DESAPARECIDO);
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findTop10ByEliminadaIsFalseAndAprobadaIsTrueAndEstadoOrderByFechaDesc(ESTADO.DESAPARECIDO);
         return extraerPrincipalDTO(desapariciones);
     }
 
@@ -276,6 +276,37 @@ public class DesaparicionServicio {
         dto.setEstado(desaparicion.getEstado());
 
         return dto;
+    }
+
+    /**
+     * Método que devuelve una lista de desapariciones no aprobadas
+     * @return
+     */
+
+    public List<DesaparicionIndividualDTO> getSinAprobar(){
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findAllByAprobadaIsFalseAndEliminadaIsFalse();
+        List<DesaparicionIndividualDTO> devolucion = new ArrayList<>();
+        desapariciones.forEach(d->{
+            DesaparicionIndividualDTO dto = new DesaparicionIndividualDTO();
+            List<String> fotos = new ArrayList<>();
+            PersonaDTO persona = new PersonaDTO();
+            persona.setNombre(d.getPersona().getNombre());
+            persona.setApellido(d.getPersona().getApellido());
+            persona.setDescripcion(d.getPersona().getDescripcion());
+            persona.setFechaNacimiento(d.getPersona().getFechaNacimiento().toString());
+            persona.setAltura(d.getPersona().getAltura());
+            persona.setComplexion(d.getPersona().getComplexion());
+            persona.setSexo(d.getPersona().getSexo());
+            dto.setPersona(persona);
+            d.getPersona().getFotos().forEach(f->fotos.add(f.getUrl()));
+            dto.setFotos(fotos);
+            dto.setFecha(d.getFecha().toString());
+            dto.setDescripcion(d.getDescripcion());
+            dto.setEstado(d.getEstado());
+            dto.setId(d.getId());
+            devolucion.add(dto);
+        });
+        return devolucion;
     }
 }
 

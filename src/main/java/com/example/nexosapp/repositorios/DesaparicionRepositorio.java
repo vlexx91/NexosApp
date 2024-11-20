@@ -10,8 +10,9 @@ import java.util.List;
 
 @Repository
 public interface DesaparicionRepositorio extends JpaRepository<Desaparicion, Integer> {
-    List<Desaparicion> findTop10ByEliminadaIsFalseAndEstadoOrderByFechaDesc(ESTADO estado);
+    List<Desaparicion> findTop10ByEliminadaIsFalseAndAprobadaIsTrueAndEstadoOrderByFechaDesc(ESTADO estado);
     List<Desaparicion> findAllByEliminadaIsFalse();
+    List<Desaparicion> findAllByAprobadaIsFalseAndEliminadaIsFalse();
 
 
 

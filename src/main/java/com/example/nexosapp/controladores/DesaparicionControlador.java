@@ -4,6 +4,7 @@ import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
+import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -52,7 +53,7 @@ public class DesaparicionControlador {
 
             desaparicionServicio.guardarDesaparicion(desaparicionDTO, files);
 
-            // Devuelve un JSON con el mensaje
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Desaparición creada");
 
@@ -105,6 +106,11 @@ public class DesaparicionControlador {
     @GetMapping()
     public DesaparicionIndividualDTO getDesaparicionId(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicion(id);
+    }
+
+    @GetMapping("/NoAprobadas")
+    public List<DesaparicionIndividualDTO> getDesaparicionesNoAprobadas(){
+        return desaparicionServicio.getSinAprobar();
     }
 
 
