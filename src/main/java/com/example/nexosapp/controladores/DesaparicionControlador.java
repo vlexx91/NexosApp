@@ -103,7 +103,7 @@ public class DesaparicionControlador {
     }
 
     @GetMapping()
-    public DesaparicionIndividualDTO getDesaparicionId(@RequestParam Integer id){
+    public DesaparicionSinVerificarDTO getDesaparicionId(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicion(id);
     }
 
