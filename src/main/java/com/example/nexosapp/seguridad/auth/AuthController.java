@@ -28,7 +28,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthDTO login(@RequestBody UsuarioLogDTO usuarioDTO) {
-        Usuario usuario = (Usuario) usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
+        Usuario usuario = usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
         String apiKey = null;
         String mensaje;
         Boolean vereificado = false;
@@ -64,12 +64,13 @@ public class AuthController {
             }
         } else {
             mensaje = "Usuario No encontrado";
+            vereificado = null;
         }
         return AuthDTO
                 .builder()
                 .token(apiKey)
                 .info(mensaje)
-                .verificado(usuario.getVerificado())
+                .verificado(vereificado)
                 .build();
     }
     @PostMapping("/register")
