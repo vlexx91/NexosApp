@@ -4,6 +4,7 @@ import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.servicios.UsuarioService;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -42,12 +43,18 @@ public class UsuarioControlador {
     }
 
     @PostMapping("/seguimiento/anyadir")
-    public String anyadirSeguimiento(@RequestParam Integer idUsuario, @RequestParam Integer idDesaparicion){
-        return usuarioService.anyadirSeguimiento(idUsuario, idDesaparicion);
+    public ResponseEntity<Void> anyadirSeguimiento(@RequestParam Integer id, @RequestParam Integer idDesaparicion) {
+        usuarioService.anyadirSeguimiento(id, idDesaparicion);
+        return ResponseEntity.ok().build();
     }
 
-//    @GetMapping("/seguimiento")
-//    public List<DesaparicionPrincipalDTO> getSeguimiento(@RequestParam Integer id){
-//        return usuarioService.desaparicionesSeguidas(id);
-//    }
+    @DeleteMapping("/seguimiento/eliminar")
+    public ResponseEntity<Void> eliminarSeguimiento(@RequestParam Integer id, @RequestParam Integer idDesaparicion) {
+        usuarioService.eliminarSeguimiento(id, idDesaparicion);
+        return ResponseEntity.ok().build();
+    }
+
+
+
+
 }

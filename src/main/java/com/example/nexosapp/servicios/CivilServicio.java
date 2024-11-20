@@ -6,13 +6,16 @@ import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.modelos.Usuario;
+import com.example.nexosapp.recursos.EmailService;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import com.example.nexosapp.seguridad.JWTservice;
 import com.example.nexosapp.seguridad.filter.JWTFilter;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +32,7 @@ public class CivilServicio {
     private UsuarioService usuarioService;
     private PasswordEncoder passwordEncoder;
     private JWTservice jwtService;
+    private EmailService emailService;
 
     /**
      * Guardar civil
@@ -84,7 +88,7 @@ public class CivilServicio {
     }
 
     /**
-     * Funcion que edita los datos de un usuario tipo civil
+     * Funcion que edita los datos de un usuario tipo civil menos dni.
      * @param id
      * @param dto
      * @return
@@ -116,7 +120,7 @@ public class CivilServicio {
      * @param dto
      * @return
      */
-    public Civil crearCivil(CivilCrearDTO dto){
+    public Civil crearCivil(CivilCrearDTO dto) throws MessagingException {
         if (!dto.getUsuarioCrearDTO().getContrasenya().equals(dto.getUsuarioCrearDTO().getRepContrasenya())){
             return null;
         }
@@ -136,7 +140,19 @@ public class CivilServicio {
         civil.setDni(dto.getDni());
         civil.setTelefono(Integer.valueOf(dto.getTelefono()));
         civil.setUsuario(usuario);
-        return civilRepositorio.save(civil);
+        civilRepositorio.save(civil);
+        emailService.sendWithHtml("nexoapp24@gmail.com",
+                usuario.getEmail(),
+                "Bienvenido a NexoApp",
+                String.format("""
+             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h1 style="color:#75c2f2;">¡Bienvenido a NexoApp!</h1>
+            <p>Gracias por unirte a nuestra plataforma <b>%s</b>.</p>
+            <br><p>Te enviaremos un mensaje cuando tu cuenta sea verificada y puedas iniciar sesión.</p>
+            <p>Saludos,<br>El equipo de NexoApp</p>
+            </div>
+        """, usuario.getUsuario()));
+        return civil;
     }
 
     /**
@@ -200,6 +216,31 @@ public class CivilServicio {
         Usuario usuario = civil.getUsuario();
         UsuarioMenuDTO dto = new UsuarioMenuDTO(usuario.getUsuario(), usuario.getEmail());
         return dto;
+    }
+
+    /**
+     * Método que verifica un usuario
+     * @param id
+     * @throws MessagingException
+     */
+    public ResponseEntity<String> verificarUsuario(Integer id) throws MessagingException {
+        Civil civil = civilRepositorio.findTopByUsuarioId(id);
+        civil.getUsuario().setVerificado(true);
+        usuarioService.guardar(civil.getUsuario());
+        emailService.sendWithHtml(
+                "nexoapp24@gmail.com",
+                civil.getUsuario().getEmail(),
+                "Activación de cuenta",
+                String.format("""
+             <div style="font-family: Arial, sans-serif; line-height: 1.6;">
+            <h2 style="color:#75c2f2;">¡Tu cuenta ha sido activada!</h2>
+            <p>Tu cuenta ha sido verificada y activada <b>%s</b>.</p>
+            <br><p>Ya puedes iniciar sesion y comenzar a usar los servicios de nuestra web</p>
+            <p>Saludos,<br>El equipo de NexoApp</p>
+            </div>
+        """, civil.getUsuario().getUsuario())
+        );
+        return ResponseEntity.ok("Usuario verificado");
     }
 
 }

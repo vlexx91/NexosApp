@@ -109,6 +109,8 @@ public class DesaparicionServicio {
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
         desaparicion.getUsuario().getDesaparicionCreada().add(desaparicion);
+        desaparicion.setAprobada(false);
+        desaparicion.setEstado(ESTADO.DESAPARECIDO);
         Set<Foto> listaFotos = new HashSet<>();
         for (MultipartFile f : files){
             Foto foto = new Foto();
@@ -243,6 +245,37 @@ public class DesaparicionServicio {
 
     public List<Desaparicion> getDesaparicionesPendientes() {
         return desaparicionRepositorio.desaparicionesPendientes();
+    }
+
+    /**
+     * Método que devuelve una desaparicion en funcion de su id
+     * @param id
+     * @return
+     */
+
+    public DesaparicionIndividualDTO getDesaparicion(Integer id){
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+        if (desaparicion == null){
+            return null;
+        }
+        DesaparicionIndividualDTO dto = new DesaparicionIndividualDTO();
+        List<String> fotos = new ArrayList<>();
+        PersonaDTO persona = new PersonaDTO();
+        persona.setNombre(desaparicion.getPersona().getNombre());
+        persona.setApellido(desaparicion.getPersona().getApellido());
+        persona.setDescripcion(desaparicion.getPersona().getDescripcion());
+        persona.setFechaNacimiento(desaparicion.getPersona().getFechaNacimiento().toString());
+        persona.setAltura(desaparicion.getPersona().getAltura());
+        persona.setComplexion(desaparicion.getPersona().getComplexion());
+        persona.setSexo(desaparicion.getPersona().getSexo());
+        dto.setPersona(persona);
+        desaparicion.getPersona().getFotos().forEach(f->fotos.add(f.getUrl()));
+        dto.setFotos(fotos);
+        dto.setFecha(desaparicion.getFecha().toString());
+        dto.setDescripcion(desaparicion.getDescripcion());
+        dto.setEstado(desaparicion.getEstado());
+
+        return dto;
     }
 }
 
