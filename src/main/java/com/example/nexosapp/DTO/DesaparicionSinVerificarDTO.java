@@ -11,10 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DesaparicionSinVerificarDTO {
-    private List<String> fotos;
-    private String fecha;
-    private String descripcion;
-    private PersonaDTO persona;
-    private ESTADO estado;
-    private LugarDTO lugar;
+    private Integer id;
+    private String dni;
+    private String nombre;
 }

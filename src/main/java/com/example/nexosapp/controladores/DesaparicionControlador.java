@@ -89,13 +89,14 @@ public class DesaparicionControlador {
         return desaparicionServicio.editarDesaparicion(id, editarDesaparicionDTO);
     }
 
-    @PostMapping("/verificar")
-    public String verificarDesaparicion(@RequestBody Autoridad autoridad, @RequestParam Integer id, @RequestParam boolean aprobada) {
-        try {
-            return desaparicionServicio.verificarDesaparicion(autoridad, id, aprobada);
-        } catch (IllegalArgumentException | SecurityException e) {
-            return e.getMessage();
-        }
+    @PutMapping("/aprobar")
+    public ResponseEntity<String> verificarDesaparicion(@RequestParam Integer id) {
+        return desaparicionServicio.verificarDesaparicion(id);
+    }
+
+    @PostMapping("/eliminar")
+    public ResponseEntity<String> eliminarDesaparicion(@RequestParam Integer id){
+        return desaparicionServicio.eliminarDesaparicion(id);
     }
 
     @GetMapping("/pendientes")
@@ -104,12 +105,12 @@ public class DesaparicionControlador {
     }
 
     @GetMapping()
-    public DesaparicionSinVerificarDTO getDesaparicionId(@RequestParam Integer id){
+    public DesaparicionIndividualDTO getDesaparicionId(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicion(id);
     }
 
     @GetMapping("/NoAprobadas")
-    public List<DesaparicionIndividualDTO> getDesaparicionesNoAprobadas(){
+    public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
         return desaparicionServicio.getSinAprobar();
     }
 

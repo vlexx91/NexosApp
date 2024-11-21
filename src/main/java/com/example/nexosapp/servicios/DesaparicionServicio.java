@@ -10,6 +10,7 @@ import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -89,13 +90,19 @@ public class DesaparicionServicio {
         return mensaje;
     }
 
-    public String eliminarDesaparicion(Integer id){
+    /**
+     * Método que marca como eliminada una desaparición por su id
+     * @param id
+     * @return
+     */
+
+    public ResponseEntity<String> eliminarDesaparicion(Integer id){
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
         if (desaparicion == null){
-            return "No existe esa desaparición";
+            return ResponseEntity.badRequest().body("No existe esa desaparición");
         }
         desaparicion.setEliminada(true);
-        return "Desaparición eliminada";
+        return ResponseEntity.ok( "Desaparición eliminada");
     }
 
     /**
@@ -223,20 +230,21 @@ public class DesaparicionServicio {
 
     /**
      * Método para verificar una desaparición
-     * @param autoridad
+     *
      * @return String mensaje
      */
 
-    public String verificarDesaparicion(Autoridad autoridad, Integer id, boolean aprobada) {
-        // busco la desaparicion por id
-        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElseThrow(() -> new IllegalArgumentException("Desaparición no encontrada"));
+    public ResponseEntity<String> verificarDesaparicion(Integer id) {
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
 
-        // la autoridad decide si es falsa o no
-        autoridad.verificarDesaparicion(desaparicion, aprobada);
+        if (desaparicion == null) {
+            return ResponseEntity.badRequest().body("No existe esa desaparición");
+        }
+
+        desaparicion.setAprobada(true);
         desaparicionRepositorio.save(desaparicion);
 
-        // mensaje segun la decision
-        return aprobada ? "Desaparición aprobada con éxito" : "Desaparición rechazada con éxito";
+        return ResponseEntity.ok("Desaparición aprobada con éxito");
     }
 
     /**
@@ -253,12 +261,12 @@ public class DesaparicionServicio {
      * @return
      */
 
-    public DesaparicionSinVerificarDTO getDesaparicion(Integer id){
+    public DesaparicionIndividualDTO getDesaparicion(Integer id){
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
         if (desaparicion == null){
             return null;
         }
-        DesaparicionSinVerificarDTO dto = new DesaparicionSinVerificarDTO();
+        DesaparicionIndividualDTO dto = new DesaparicionIndividualDTO();
         List<String> fotos = new ArrayList<>();
         PersonaDTO persona = new PersonaDTO();
         persona.setNombre(desaparicion.getPersona().getNombre());
@@ -275,8 +283,7 @@ public class DesaparicionServicio {
         dto.setFecha(desaparicion.getFecha().toString());
         dto.setDescripcion(desaparicion.getDescripcion());
         dto.setEstado(desaparicion.getEstado());
-        LugarDTO lugar = lugarMapeador.toDTO(desaparicion.getLugar());
-        dto.setLugar(lugar);
+        dto.setAprobada(desaparicion.getAprobada());
         return dto;
     }
 
@@ -285,27 +292,14 @@ public class DesaparicionServicio {
      * @return
      */
 
-    public List<DesaparicionIndividualDTO> getSinAprobar(){
+    public List<DesaparicionSinVerificarDTO> getSinAprobar(){
         List<Desaparicion> desapariciones = desaparicionRepositorio.findAllByAprobadaIsFalseAndEliminadaIsFalse();
-        List<DesaparicionIndividualDTO> devolucion = new ArrayList<>();
+        List<DesaparicionSinVerificarDTO> devolucion = new ArrayList<>();
         desapariciones.forEach(d->{
-            DesaparicionIndividualDTO dto = new DesaparicionIndividualDTO();
-            List<String> fotos = new ArrayList<>();
-            PersonaDTO persona = new PersonaDTO();
-            persona.setNombre(d.getPersona().getNombre());
-            persona.setApellido(d.getPersona().getApellido());
-            persona.setDescripcion(d.getPersona().getDescripcion());
-            persona.setFechaNacimiento(d.getPersona().getFechaNacimiento().toString());
-            persona.setAltura(d.getPersona().getAltura());
-            persona.setComplexion(d.getPersona().getComplexion());
-            persona.setSexo(d.getPersona().getSexo());
-            dto.setPersona(persona);
-            d.getPersona().getFotos().forEach(f->fotos.add(f.getUrl()));
-            dto.setFotos(fotos);
-            dto.setFecha(d.getFecha().toString());
-            dto.setDescripcion(d.getDescripcion());
-            dto.setEstado(d.getEstado());
+            DesaparicionSinVerificarDTO dto = new DesaparicionSinVerificarDTO();
             dto.setId(d.getId());
+            dto.setDni(d.getPersona().getDni());
+            dto.setNombre(d.getPersona().getNombre());
             devolucion.add(dto);
         });
         return devolucion;

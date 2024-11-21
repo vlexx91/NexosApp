@@ -17,4 +17,5 @@ public class DesaparicionIndividualDTO {
     private String descripcion;
     private PersonaDTO persona;
     private ESTADO estado;
+    private Boolean aprobada;
 }
