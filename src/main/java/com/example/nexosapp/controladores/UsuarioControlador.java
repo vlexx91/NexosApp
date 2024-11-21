@@ -2,6 +2,7 @@ package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.modelos.Usuario;
+import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import com.example.nexosapp.servicios.UsuarioService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +15,7 @@ import java.util.List;
 
 public class UsuarioControlador {
 
+    private final UsuarioRepositorio usuarioRepositorio;
     private UsuarioService usuarioService;
 
     @GetMapping("/getAll")
@@ -49,6 +51,12 @@ public class UsuarioControlador {
     @GetMapping("/seguimiento")
     public List<DesaparicionPrincipalDTO> getSeguimiento(@RequestParam Integer id){
         return usuarioService.desaparicionesSeguidas(id);
+    }
+
+    @GetMapping("/no-verificados")
+    public List<Usuario> getUsuariosNoVerificados() {
+
+        return usuarioRepositorio.findByVerificadoFalse(false);
     }
 
 

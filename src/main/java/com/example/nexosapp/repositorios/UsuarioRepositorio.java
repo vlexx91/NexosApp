@@ -12,4 +12,7 @@ import java.util.List;
 public interface UsuarioRepositorio extends JpaRepository<Usuario,Integer> {
     Optional<Usuario> findTopByUsuario(String usuario);
     List<Usuario> findByDesapariciones_Id(Integer desaparicionId);
+
+    List<Usuario> findByVerificadoFalse(Boolean verificado);
+
 }
