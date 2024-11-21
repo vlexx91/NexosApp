@@ -13,6 +13,6 @@ public class CrearAvisoDTO {
 
     private String texto;
     private String fecha;
-    private Integer id_usuario;
+    private Integer idUsuario;
 
 }
