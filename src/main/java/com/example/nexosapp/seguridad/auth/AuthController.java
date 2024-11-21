@@ -35,7 +35,7 @@ public class AuthController {
 
         if (usuario != null) {
             if (usuarioService.validarContrasenya(usuario, usuarioDTO.getContrasenya())) {
-
+                vereificado = usuario.getVerificado();
                 mensaje = "Usuario Logueado";
 
                 //Usuario sin token
