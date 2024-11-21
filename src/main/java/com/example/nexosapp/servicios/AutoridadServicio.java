@@ -2,6 +2,7 @@ package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Civil;
+import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -66,4 +67,5 @@ public class AutoridadServicio {
         }
         return mensaje;
     }
+
 }

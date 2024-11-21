@@ -185,7 +185,7 @@ public class CivilServicio {
      */
 
     private List<DesaparicionListaDTO> getDesaparicionListaDTOS(Set<Desaparicion> desapariciones) {
-        desapariciones = desapariciones.stream().filter(d->!d.getAprobada()).collect(Collectors.toSet());
+        desapariciones = desapariciones.stream().filter(Desaparicion::getAprobada).collect(Collectors.toSet());
         List<DesaparicionListaDTO> devolucion = new ArrayList<>();
         desapariciones.forEach(d->{
             DesaparicionListaDTO dto = new DesaparicionListaDTO();

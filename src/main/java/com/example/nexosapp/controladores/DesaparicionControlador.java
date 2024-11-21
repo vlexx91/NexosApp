@@ -4,6 +4,7 @@ import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
+import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,7 +55,7 @@ public class DesaparicionControlador {
 
             desaparicionServicio.guardarDesaparicion(request,desaparicionDTO, files);
 
-            // Devuelve un JSON con el mensaje
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Desaparición creada");
 
@@ -90,13 +91,14 @@ public class DesaparicionControlador {
         return desaparicionServicio.editarDesaparicion(id, editarDesaparicionDTO);
     }
 
-    @PostMapping("/verificar")
-    public String verificarDesaparicion(@RequestBody Autoridad autoridad, @RequestParam Integer id, @RequestParam boolean aprobada) {
-        try {
-            return desaparicionServicio.verificarDesaparicion(autoridad, id, aprobada);
-        } catch (IllegalArgumentException | SecurityException e) {
-            return e.getMessage();
-        }
+    @PutMapping("/aprobar")
+    public ResponseEntity<String> verificarDesaparicion(@RequestParam Integer id) {
+        return desaparicionServicio.verificarDesaparicion(id);
+    }
+
+    @PutMapping("/eliminar")
+    public ResponseEntity<String> eliminarDesaparicion(@RequestParam Integer id){
+        return desaparicionServicio.eliminarDesaparicion(id);
     }
 
     @GetMapping("/pendientes")
@@ -105,8 +107,13 @@ public class DesaparicionControlador {
     }
 
     @GetMapping()
-    public DesaparicionSinVerificarDTO getDesaparicionId(@RequestParam Integer id){
+    public DesaparicionIndividualDTO getDesaparicionId(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicion(id);
+    }
+
+    @GetMapping("/NoAprobadas")
+    public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
+        return desaparicionServicio.getSinAprobar();
     }
 
 
