@@ -14,4 +14,5 @@ public class DesaparicionSinVerificarDTO {
     private Integer id;
     private String dni;
     private String nombre;
+    private String apellido;
 }

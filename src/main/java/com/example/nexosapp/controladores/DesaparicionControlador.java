@@ -94,7 +94,7 @@ public class DesaparicionControlador {
         return desaparicionServicio.verificarDesaparicion(id);
     }
 
-    @PostMapping("/eliminar")
+    @PutMapping("/eliminar")
     public ResponseEntity<String> eliminarDesaparicion(@RequestParam Integer id){
         return desaparicionServicio.eliminarDesaparicion(id);
     }

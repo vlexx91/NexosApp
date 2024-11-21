@@ -102,6 +102,7 @@ public class DesaparicionServicio {
             return ResponseEntity.badRequest().body("No existe esa desaparición");
         }
         desaparicion.setEliminada(true);
+        guardar(desaparicion);
         return ResponseEntity.ok( "Desaparición eliminada");
     }
 
@@ -300,6 +301,7 @@ public class DesaparicionServicio {
             dto.setId(d.getId());
             dto.setDni(d.getPersona().getDni());
             dto.setNombre(d.getPersona().getNombre());
+            dto.setApellido(d.getPersona().getApellido());
             devolucion.add(dto);
         });
         return devolucion;
