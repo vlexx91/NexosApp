@@ -22,7 +22,5 @@ public class Autoridad {
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
     private Usuario usuario;
 
-    public void verificarDesaparicion(Desaparicion desaparicion, boolean aprobada) {
-        desaparicion.setAprobada(aprobada);
-    }
+
 }

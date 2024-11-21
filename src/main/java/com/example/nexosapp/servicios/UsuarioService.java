@@ -7,6 +7,8 @@ import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
+import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -31,6 +33,8 @@ public class UsuarioService implements UserDetailsService {
     private CivilRepositorio civilRepositorio;
 
    private DesaparicionRepositorio desaparicionRepositorio;
+
+   private JWTservice jwtService;
 
     /**
      * Obtener todos los Usuarios
@@ -107,14 +111,14 @@ public class UsuarioService implements UserDetailsService {
 
     /**
      * Añadir una desaparicion a un usuario, osea a su lista de seguimiento
-     * @param idUsuario
+     *
      * @param idDesaparicion
      * @return
      */
 
-    public String anyadirSeguimiento(Integer  idUsuario, Integer idDesaparicion){
+    public String anyadirSeguimiento(HttpServletRequest request, Integer idDesaparicion){
         String mensaje;
-        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
+        Usuario usuario = usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null);
         Desaparicion desaparicion = desaparicionRepositorio.getReferenceById(idDesaparicion);
         if (usuario == null) {
             mensaje = "Ese usuario no existe";
@@ -133,14 +137,14 @@ public class UsuarioService implements UserDetailsService {
 
     /**
      * Eliminar una desaparicion de un usuario, osea de su lista de seguimiento
-     * @param idUsuario
+     *
      * @param idDesaparicion
      * @return
      */
 
-    public String eliminarSeguimiento(Integer idUsuario, Integer idDesaparicion) {
+    public String eliminarSeguimiento(HttpServletRequest request, Integer idDesaparicion) {
         String mensaje;
-        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
+        Usuario usuario = usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null);
         Desaparicion desaparicion = desaparicionRepositorio.getReferenceById(idDesaparicion);
         if (usuario == null) {
             mensaje = "Ese usuario no existe";

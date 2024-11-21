@@ -4,9 +4,11 @@ import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
+import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleState;
 import org.springframework.http.HttpStatus;
@@ -43,6 +45,7 @@ public class DesaparicionControlador {
 
     @PostMapping("/guardar")
     public ResponseEntity<Map<String, String>> guardarDesaparicion(
+            HttpServletRequest request,
             @RequestParam("desaparicion") String desaparicionJson,
             @RequestParam("files") List<MultipartFile> files) {
         try {
@@ -50,9 +53,9 @@ public class DesaparicionControlador {
             DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
 
 
-            desaparicionServicio.guardarDesaparicion(desaparicionDTO, files);
+            desaparicionServicio.guardarDesaparicion(request,desaparicionDTO, files);
 
-            // Devuelve un JSON con el mensaje
+
             Map<String, String> response = new HashMap<>();
             response.put("message", "Desaparición creada");
 
@@ -88,13 +91,14 @@ public class DesaparicionControlador {
         return desaparicionServicio.editarDesaparicion(id, editarDesaparicionDTO);
     }
 
-    @PostMapping("/verificar")
-    public String verificarDesaparicion(@RequestBody Autoridad autoridad, @RequestParam Integer id, @RequestParam boolean aprobada) {
-        try {
-            return desaparicionServicio.verificarDesaparicion(autoridad, id, aprobada);
-        } catch (IllegalArgumentException | SecurityException e) {
-            return e.getMessage();
-        }
+    @PutMapping("/aprobar")
+    public ResponseEntity<String> verificarDesaparicion(@RequestParam Integer id) {
+        return desaparicionServicio.verificarDesaparicion(id);
+    }
+
+    @PutMapping("/eliminar")
+    public ResponseEntity<String> eliminarDesaparicion(@RequestParam Integer id){
+        return desaparicionServicio.eliminarDesaparicion(id);
     }
 
     @GetMapping("/pendientes")
@@ -105,6 +109,11 @@ public class DesaparicionControlador {
     @GetMapping()
     public DesaparicionIndividualDTO getDesaparicionId(@RequestParam Integer id){
         return desaparicionServicio.getDesaparicion(id);
+    }
+
+    @GetMapping("/NoAprobadas")
+    public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
+        return desaparicionServicio.getSinAprobar();
     }
 
 

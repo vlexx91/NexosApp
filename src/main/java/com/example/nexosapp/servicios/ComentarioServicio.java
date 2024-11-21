@@ -7,6 +7,7 @@ import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.repositorios.ComentarioRepositorio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -87,7 +88,7 @@ public class ComentarioServicio {
      * @return
      * @throws IOException
      */
-    public Comentario crearComentario(ComentarioDTO comentarioDTO, List<MultipartFile> files) throws IOException {
+    public ResponseEntity<String> crearComentario(ComentarioDTO comentarioDTO, List<MultipartFile> files) throws IOException {
         Comentario comentario = new Comentario();
         comentario.setNombre(comentarioDTO.getNombre());
         comentario.setTexto(comentarioDTO.getTexto());
@@ -111,7 +112,7 @@ public class ComentarioServicio {
         }
 
         comentarioRepositorio.save(comentario);
-        return comentario;
+        return ResponseEntity.ok("Comentario creado");
     }
 
     public List<ComentarioListarDTO> obtenerComentariosPorDesaparicionId(Integer desaparicionId) {

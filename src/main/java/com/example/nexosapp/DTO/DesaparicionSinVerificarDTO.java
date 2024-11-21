@@ -10,12 +10,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DesaparicionIndividualDTO {
+public class DesaparicionSinVerificarDTO {
     private Integer id;
-    private List<String> fotos;
-    private String fecha;
-    private String descripcion;
-    private PersonaDTO persona;
-    private ESTADO estado;
-    private Boolean aprobada;
+    private String dni;
+    private String nombre;
+    private String apellido;
 }
