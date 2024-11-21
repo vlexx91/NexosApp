@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +114,14 @@ public class DesaparicionServicio {
      */
     public Desaparicion guardarDesaparicion(DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
+        LocalDate fechaHoy = LocalDate.now();
+        if (desaparicion.getFecha().isAfter(fechaHoy)) {
+            throw new IllegalArgumentException("La fecha de desaparición no puede ser posterior a la fecha actual.");
+        }
+
+        if (desaparicion.getFecha().isBefore(desaparicion.getPersona().getFechaNacimiento())) {
+            throw new IllegalArgumentException("La fecha de desaparición no puede ser anterior a la fecha de nacimiento.");
+        }
         Map<String,Double> coordenadas = openCageService.getLatLon(desaparicion.getLugar().getCalle()+ ", "+ desaparicion.getLugar().getLocalidad() + ", " + desaparicion.getLugar().getProvincia() + ", España");
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
