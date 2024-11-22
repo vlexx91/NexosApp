@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
@@ -178,5 +179,22 @@ public class UsuarioService implements UserDetailsService {
 //        usuarioRepositorio.save(usuario);
 //        return "Usuario creado correctamente";
 //    }
+
+    public List<UsuarioAdminListaDTO> usuarioAdminLista() {
+        List<UsuarioAdminListaDTO> usuarioAdminLista = new ArrayList<>();
+        List<Usuario> usuario = usuarioRepositorio.findAll();
+
+        for (Usuario u : usuario){
+            UsuarioAdminListaDTO usuarioAdminListaDTO = new UsuarioAdminListaDTO();
+
+            usuarioAdminListaDTO.setId(u.getId());
+            usuarioAdminListaDTO.setVerificado(u.getVerificado());
+            usuarioAdminListaDTO.setUsuario(u.getUsername());
+
+            usuarioAdminLista.add(usuarioAdminListaDTO);
+        }
+
+        return usuarioAdminLista;
+    }
 }
 

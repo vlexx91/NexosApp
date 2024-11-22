@@ -1,6 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import com.example.nexosapp.servicios.UsuarioService;
@@ -53,11 +54,9 @@ public class UsuarioControlador {
         return usuarioService.desaparicionesSeguidas(id);
     }
 
-    @GetMapping("/no-verificados")
-    public List<Usuario> getUsuariosNoVerificados() {
-
-        return usuarioRepositorio.findByVerificadoFalse(false);
+    @GetMapping("/listaUsuarios")
+    public List<UsuarioAdminListaDTO> listaUsuarios(){
+        return usuarioService.usuarioAdminLista();
     }
-
 
 }
