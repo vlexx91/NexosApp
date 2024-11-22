@@ -206,26 +206,56 @@ public class DesaparicionServicio {
      * @return Desaparicion
      */
 
-    public Desaparicion editarDesaparicion(Integer id, EditarDesaparicionDTO editarDesaparicionDTO) {
+    public ResponseEntity<String> editarDesaparicion(Integer id, EditarDesaparicionDTO editarDesaparicionDTO) {
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
 
         if (desaparicion == null) {
             return null;
         }
 
-        // obtiene el lugar actual si ya existe si no crea uno nuevo
-        Lugar lugar = desaparicion.getLugar() != null ? desaparicion.getLugar() : new Lugar();
+       if (!Objects.equals(desaparicion.getLugar().getProvincia(), editarDesaparicionDTO.getLugarLatLongDTO().getProvincia()) || !Objects.equals(desaparicion.getLugar().getLocalidad(), editarDesaparicionDTO.getLugarLatLongDTO().getLocalidad()) || !Objects.equals(desaparicion.getLugar().getCalle(), editarDesaparicionDTO.getLugarLatLongDTO().getCalle())){
+            Map<String,Double> coordenadas = openCageService.getLatLon(editarDesaparicionDTO.getLugarLatLongDTO().getCalle()+ ", "+ editarDesaparicionDTO.getLugarLatLongDTO().getLocalidad() + ", " + editarDesaparicionDTO.getLugarLatLongDTO().getProvincia() + ", España");
+            desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
+            desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
+            desaparicion.getLugar().setProvincia(editarDesaparicionDTO.getLugarLatLongDTO().getProvincia());
+            desaparicion.getLugar().setLocalidad(editarDesaparicionDTO.getLugarLatLongDTO().getLocalidad());
+            desaparicion.getLugar().setCalle(editarDesaparicionDTO.getLugarLatLongDTO().getCalle());
+            lugarServicio.guardar(desaparicion.getLugar());
+        }
 
-        lugar.setProvincia(editarDesaparicionDTO.getLugarLatLongDTO().getProvincia());
-        lugar.setLocalidad(editarDesaparicionDTO.getLugarLatLongDTO().getLocalidad());
-        lugar.setCalle(editarDesaparicionDTO.getLugarLatLongDTO().getCalle());
-        lugar.setLatitud(editarDesaparicionDTO.getLugarLatLongDTO().getLatitud());
-        lugar.setLongitud(editarDesaparicionDTO.getLugarLatLongDTO().getLongitud());
 
         desaparicion.setEstado(editarDesaparicionDTO.getEstado());
-        desaparicion.setLugar(lugar);
 
-        return desaparicionRepositorio.save(desaparicion);
+        desaparicion.setDescripcion(editarDesaparicionDTO.getDescripcion());
+
+
+        desaparicionRepositorio.save(desaparicion);
+
+        return ResponseEntity.ok("Desaparición editada con éxito");
+    }
+
+    /**
+     * Método para obtener los datos para editar una desaparición
+     * @param id
+     * @return EditarDesaparicionDTO
+     */
+
+    public EditarDesaparicionDTO getEditarDesaparicionDTO(Integer id){
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+        if (desaparicion == null){
+            return null;
+        }
+        EditarDesaparicionDTO dto = new EditarDesaparicionDTO();
+        LugarLatLongDTO lugar = new LugarLatLongDTO();
+        lugar.setProvincia(desaparicion.getLugar().getProvincia());
+        lugar.setLocalidad(desaparicion.getLugar().getLocalidad());
+        lugar.setCalle(desaparicion.getLugar().getCalle());
+        lugar.setLatitud(desaparicion.getLugar().getLatitud());
+        lugar.setLongitud(desaparicion.getLugar().getLongitud());
+        dto.setLugarLatLongDTO(lugar);
+        dto.setDescripcion(desaparicion.getDescripcion());
+        dto.setEstado(desaparicion.getEstado());
+        return dto;
     }
 
 
