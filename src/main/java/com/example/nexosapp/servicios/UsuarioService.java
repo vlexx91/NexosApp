@@ -1,6 +1,8 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.enumerados.ESTADO;
+import com.example.nexosapp.enumerados.Sexo;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
@@ -16,6 +18,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

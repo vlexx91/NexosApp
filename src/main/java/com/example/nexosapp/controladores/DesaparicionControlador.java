@@ -1,8 +1,12 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.*;
+import com.example.nexosapp.enumerados.ESTADO;
+import com.example.nexosapp.enumerados.Sexo;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Desaparicion;
+import com.example.nexosapp.modelos.Lugar;
+import com.example.nexosapp.modelos.Persona;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
@@ -11,12 +15,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleState;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -119,6 +125,14 @@ public class DesaparicionControlador {
     @GetMapping("/NoAprobadas")
     public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
         return desaparicionServicio.getSinAprobar();
+    }
+    @GetMapping("/filtrar")
+    public List<Desaparicion> buscarPorFechaEstadoYNombre(
+            @RequestParam LocalDate fecha,
+            @RequestParam String estado,
+            @RequestParam String nombre) {
+
+        return desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
     }
 
 

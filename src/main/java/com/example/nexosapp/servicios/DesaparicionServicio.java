@@ -2,6 +2,7 @@ package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.enumerados.ESTADO;
+import com.example.nexosapp.enumerados.Sexo;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.*;
@@ -10,6 +11,12 @@ import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +29,7 @@ import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 @Service
 @AllArgsConstructor
@@ -35,6 +43,8 @@ public class DesaparicionServicio {
     private AutoridadServicio autoridadServicio;
     private UsuarioRepositorio usuarioRepositorio;
     private JWTservice jwtService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -350,5 +360,47 @@ public class DesaparicionServicio {
         });
         return devolucion;
     }
+//    public List<Desaparicion> filtrarDesapariciones(LocalDate fecha, ESTADO estado, String provincia,
+//                                                    String dni, String nombrePersona, String apellidoPersona, Sexo sexo) {
+//        if (estado == null) {
+//            estado = ESTADO.DESAPARECIDO;
+//        }
+//
+//        if (sexo == null) {
+//            sexo = Sexo.HOMBRE;
+//        }
+//        return desaparicionRepositorio.buscarDesapariciones(fecha, estado.ordinal(), provincia, dni, nombrePersona, apellidoPersona,sexo.ordinal());
+//    }
+//public List<Desaparicion> buscarDesapariciones(LocalDate fecha, Integer estadoOrdinal, String provincia,
+//                                               String dni, String nombrePersona, String apellidoPersona, Integer sexo) {
+//    ESTADO estado = estadoOrdinal != null ? ESTADO.values()[estadoOrdinal] : null;
+//    return desaparicionRepositorio.buscarDesapariciones(fecha, estadoOrdinal, provincia, dni, nombrePersona, apellidoPersona, sexo);
+//}
+
+//public List<Desaparicion> buscarConFiltros(FiltroDTO filtro) {
+//    return desaparicionRepositorio.buscarConFiltros(
+//            filtro.getDni(),
+//            filtro.getNombre(),
+//            filtro.getApellidos(),
+//            filtro.getSexo(),
+//            filtro.getComplexion(),
+//            filtro.getEstado(),
+//            filtro.getProvincia(),
+//            filtro.getLocalidad(),
+//            filtro.getFecha()
+//    );
+//}
+public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String estado, String nombre) {
+    ESTADO estadoEnum = ESTADO.valueOf(estado);  // Convertir el String a Enum
+
+    String jpql = "SELECT d FROM Desaparicion d WHERE d.fecha = :fecha AND d.estado = :estado AND d.persona.nombre LIKE :nombre";
+    TypedQuery<Desaparicion> query = entityManager.createQuery(jpql, Desaparicion.class);
+
+    query.setParameter("fecha", fecha);
+    query.setParameter("estado", estadoEnum);  // Usar el valor Enum
+    query.setParameter("nombre", "%" + nombre + "%");  // Usar "%" para la búsqueda parcial
+
+    return query.getResultList();
+}
 }
 
