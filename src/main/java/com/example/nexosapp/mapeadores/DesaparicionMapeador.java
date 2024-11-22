@@ -24,9 +24,6 @@ public abstract class DesaparicionMapeador {
     LugarMapeador lugarMapeador = Mappers.getMapper(LugarMapeador.class);
     PersonaMapeador personaMapeador = Mappers.getMapper(PersonaMapeador.class);
 
-    @Autowired
-    UsuarioService usuarioService;
-
 
     @Mapping(source = "personaDTO", target = "persona" , qualifiedByName = "transformarPersonaDTO")
     @Mapping(source = "lugarDTO", target = "lugar" , qualifiedByName = "transformarLugarDTO")

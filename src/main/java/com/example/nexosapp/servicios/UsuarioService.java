@@ -2,9 +2,12 @@ package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
 import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
+import com.example.nexosapp.mapeadores.DesaparicionMapeador;
+import com.example.nexosapp.modelos.Aviso;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
+import com.example.nexosapp.repositorios.AvisoRepositorio;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
@@ -27,6 +30,7 @@ import static com.example.nexosapp.servicios.DesaparicionServicio.extraerPrincip
 @AllArgsConstructor
 public class UsuarioService implements UserDetailsService {
 
+    private final DesaparicionMapeador desaparicionMapeador;
     private PasswordEncoder passwordEncoder;
 
     private UsuarioRepositorio usuarioRepositorio;
@@ -34,6 +38,8 @@ public class UsuarioService implements UserDetailsService {
     private CivilRepositorio civilRepositorio;
 
    private DesaparicionRepositorio desaparicionRepositorio;
+
+    private AvisoRepositorio avisoRepositorio;
 
    private JWTservice jwtService;
 
@@ -93,6 +99,8 @@ public class UsuarioService implements UserDetailsService {
             }
 
         }
+
+        avisoRepositorio.deleteAll(avisoRepositorio.findAvisoByUsuario_Id(usuario.getId()));
 
         try {
             usuarioRepositorio.deleteById(id);

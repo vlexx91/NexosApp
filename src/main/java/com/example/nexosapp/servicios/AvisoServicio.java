@@ -9,6 +9,7 @@ import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.repositorios.AvisoRepositorio;
 import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -151,5 +152,9 @@ public class AvisoServicio {
         avisoRepositorio.save(avisosave);
 
         return ResponseEntity.ok("Aviso creado con éxito") ;
+    }
+
+    public List<Aviso> getByUsuId(Integer id){
+        return avisoRepositorio.findAvisoByUsuario_Id(id);
     }
 }
