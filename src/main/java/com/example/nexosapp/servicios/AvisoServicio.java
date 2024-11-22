@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.AvisoDTO;
+import com.example.nexosapp.DTO.AvisoDTOAutoridadAdmin;
 import com.example.nexosapp.DTO.CrearAvisoDTO;
 import com.example.nexosapp.DTO.FotoUrlDTO;
 import com.example.nexosapp.modelos.Aviso;
@@ -111,7 +112,7 @@ public class AvisoServicio {
                 fotoUrlDTO.add(fotoDTO);
             }
             avisoDTO.setFotos(fotoUrlDTO);
-            avisoDTO.setUsuarioId(a.getUsuario().getId());
+            avisoDTO.setId_usuario(a.getUsuario().getId());
 
             avisoDTOS.add(avisoDTO);
         }
@@ -152,4 +153,26 @@ public class AvisoServicio {
 
         return ResponseEntity.ok("Aviso creado con éxito") ;
     }
+
+
+    /**
+     * Lista avisos para AvisoDTOAutoridad
+     */
+
+    public List<AvisoDTOAutoridadAdmin> listarAdminAvisos(){
+        List<AvisoDTOAutoridadAdmin> avisoDTOS= new ArrayList<>();
+        List<Aviso> avisos = avisoRepositorio.findAll();
+
+        for (Aviso a : avisos){
+            AvisoDTOAutoridadAdmin avisoDTO = new AvisoDTOAutoridadAdmin();
+            avisoDTO.setFecha(a.getFecha());
+            avisoDTO.setTexto(a.getTexto());
+            avisoDTO.setId(a.getId());
+            avisoDTO.setUsername(usuarioService.getUsuarioId(a.getUsuario().getId()).getUsername());
+
+            avisoDTOS.add(avisoDTO);
+        }
+        return avisoDTOS;
+    }
+
 }

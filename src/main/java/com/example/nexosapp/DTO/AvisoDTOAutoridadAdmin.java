@@ -1,20 +1,21 @@
 package com.example.nexosapp.DTO;
 
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.Set;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AvisoDTO {
 
+public class AvisoDTOAutoridadAdmin {
 
-    private LocalDate fecha;
+    private Integer id;
     private String texto;
-    private Integer id_usuario;
-    private Set<FotoUrlDTO> fotos;
+    private LocalDate fecha;
+    private String username;
 }
