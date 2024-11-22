@@ -58,6 +58,11 @@ public class UsuarioControlador {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/rol/{rol}")
+    public String getRol(@PathVariable("rol") String rol) {
+        return usuarioService.getRol(rol);
+    }
+
 
 
 

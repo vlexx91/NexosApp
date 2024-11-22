@@ -16,6 +16,6 @@ public class EditarDesaparicionDTO {
 
     @Enumerated(EnumType.ORDINAL)
     private ESTADO estado;
-
+    private String descripcion;
     private LugarLatLongDTO lugarLatLongDTO;
 }

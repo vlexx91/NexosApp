@@ -178,6 +178,20 @@ public class UsuarioService implements UserDetailsService {
         return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
     }
 
+    /**
+     * Obtiene el rol de un usuario
+     * @param usuario
+     * @return
+     */
+
+    public String getRol(String usuario){
+        Usuario usuario1 = usuarioRepositorio.findTopByUsuario(usuario).orElse(null);
+        if (usuario1 == null){
+            return "Usuario no encontrado";
+        }
+        return usuario1.getRol().toString();
+    }
+
 //    public String guardarUsario(UsuarioDTO usuarioDTO){
 //        if (usuarioDTO.getContrasenya() !=usuarioDTO.getRepContrasenya()){
 //            return "Las contraseñas no coinciden";
