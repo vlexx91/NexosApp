@@ -189,7 +189,7 @@ public class UsuarioService implements UserDetailsService {
 
             usuarioAdminListaDTO.setId(u.getId());
             usuarioAdminListaDTO.setVerificado(u.getVerificado());
-            usuarioAdminListaDTO.setUsuario(u.getUsername());
+            usuarioAdminListaDTO.setUsuario(u.getUsuario());
 
             usuarioAdminLista.add(usuarioAdminListaDTO);
         }
