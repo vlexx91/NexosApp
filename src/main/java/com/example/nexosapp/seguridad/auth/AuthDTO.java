@@ -8,4 +8,5 @@ import lombok.Data;
 public class AuthDTO {
     private String token;
     private String info;
+    private Boolean verificado;
 }

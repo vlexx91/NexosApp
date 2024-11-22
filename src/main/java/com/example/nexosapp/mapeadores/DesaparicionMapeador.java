@@ -30,27 +30,16 @@ public abstract class DesaparicionMapeador {
 
     @Mapping(source = "personaDTO", target = "persona" , qualifiedByName = "transformarPersonaDTO")
     @Mapping(source = "lugarDTO", target = "lugar" , qualifiedByName = "transformarLugarDTO")
-    @Mapping(source = "id_usuario", target = "usuario" , qualifiedByName = "sacarUsuario")
+
     public abstract Desaparicion toEntity(DesaparicionDTO dto);
 
     @Mapping(source = "persona", target = "personaDTO" , qualifiedByName = "transformarPersona")
     @Mapping(source = "lugar", target = "lugarDTO" , qualifiedByName = "transformarLugar")
-    @Mapping(source = "usuario", target = "id_usuario" , qualifiedByName = "sacaId")
     public abstract DesaparicionDTO toDTO(Desaparicion entity);
 
     public abstract List<Desaparicion> toEntity(List<DesaparicionDTO> dtos);
 
     public abstract List<DesaparicionDTO> toDTO(List<Desaparicion> entities);
-
-    @Named("sacarUsuario")
-    Usuario sacarUsuario(Integer id){
-        return usuarioService.getUsuarioId(id);
-    }
-
-    @Named("sacaId")
-    Integer sacaID(Usuario usuario){
-        return usuario.getId();
-    }
 
     @Named("transformarPersonaDTO")
     Persona transformarUsuario(PersonaDTO dto){

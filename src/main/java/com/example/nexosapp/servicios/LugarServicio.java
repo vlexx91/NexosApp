@@ -1,5 +1,6 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.LugarLatLongDTO;
 import com.example.nexosapp.DTO.MapaPrincipalDTO;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Lugar;
@@ -80,6 +81,11 @@ public class LugarServicio {
         return mensaje;
     }
 
+    /**
+     * Obtener los lugares de todas las desapariciones y sus datos
+     * @return
+     */
+
     public List<MapaPrincipalDTO>mapaPrincipal(){
 
         List<MapaPrincipalDTO> devolucion = new ArrayList<>();
@@ -95,5 +101,17 @@ public class LugarServicio {
             devolucion.add(dto);
         });
         return devolucion;
+    }
+
+    /**
+     * Obtener el lugar de desaparicion de una persona
+     * @param id
+     * @return
+     */
+    public LugarLatLongDTO getLugarDesaparicion(Integer id){
+        Desaparicion desaparicion = desaparicionServicio.getDesaparicionId(id);
+        Lugar lugar = desaparicion.getLugar();
+        LugarLatLongDTO dto = new LugarLatLongDTO(lugar.getCalle(),lugar.getProvincia(),lugar.getLocalidad(),lugar.getLatitud(), lugar.getLongitud());
+        return dto;
     }
 }

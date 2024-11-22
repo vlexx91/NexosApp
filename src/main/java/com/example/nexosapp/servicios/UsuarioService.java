@@ -8,6 +8,8 @@ import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
+import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -32,6 +34,8 @@ public class UsuarioService implements UserDetailsService {
     private CivilRepositorio civilRepositorio;
 
    private DesaparicionRepositorio desaparicionRepositorio;
+
+   private JWTservice jwtService;
 
     /**
      * Obtener todos los Usuarios
@@ -72,8 +76,6 @@ public class UsuarioService implements UserDetailsService {
 
         Civil civil = civilRepositorio.findTopByUsuarioId(id);
 
-
-
         if (civil != null) {
             civilRepositorio.delete(civil);
         }
@@ -110,14 +112,14 @@ public class UsuarioService implements UserDetailsService {
 
     /**
      * Añadir una desaparicion a un usuario, osea a su lista de seguimiento
-     * @param idUsuario
+     *
      * @param idDesaparicion
      * @return
      */
 
-    public String anyadirSeguimiento(Integer  idUsuario, Integer idDesaparicion){
+    public String anyadirSeguimiento(HttpServletRequest request, Integer idDesaparicion){
         String mensaje;
-        Usuario usuario = usuarioRepositorio.findById(idUsuario).orElse(null);
+        Usuario usuario = usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null);
         Desaparicion desaparicion = desaparicionRepositorio.getReferenceById(idDesaparicion);
         if (usuario == null) {
             mensaje = "Ese usuario no existe";
@@ -135,16 +137,29 @@ public class UsuarioService implements UserDetailsService {
     }
 
     /**
-     * Método que devuelve una lista de desapariciones que sigue un usuario
+     * Eliminar una desaparicion de un usuario, osea de su lista de seguimiento
+     *
+     * @param idDesaparicion
+     * @return
      */
 
-    public List<DesaparicionPrincipalDTO> desaparicionesSeguidas(Integer id){
-        Usuario usuario = usuarioRepositorio.findById(id).orElse(null);
-        if (usuario == null){
-            return null;
+    public String eliminarSeguimiento(HttpServletRequest request, Integer idDesaparicion) {
+        String mensaje;
+        Usuario usuario = usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null);
+        Desaparicion desaparicion = desaparicionRepositorio.getReferenceById(idDesaparicion);
+        if (usuario == null) {
+            mensaje = "Ese usuario no existe";
+            return mensaje;
         }
-        Set<Desaparicion> desapariciones = usuario.getDesapariciones();
-        return extraerPrincipalDTO(new ArrayList<>(desapariciones));
+        if (desaparicion == null) {
+            mensaje = "Esa desaparicion no existe";
+            return mensaje;
+        } else {
+            usuario.getDesapariciones().remove(desaparicion);
+            usuarioRepositorio.save(usuario);
+            mensaje = "Desaparicion eliminada";
+        }
+        return mensaje;
     }
 
     /**
@@ -163,6 +178,7 @@ public class UsuarioService implements UserDetailsService {
     public boolean validarContrasenya(Usuario usuario, String passwordSinEncriptar){
         return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
     }
+
 //    public String guardarUsario(UsuarioDTO usuarioDTO){
 //        if (usuarioDTO.getContrasenya() !=usuarioDTO.getRepContrasenya()){
 //            return "Las contraseñas no coinciden";

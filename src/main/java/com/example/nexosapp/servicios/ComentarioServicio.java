@@ -1,20 +1,24 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.ComentarioDTO;
+import com.example.nexosapp.DTO.ComentarioListarDTO;
 import com.example.nexosapp.modelos.Comentario;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.repositorios.ComentarioRepositorio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -84,7 +88,7 @@ public class ComentarioServicio {
      * @return
      * @throws IOException
      */
-    public Comentario crearComentario(ComentarioDTO comentarioDTO, List<MultipartFile> files) throws IOException {
+    public ResponseEntity<String> crearComentario(ComentarioDTO comentarioDTO, List<MultipartFile> files) throws IOException {
         Comentario comentario = new Comentario();
         comentario.setNombre(comentarioDTO.getNombre());
         comentario.setTexto(comentarioDTO.getTexto());
@@ -108,10 +112,23 @@ public class ComentarioServicio {
         }
 
         comentarioRepositorio.save(comentario);
-        return comentario;
+        return ResponseEntity.ok("Comentario creado");
     }
 
+    public List<ComentarioListarDTO> obtenerComentariosPorDesaparicionId(Integer desaparicionId) {
+        List<Comentario> comentarios = comentarioRepositorio.findByDesaparicionId(desaparicionId);
+        List<ComentarioListarDTO> comentariosListarDTO = new ArrayList<>();
 
-
+        comentarios.forEach(comentario -> {
+            ComentarioListarDTO comentarioListarDTO = new ComentarioListarDTO();
+            comentarioListarDTO.setTexto(comentario.getTexto());
+            comentarioListarDTO.setNombre(comentario.getNombre());
+            comentarioListarDTO.setEmail(comentario.getEmail());
+            comentarioListarDTO.setTelefono(comentario.getTelefono());
+            comentarioListarDTO.setFotos(comentario.getFotos().stream().map(Foto::getUrl).collect(Collectors.toList()));
+            comentariosListarDTO.add(comentarioListarDTO);
+        });
+        return comentariosListarDTO;
+    }
 
 }

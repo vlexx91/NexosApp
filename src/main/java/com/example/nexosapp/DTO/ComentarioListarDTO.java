@@ -9,10 +9,10 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrearAvisoDTO {
-
+public class ComentarioListarDTO {
     private String texto;
-    private String fecha;
-    private Integer idUsuario;
-
+    private String nombre;
+    private String email;
+    private Integer telefono;
+    private List<String> fotos;
 }

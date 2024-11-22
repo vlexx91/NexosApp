@@ -8,6 +8,7 @@ import com.example.nexosapp.seguridad.JWTservice;
 import com.example.nexosapp.servicios.CivilServicio;
 import com.example.nexosapp.servicios.TokenServicio;
 import com.example.nexosapp.servicios.UsuarioService;
+import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,13 +28,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthDTO login(@RequestBody UsuarioLogDTO usuarioDTO) {
-        Usuario usuario = (Usuario) usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
+        Usuario usuario = usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
         String apiKey = null;
         String mensaje;
+        Boolean vereificado = false;
 
         if (usuario != null) {
             if (usuarioService.validarContrasenya(usuario, usuarioDTO.getContrasenya())) {
-
+                vereificado = usuario.getVerificado();
                 mensaje = "Usuario Logueado";
 
                 //Usuario sin token
@@ -62,16 +64,17 @@ public class AuthController {
             }
         } else {
             mensaje = "Usuario No encontrado";
+            vereificado = null;
         }
-
         return AuthDTO
                 .builder()
                 .token(apiKey)
                 .info(mensaje)
+                .verificado(vereificado)
                 .build();
     }
     @PostMapping("/register")
-    public AuthDTO register(@RequestBody CivilCrearDTO dto) {
+    public AuthDTO register(@RequestBody CivilCrearDTO dto) throws MessagingException {
 
         Civil civil = civilServicio.crearCivil(dto);
 

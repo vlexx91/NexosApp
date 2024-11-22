@@ -1,21 +1,21 @@
 package com.example.nexosapp.DTO;
 
 import com.example.nexosapp.enumerados.ESTADO;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EditarDesaparicionDTO {
-
-    @Enumerated(EnumType.ORDINAL)
-    private ESTADO estado;
+public class DesaparicionIndividualDTO {
+    private Integer id;
+    private List<String> fotos;
+    private String fecha;
     private String descripcion;
-    private LugarLatLongDTO lugarLatLongDTO;
+    private PersonaDTO persona;
+    private ESTADO estado;
+    private Boolean aprobada;
 }

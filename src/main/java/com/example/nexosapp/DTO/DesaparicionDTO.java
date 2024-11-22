@@ -12,10 +12,7 @@ import lombok.NoArgsConstructor;
 public class DesaparicionDTO {
     private String fecha;
     private String descripcion;
-    private ESTADO estado;
-    private Boolean aprobada;
     private PersonaDTO personaDTO;
-    private Integer id_usuario;
     private LugarDTO lugarDTO;
 }
 
