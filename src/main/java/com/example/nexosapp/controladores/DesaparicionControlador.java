@@ -84,9 +84,14 @@ public class DesaparicionControlador {
         return desaparicionServicio.paginaPrincipal();
     }
 
-    @PostMapping("/editarAutoridad")
-    public Desaparicion editarDesaparicionAutoridad(@RequestParam Integer id, @RequestBody EditarDesaparicionDTO editarDesaparicionDTO){
+    @PostMapping("/editarAutoridadDesaparicion")
+    public ResponseEntity<String> editarDesaparicionAutoridad(@RequestParam Integer id, @RequestBody EditarDesaparicionDTO editarDesaparicionDTO){
         return desaparicionServicio.editarDesaparicion(id, editarDesaparicionDTO);
+    }
+
+    @GetMapping("/getDesaparicionEditar")
+    public EditarDesaparicionDTO getDesaparicionEditar(@RequestParam Integer id){
+        return desaparicionServicio.getEditarDesaparicionDTO(id);
     }
 
     @PutMapping("/aprobar")
