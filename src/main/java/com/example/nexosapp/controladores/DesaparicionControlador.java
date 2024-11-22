@@ -8,6 +8,7 @@ import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
 import com.example.nexosapp.servicios.DesaparicionServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleState;
 import org.springframework.http.HttpStatus;
@@ -44,6 +45,7 @@ public class DesaparicionControlador {
 
     @PostMapping("/guardar")
     public ResponseEntity<Map<String, String>> guardarDesaparicion(
+            HttpServletRequest request,
             @RequestParam("desaparicion") String desaparicionJson,
             @RequestParam("files") List<MultipartFile> files) {
         try {
@@ -51,7 +53,7 @@ public class DesaparicionControlador {
             DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
 
 
-            desaparicionServicio.guardarDesaparicion(desaparicionDTO, files);
+            desaparicionServicio.guardarDesaparicion(request,desaparicionDTO, files);
 
 
             Map<String, String> response = new HashMap<>();

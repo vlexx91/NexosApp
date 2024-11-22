@@ -28,14 +28,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public AuthDTO login(@RequestBody UsuarioLogDTO usuarioDTO) {
-        Usuario usuario = (Usuario) usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
+        Usuario usuario = usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
         String apiKey = null;
         String mensaje;
         Boolean vereificado = false;
 
         if (usuario != null) {
             if (usuarioService.validarContrasenya(usuario, usuarioDTO.getContrasenya())) {
-
+                vereificado = usuario.getVerificado();
                 mensaje = "Usuario Logueado";
 
                 //Usuario sin token
@@ -64,12 +64,13 @@ public class AuthController {
             }
         } else {
             mensaje = "Usuario No encontrado";
+            vereificado = null;
         }
         return AuthDTO
                 .builder()
                 .token(apiKey)
                 .info(mensaje)
-                .verificado(usuario.getVerificado())
+                .verificado(vereificado)
                 .build();
     }
     @PostMapping("/register")

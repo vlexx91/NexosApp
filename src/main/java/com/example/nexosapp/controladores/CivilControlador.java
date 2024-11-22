@@ -1,5 +1,6 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.CivilConfirmarDTO;
 import com.example.nexosapp.DTO.CivilDTO;
 import com.example.nexosapp.DTO.DesaparicionListaDTO;
 import com.example.nexosapp.DTO.UsuarioMenuDTO;
@@ -72,5 +73,9 @@ public class CivilControlador {
     @PostMapping("/verificar")
     public ResponseEntity verificar(@RequestParam Integer id) throws MessagingException {
         return civilServicio.verificarUsuario(id);
+    }
+    @GetMapping("/listaVerificar")
+    public List<CivilConfirmarDTO> listaVerificar(){
+        return civilServicio.getCivilesSinConfirmar();
     }
 }

@@ -9,6 +9,8 @@ import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
+import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,6 +34,7 @@ public class DesaparicionServicio {
     private CloudinaryService cloudinaryService;
     private AutoridadServicio autoridadServicio;
     private UsuarioRepositorio usuarioRepositorio;
+    private JWTservice jwtService;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -112,8 +115,10 @@ public class DesaparicionServicio {
      * @param dto
      * @return
      */
-    public Desaparicion guardarDesaparicion(DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
+    public Desaparicion guardarDesaparicion(HttpServletRequest request, DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
+        desaparicion.setUsuario(usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null));
+
         LocalDate fechaHoy = LocalDate.now();
         if (desaparicion.getFecha().isAfter(fechaHoy)) {
             throw new IllegalArgumentException("La fecha de desaparición no puede ser posterior a la fecha actual.");

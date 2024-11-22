@@ -243,4 +243,7 @@ public class CivilServicio {
         return ResponseEntity.ok("Usuario verificado");
     }
 
+    public List<CivilConfirmarDTO> getCivilesSinConfirmar(){
+        return civilRepositorio.findByUsuarioVerificadoFalse().stream().map(c -> new CivilConfirmarDTO(c.getNombre(),c.getApellido(), c.getDni(), c.getUsuario().getUsuario())).toList();
+    }
 }

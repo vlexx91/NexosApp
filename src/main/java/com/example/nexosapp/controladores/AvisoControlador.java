@@ -7,7 +7,9 @@ import com.example.nexosapp.modelos.Aviso;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.AvisoServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -34,7 +36,7 @@ public class AvisoControlador {
     public Aviso guardar(@RequestBody Aviso aviso){
         return avisoSercicio.guardar(aviso);
     }
-    @DeleteMapping()
+    @DeleteMapping("/eliminar")
     public String eliminar(@RequestParam Integer id) {
         return avisoSercicio.eliminar(id);
     }
@@ -46,9 +48,11 @@ public class AvisoControlador {
     }
 
     @PostMapping("/crearAviso")
-    public Aviso guardarAviso(@RequestParam("aviso") String avisoJson, @RequestParam(value = "files",required = false) List<MultipartFile> files) throws IOException {
+    public ResponseEntity<String> guardarAviso(HttpServletRequest request, @RequestParam("aviso") String avisoJson, @RequestParam(value = "files",required = false) List<MultipartFile> files) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         CrearAvisoDTO crearAvisoDTO = objectMapper.readValue(avisoJson, CrearAvisoDTO.class);
-        return avisoSercicio.nuevoAviso(crearAvisoDTO, files);
+        return avisoSercicio.nuevoAviso(request,crearAvisoDTO, files);
     }
+
+
 }
