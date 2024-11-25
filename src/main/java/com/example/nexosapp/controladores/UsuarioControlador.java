@@ -10,7 +10,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuario")
@@ -58,7 +60,24 @@ public class UsuarioControlador {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/rol/{rol}")
+    public String getRol(@PathVariable("rol") String rol) {
+        return usuarioService.getRol(rol);
+    }
 
 
 
+
+    @DeleteMapping("/eliminar")
+    public ResponseEntity<Map<String, String>> eliminaUsuarioId(@RequestParam Integer id){
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", usuarioService.eliminaUsuarioIdCivil(id));
+        return ResponseEntity.ok(respuesta);
+    }
+    @PutMapping("/verifica")
+    public ResponseEntity<Map<String, String>> verificaUsuarioId(@RequestParam Integer id){
+        Map<String, String> respuesta = new HashMap<>();
+        respuesta.put("mensaje", usuarioService.verificaUsuarioId(id));
+        return ResponseEntity.ok(respuesta);
+    }
 }

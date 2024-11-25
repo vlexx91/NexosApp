@@ -181,6 +181,20 @@ public class UsuarioService implements UserDetailsService {
         return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
     }
 
+    /**
+     * Obtiene el rol de un usuario
+     * @param usuario
+     * @return
+     */
+
+    public String getRol(String usuario){
+        Usuario usuario1 = usuarioRepositorio.findTopByUsuario(usuario).orElse(null);
+        if (usuario1 == null){
+            return "Usuario no encontrado";
+        }
+        return usuario1.getRol().toString();
+    }
+
 //    public String guardarUsario(UsuarioDTO usuarioDTO){
 //        if (usuarioDTO.getContrasenya() !=usuarioDTO.getRepContrasenya()){
 //            return "Las contraseñas no coinciden";
@@ -197,5 +211,25 @@ public class UsuarioService implements UserDetailsService {
 //        usuarioRepositorio.save(usuario);
 //        return "Usuario creado correctamente";
 //    }
+    public String eliminaUsuarioId(Integer id){
+        try {
+            usuarioRepositorio.deleteById(id);
+            return "Usuario eliminado.";
+
+        } catch (Exception e){
+            return "No se ha podido elimar.";
+        }
+    }
+
+    public String verificaUsuarioId(Integer id) {
+        try {
+            Usuario u = usuarioRepositorio.findById(id).orElse(null);
+            u.setVerificado(true);
+            usuarioRepositorio.save(u);
+            return "Usuario verificado";
+        } catch (Exception e){
+            return "No se ha podido verificar el usuario";
+        }
+    }
 }
 
