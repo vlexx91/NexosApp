@@ -12,4 +12,5 @@ public class CivilConfirmarDTO {
     private String apellido;
     private String dni;
     private String nombreUsuario;
+    private Integer idUsuario;
 }
