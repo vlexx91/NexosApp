@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.AvisoDTO;
+import com.example.nexosapp.DTO.AvisoDTOAutoridadAdmin;
 import com.example.nexosapp.DTO.CrearAvisoDTO;
 import com.example.nexosapp.DTO.FotoUrlDTO;
 import com.example.nexosapp.modelos.Aviso;
@@ -9,8 +10,10 @@ import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.modelos.Foto;
 import com.example.nexosapp.repositorios.AvisoRepositorio;
 import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -60,28 +63,34 @@ public class AvisoServicio {
 
     public String eliminar(Integer id) {
         String mensaje;
+
         Aviso aviso = getAvisoId(id);
-        if (aviso == null){
+        if (aviso == null) {
             return "No existe ese aviso";
         }
-        try {
 
-            for(Foto f : aviso.getFotos()){
-                aviso.getFotos().remove(f);
-            }
+        try {
+            // Si necesitas romper la relación entre Aviso y Fotos:
+            aviso.getFotos().clear();
             avisoRepositorio.saveAndFlush(aviso);
+
+            // Ahora elimina el aviso
             avisoRepositorio.deleteById(id);
-            aviso = getAvisoId(id);
-            if (aviso!= null){
+
+            // Verifica si el aviso aún existe
+            if (avisoRepositorio.existsById(id)) {
                 mensaje = "No se ha podido eliminar el aviso.";
             } else {
                 mensaje = "Eliminado correctamente.";
             }
         } catch (Exception e) {
+            e.printStackTrace();
             mensaje = "No se ha podido eliminar el aviso.";
         }
+
         return mensaje;
     }
+
 
     /**
      * Muestra todos los avisos para la pagina principal
@@ -103,7 +112,7 @@ public class AvisoServicio {
                 fotoUrlDTO.add(fotoDTO);
             }
             avisoDTO.setFotos(fotoUrlDTO);
-            avisoDTO.setUsuarioId(a.getUsuario().getId());
+            avisoDTO.setId_usuario(a.getUsuario().getId());
 
             avisoDTOS.add(avisoDTO);
         }
@@ -114,8 +123,9 @@ public class AvisoServicio {
      * Crear un aviso
      */
 
-    public Aviso nuevoAviso(CrearAvisoDTO avisoDTO, List<MultipartFile> files) throws IOException {
+    public ResponseEntity<String> nuevoAviso(HttpServletRequest request, CrearAvisoDTO avisoDTO, List<MultipartFile> files) throws IOException {
         Aviso avisosave = new Aviso();
+        Integer id = jwTservice.extraerDatosHeader(request).getIdUsuario();
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fecha = LocalDate.parse(avisoDTO.getFecha(), formatter);
@@ -123,7 +133,7 @@ public class AvisoServicio {
 
         avisosave.setFecha(fecha);
         avisosave.setTexto(avisoDTO.getTexto());
-        avisosave.setUsuario(usuarioService.getUsuarioId(avisoDTO.getId_usuario()));
+        avisosave.setUsuario(usuarioService.getUsuarioId(id));
 
         if (files != null && files.stream().anyMatch(file -> !file.isEmpty())) {
             Set<Foto> listaFotos = new HashSet<>();
@@ -139,6 +149,30 @@ public class AvisoServicio {
 
         }
 
-        return avisoRepositorio.save(avisosave);
+        avisoRepositorio.save(avisosave);
+
+        return ResponseEntity.ok("Aviso creado con éxito") ;
     }
+
+
+    /**
+     * Lista avisos para AvisoDTOAutoridad
+     */
+
+    public List<AvisoDTOAutoridadAdmin> listarAdminAvisos(){
+        List<AvisoDTOAutoridadAdmin> avisoDTOS= new ArrayList<>();
+        List<Aviso> avisos = avisoRepositorio.findAll();
+
+        for (Aviso a : avisos){
+            AvisoDTOAutoridadAdmin avisoDTO = new AvisoDTOAutoridadAdmin();
+            avisoDTO.setFecha(a.getFecha());
+            avisoDTO.setTexto(a.getTexto());
+            avisoDTO.setId(a.getId());
+            avisoDTO.setUsername(usuarioService.getUsuarioId(a.getUsuario().getId()).getUsername());
+
+            avisoDTOS.add(avisoDTO);
+        }
+        return avisoDTOS;
+    }
+
 }

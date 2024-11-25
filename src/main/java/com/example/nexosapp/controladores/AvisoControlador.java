@@ -1,18 +1,22 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.AvisoDTO;
+import com.example.nexosapp.DTO.AvisoDTOAutoridadAdmin;
 import com.example.nexosapp.DTO.CrearAvisoDTO;
 import com.example.nexosapp.DTO.DesaparicionDTO;
 import com.example.nexosapp.modelos.Aviso;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.servicios.AvisoServicio;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/aviso")
@@ -34,7 +38,7 @@ public class AvisoControlador {
     public Aviso guardar(@RequestBody Aviso aviso){
         return avisoSercicio.guardar(aviso);
     }
-    @DeleteMapping()
+    @DeleteMapping("/eliminar")
     public String eliminar(@RequestParam Integer id) {
         return avisoSercicio.eliminar(id);
     }
@@ -46,9 +50,16 @@ public class AvisoControlador {
     }
 
     @PostMapping("/crearAviso")
-    public Aviso guardarAviso(@RequestParam("aviso") String avisoJson, @RequestParam(value = "files",required = false) List<MultipartFile> files) throws IOException {
+    public ResponseEntity<String> guardarAviso(HttpServletRequest request, @RequestParam("aviso") String avisoJson, @RequestParam(value = "files",required = false) List<MultipartFile> files) throws IOException {
         ObjectMapper objectMapper = new ObjectMapper();
         CrearAvisoDTO crearAvisoDTO = objectMapper.readValue(avisoJson, CrearAvisoDTO.class);
-        return avisoSercicio.nuevoAviso(crearAvisoDTO, files);
+        return avisoSercicio.nuevoAviso(request,crearAvisoDTO, files);
     }
+
+    @GetMapping("/listarAvisosAdmin")
+    public List<AvisoDTOAutoridadAdmin> listarAdminAvisos(){
+        return avisoSercicio.listarAdminAvisos();
+    }
+
+
 }

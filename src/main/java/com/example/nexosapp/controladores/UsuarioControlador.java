@@ -60,6 +60,14 @@ public class UsuarioControlador {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/rol/{rol}")
+    public String getRol(@PathVariable("rol") String rol) {
+        return usuarioService.getRol(rol);
+    }
+
+
+
+
     @DeleteMapping("/eliminar")
     public ResponseEntity<Map<String, String>> eliminaUsuarioId(@RequestParam Integer id){
         Map<String, String> respuesta = new HashMap<>();
