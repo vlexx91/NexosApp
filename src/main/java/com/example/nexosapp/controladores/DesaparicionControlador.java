@@ -78,7 +78,7 @@ public class DesaparicionControlador {
     }
 
     @DeleteMapping()
-    public String eliminar(@RequestParam Integer id) {
+    public ResponseEntity<String> eliminar(@RequestParam Integer id) {
         return desaparicionServicio.eliminar(id);
     }
 
@@ -133,6 +133,16 @@ public class DesaparicionControlador {
             @RequestParam String nombre) {
 
         return desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
+    }
+
+    @GetMapping("/eliminadas")
+    public List<DesaparicionSinVerificarDTO> getDesaparicionesEliminadas(){
+        return desaparicionServicio.listaEliminadas();
+    }
+
+    @PostMapping("/recuperar")
+    public ResponseEntity<String> recuperarDesaparicion(@RequestParam Integer id){
+        return desaparicionServicio.recuperarEliminacion(id);
     }
 
 

@@ -36,11 +36,9 @@ import java.util.function.Predicate;
 public class DesaparicionServicio {
     private DesaparicionRepositorio desaparicionRepositorio;
     private DesaparicionMapeador desaparicionMapeador;
-    private LugarMapeador lugarMapeador;
     private LugarServicio lugarServicio;
     private OpenCageService openCageService;
     private CloudinaryService cloudinaryService;
-    private AutoridadServicio autoridadServicio;
     private UsuarioRepositorio usuarioRepositorio;
     private JWTservice jwtService;
     @PersistenceContext
@@ -78,11 +76,11 @@ public class DesaparicionServicio {
      * @param id
      * @return
      */
-    public String eliminar(Integer id) {
+    public ResponseEntity<String> eliminar(Integer id) {
         String mensaje;
         Desaparicion desaparicion = getDesaparicionId(id);
         if (desaparicion == null){
-            return "No existe ese usuario";
+            return ResponseEntity.badRequest().body("No existe ese usuario");
         }
         try {
             //aqui primero limpio las desapariciones que sigue el usuario y luego elimino de las relaciones de segimiento de otros  usuarios con esa desaparicion
@@ -94,14 +92,14 @@ public class DesaparicionServicio {
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
             if (desaparicion!= null){
-                mensaje = "No se ha podido eliminar la desaparición correcmente.";
+                mensaje = "No se ha podido eliminar la desaparición correctamente.";
             } else {
                 mensaje = "Eliminado correctamente.";
             }
         } catch (Exception e) {
             mensaje = "No se ha podido eliminar la desaparición.";
         }
-        return mensaje;
+        return ResponseEntity.ok(mensaje);
     }
 
     /**
@@ -349,6 +347,25 @@ public class DesaparicionServicio {
 
     public List<DesaparicionSinVerificarDTO> getSinAprobar(){
         List<Desaparicion> desapariciones = desaparicionRepositorio.findAllByAprobadaIsFalseAndEliminadaIsFalse();
+        return getDesaparicionSinVerificarDTOS(desapariciones);
+    }
+
+    /**
+     * Método que devuelve una lista de desapariciones eliminadas
+     * @return
+     */
+
+    public List<DesaparicionSinVerificarDTO> listaEliminadas(){
+        List<Desaparicion> desapariciones = desaparicionRepositorio.findAllByEliminadaIsTrue();
+        return getDesaparicionSinVerificarDTOS(desapariciones);
+    }
+
+    /**
+     * metodo qye genera dtos para enviar al front
+     * @param desapariciones
+     * @return
+     */
+    private List<DesaparicionSinVerificarDTO> getDesaparicionSinVerificarDTOS(List<Desaparicion> desapariciones) {
         List<DesaparicionSinVerificarDTO> devolucion = new ArrayList<>();
         desapariciones.forEach(d->{
             DesaparicionSinVerificarDTO dto = new DesaparicionSinVerificarDTO();
@@ -359,6 +376,16 @@ public class DesaparicionServicio {
             devolucion.add(dto);
         });
         return devolucion;
+    }
+
+    public ResponseEntity<String> recuperarEliminacion(Integer id) {
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+        if (desaparicion == null){
+            return ResponseEntity.badRequest().body("No existe esa desaparición");
+        }
+        desaparicion.setEliminada(false);
+        desaparicionRepositorio.save(desaparicion);
+        return ResponseEntity.ok("Desaparición recuperada");
     }
 //    public List<Desaparicion> filtrarDesapariciones(LocalDate fecha, ESTADO estado, String provincia,
 //                                                    String dni, String nombrePersona, String apellidoPersona, Sexo sexo) {

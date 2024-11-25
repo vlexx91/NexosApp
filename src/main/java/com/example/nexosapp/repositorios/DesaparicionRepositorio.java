@@ -19,6 +19,7 @@ public interface DesaparicionRepositorio extends JpaRepository<Desaparicion, Int
     List<Desaparicion> findTop10ByEliminadaIsFalseAndAprobadaIsTrueAndEstadoOrderByFechaDesc(ESTADO estado);
     List<Desaparicion> findAllByEliminadaIsFalse();
     List<Desaparicion> findAllByAprobadaIsFalseAndEliminadaIsFalse();
+    List<Desaparicion> findAllByEliminadaIsTrue();
 
 
 
