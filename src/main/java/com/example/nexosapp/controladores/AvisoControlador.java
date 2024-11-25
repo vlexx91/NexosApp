@@ -1,6 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.AvisoDTO;
+import com.example.nexosapp.DTO.AvisoDTOAutoridadAdmin;
 import com.example.nexosapp.DTO.CrearAvisoDTO;
 import com.example.nexosapp.DTO.DesaparicionDTO;
 import com.example.nexosapp.modelos.Aviso;
@@ -15,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/aviso")
@@ -52,6 +54,11 @@ public class AvisoControlador {
         ObjectMapper objectMapper = new ObjectMapper();
         CrearAvisoDTO crearAvisoDTO = objectMapper.readValue(avisoJson, CrearAvisoDTO.class);
         return avisoSercicio.nuevoAviso(request,crearAvisoDTO, files);
+    }
+
+    @GetMapping("/listarAvisosAdmin")
+    public List<AvisoDTOAutoridadAdmin> listarAdminAvisos(){
+        return avisoSercicio.listarAdminAvisos();
     }
 
 

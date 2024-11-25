@@ -208,5 +208,25 @@ public class UsuarioService implements UserDetailsService {
 //        usuarioRepositorio.save(usuario);
 //        return "Usuario creado correctamente";
 //    }
+    public String eliminaUsuarioId(Integer id){
+        try {
+            usuarioRepositorio.deleteById(id);
+            return "Usuario eliminado.";
+
+        } catch (Exception e){
+            return "No se ha podido elimar.";
+        }
+    }
+
+    public String verificaUsuarioId(Integer id) {
+        try {
+            Usuario u = usuarioRepositorio.findById(id).orElse(null);
+            u.setVerificado(true);
+            usuarioRepositorio.save(u);
+            return "Usuario verificado";
+        } catch (Exception e){
+            return "No se ha podido verificar el usuario";
+        }
+    }
 }
 
