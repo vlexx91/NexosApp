@@ -50,7 +50,7 @@ public class Usuario implements UserDetails {
     @OneToOne(mappedBy = "usuario", fetch = FetchType.LAZY)
     private Token token;
 
-@ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
+    @ManyToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Desaparicion.class)    @JoinTable(name = "usuario_desaparicion", schema = "nexo_app", catalog = "postgres",
             joinColumns = {@JoinColumn(name = "id_usuario", nullable = false)},
             inverseJoinColumns = {@JoinColumn(name = "id_desaparicion", nullable = false)})
     private Set<Desaparicion> desapariciones;

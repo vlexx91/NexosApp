@@ -1,10 +1,14 @@
 package com.example.nexosapp.servicios;
 
+import com.example.nexosapp.DTO.CrearAutoridadDTO;
+import com.example.nexosapp.enumerados.ROL;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
+import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
 import lombok.AllArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +17,7 @@ import java.util.List;
 public class AutoridadServicio {
 
     private AutoridadRepositorio autoridadRepositorio;
+    private PasswordEncoder passwordEncoder;
 
     /**
      * Guardar autoridad
@@ -68,4 +73,24 @@ public class AutoridadServicio {
         return mensaje;
     }
 
+    /**
+     * Servicio para crear Autoridad
+     */
+
+    public Autoridad crearAutoridad(CrearAutoridadDTO crearAutoridadDTO) {
+        Autoridad autoridad = new Autoridad();
+
+        autoridad.setIdentificador(crearAutoridadDTO.getIdentificador());
+
+        Usuario usuario = new Usuario();
+        usuario.setUsuario(crearAutoridadDTO.getUsuarioCrearDTO().getUsuario());
+        usuario.setEmail(crearAutoridadDTO.getUsuarioCrearDTO().getEmail());
+        usuario.setContrasenya(passwordEncoder.encode(crearAutoridadDTO.getUsuarioCrearDTO().getContrasenya()));
+        usuario.setRol(ROL.AUTORIDAD);
+        usuario.setVerificado(true);
+
+        autoridad.setUsuario(usuario);
+
+        return autoridadRepositorio.save(autoridad);
+    }
 }

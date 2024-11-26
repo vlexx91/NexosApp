@@ -60,6 +60,11 @@ public class UsuarioControlador {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/listaUsuarios")
+    public List<UsuarioAdminListaDTO> listaUsuarios(){
+        return usuarioService.usuarioAdminLista();
+    }
+
     @GetMapping("/rol/")
     public String getRol(HttpServletRequest request) {
         return usuarioService.getRol(request);

@@ -1,8 +1,9 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.*;
-import com.example.nexosapp.modelos.Autoridad;
-import com.example.nexosapp.modelos.Desaparicion;
+import com.example.nexosapp.enumerados.ESTADO;
+import com.example.nexosapp.enumerados.Sexo;
+import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
@@ -11,15 +12,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
 import org.apache.catalina.LifecycleState;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/desaparicion")
@@ -44,35 +48,34 @@ public class DesaparicionControlador {
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<Map<String, String>> guardarDesaparicion(
+    public ResponseEntity<String> guardarDesaparicion(
             HttpServletRequest request,
             @RequestParam("desaparicion") String desaparicionJson,
             @RequestParam("files") List<MultipartFile> files) {
         try {
+
             ObjectMapper objectMapper = new ObjectMapper();
             DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
 
 
-            desaparicionServicio.guardarDesaparicion(request,desaparicionDTO, files);
+            desaparicionServicio.guardarDesaparicion(request, desaparicionDTO, files);
 
 
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Desaparición creada");
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Desaparición creada con éxito");
         } catch (IOException e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Error al procesar los datos de la desaparición: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al procesar los datos de la desaparición: " + e.getMessage());
         } catch (Exception e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Error al guardar la desaparición: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al guardar la desaparición: " + e.getMessage());
         }
     }
 
+
     @DeleteMapping()
-    public String eliminar(@RequestParam Integer id) {
+    public ResponseEntity<String> eliminar(@RequestParam Integer id) {
         return desaparicionServicio.eliminar(id);
     }
 
@@ -120,6 +123,45 @@ public class DesaparicionControlador {
     public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
         return desaparicionServicio.getSinAprobar();
     }
+    @GetMapping("/filtrar")
+    public ResponseEntity<?> buscarPorFechaEstadoYNombre(
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+            @RequestParam(required = false) String nombre) {
+
+        if (estado == null && nombre == null) {
+            return ResponseEntity.badRequest().body("Debe proporcionar al menos un criterio de búsqueda.");
+        }
+
+        List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
+
+        List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
+            Map<String, Object> result = new HashMap<>();
+            result.put("nombre", desaparicion.getPersona().getNombre());
+            result.put("apellidos", desaparicion.getPersona().getApellido());
+            result.put("fecha", desaparicion.getFecha());
+            result.put("foto", desaparicion.getPersona().getFotos()
+                    .stream()
+                    .findFirst()
+                    .map(Foto::getUrl)
+                    .orElse("default.jpg"));
+            return result;
+        }).toList();
+
+        return ResponseEntity.ok(resultados);
+    }
+
+    @GetMapping("/eliminadas")
+    public List<DesaparicionSinVerificarDTO> getDesaparicionesEliminadas(){
+        return desaparicionServicio.listaEliminadas();
+    }
+
+    @PostMapping("/recuperar")
+    public ResponseEntity<String> recuperarDesaparicion(@RequestParam Integer id){
+        return desaparicionServicio.recuperarEliminacion(id);
+    }
+
+
 
 
 }
