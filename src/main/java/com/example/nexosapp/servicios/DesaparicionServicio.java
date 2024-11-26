@@ -131,7 +131,7 @@ public class DesaparicionServicio {
      * @param dto
      * @return
      */
-    public Desaparicion guardarDesaparicion(HttpServletRequest request, DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
+    public ResponseEntity<String> guardarDesaparicion(HttpServletRequest request, DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
         desaparicion.setUsuario(usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null));
         desaparicion.setAprobada(desaparicion.getUsuario().getRol() == ROL.AUTORIDAD);
@@ -164,7 +164,7 @@ public class DesaparicionServicio {
         desaparicion.getPersona().setFotos(listaFotos);
         desaparicion.setEliminada(false);
         desaparicionRepositorio.save(desaparicion);
-        return desaparicion;
+        return ResponseEntity.ok("Desaparicion creada con exito");
     }
 
     /**

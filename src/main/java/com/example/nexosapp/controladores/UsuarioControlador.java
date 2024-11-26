@@ -1,9 +1,11 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.seguridad.JWTservice;
 import com.example.nexosapp.seguridad.filter.JWTFilter;
+import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import com.example.nexosapp.servicios.UsuarioService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
@@ -60,6 +62,10 @@ public class UsuarioControlador {
         return ResponseEntity.ok().build();
     }
 
+    @GetMapping("/listaUsuarios")
+    public List<UsuarioAdminListaDTO> listaUsuarios(){
+        return usuarioService.usuarioAdminLista();
+    }
     @GetMapping("/rol/{rol}")
     public String getRol(@PathVariable("rol") String rol) {
         return usuarioService.getRol(rol);
