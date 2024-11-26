@@ -60,9 +60,9 @@ public class UsuarioControlador {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/rol/{rol}")
-    public String getRol(@PathVariable("rol") String rol) {
-        return usuarioService.getRol(rol);
+    @GetMapping("/rol/")
+    public String getRol(HttpServletRequest request) {
+        return usuarioService.getRol(request);
     }
 
 

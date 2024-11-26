@@ -184,8 +184,8 @@ public class UsuarioService implements UserDetailsService {
      * @return
      */
 
-    public String getRol(String usuario){
-        Usuario usuario1 = usuarioRepositorio.findTopByUsuario(usuario).orElse(null);
+    public String getRol(HttpServletRequest request){
+        Usuario usuario1 = usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null);
         if (usuario1 == null){
             return "Usuario no encontrado";
         }
