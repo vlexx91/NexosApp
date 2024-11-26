@@ -8,6 +8,7 @@ import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
+import com.example.nexosapp.repositorios.ComentarioRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import com.example.nexosapp.seguridad.JWTservice;
@@ -34,6 +35,7 @@ public class DesaparicionServicio {
     private CloudinaryService cloudinaryService;
     private UsuarioRepositorio usuarioRepositorio;
     private JWTservice jwtService;
+    private ComentarioRepositorio comentarioRepositorio;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -80,6 +82,10 @@ public class DesaparicionServicio {
                 u.getDesapariciones().remove(desaparicion);
                 usuarioRepositorio.save(u);
             }
+
+            List<Comentario> comentarios = comentarioRepositorio.findByDesaparicionId(id);
+            comentarioRepositorio.deleteAll(comentarios);
+
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
             if (desaparicion!= null){
