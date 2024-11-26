@@ -137,6 +137,7 @@ public class DesaparicionControlador {
 
         List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
             Map<String, Object> result = new HashMap<>();
+            result.put("id", desaparicion.getId());
             result.put("nombre", desaparicion.getPersona().getNombre());
             result.put("apellidos", desaparicion.getPersona().getApellido());
             result.put("fecha", desaparicion.getFecha());
