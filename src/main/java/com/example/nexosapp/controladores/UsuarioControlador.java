@@ -1,6 +1,7 @@
 package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.seguridad.JWTservice;
 import com.example.nexosapp.seguridad.filter.JWTFilter;
