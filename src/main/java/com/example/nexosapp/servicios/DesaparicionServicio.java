@@ -2,6 +2,7 @@ package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.enumerados.ESTADO;
+import com.example.nexosapp.enumerados.ROL;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.*;
@@ -116,7 +117,7 @@ public class DesaparicionServicio {
     public Desaparicion guardarDesaparicion(HttpServletRequest request, DesaparicionDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
         desaparicion.setUsuario(usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null));
-
+        desaparicion.setAprobada(desaparicion.getUsuario().getRol() == ROL.AUTORIDAD);
         LocalDate fechaHoy = LocalDate.now();
         if (desaparicion.getFecha().isAfter(fechaHoy)) {
             throw new IllegalArgumentException("La fecha de desaparición no puede ser posterior a la fecha actual.");
@@ -129,7 +130,7 @@ public class DesaparicionServicio {
         desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
         desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
         desaparicion.getUsuario().getDesaparicionCreada().add(desaparicion);
-        desaparicion.setAprobada(false);
+
         desaparicion.setEstado(ESTADO.DESAPARECIDO);
         Set<Foto> listaFotos = new HashSet<>();
         for (MultipartFile f : files){
