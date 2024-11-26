@@ -12,6 +12,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FiltroDTO {
+        private Integer id;
         private String dni;
         private String nombre;
         private String apellidos;
