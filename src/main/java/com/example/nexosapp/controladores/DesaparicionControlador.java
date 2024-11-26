@@ -44,32 +44,31 @@ public class DesaparicionControlador {
     }
 
     @PostMapping("/guardar")
-    public ResponseEntity<Map<String, String>> guardarDesaparicion(
+    public ResponseEntity<String> guardarDesaparicion(
             HttpServletRequest request,
             @RequestParam("desaparicion") String desaparicionJson,
             @RequestParam("files") List<MultipartFile> files) {
         try {
+
             ObjectMapper objectMapper = new ObjectMapper();
             DesaparicionDTO desaparicionDTO = objectMapper.readValue(desaparicionJson, DesaparicionDTO.class);
 
 
-            desaparicionServicio.guardarDesaparicion(request,desaparicionDTO, files);
+            desaparicionServicio.guardarDesaparicion(request, desaparicionDTO, files);
 
 
-            Map<String, String> response = new HashMap<>();
-            response.put("message", "Desaparición creada");
-
-            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Desaparición creada con éxito");
         } catch (IOException e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Error al procesar los datos de la desaparición: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al procesar los datos de la desaparición: " + e.getMessage());
         } catch (Exception e) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Error al guardar la desaparición: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al guardar la desaparición: " + e.getMessage());
         }
     }
+
 
     @DeleteMapping()
     public ResponseEntity<String> eliminar(@RequestParam Integer id) {
