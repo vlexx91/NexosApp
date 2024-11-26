@@ -19,6 +19,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -418,16 +419,23 @@ public class DesaparicionServicio {
 //    );
 //}
 public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String estado, String nombre) {
-    ESTADO estadoEnum = ESTADO.valueOf(estado);  // Convertir el String a Enum
+    ESTADO estadoEnum = null;
+    if (estado != null && !estado.isEmpty()) {
+        try {
+            estadoEnum = ESTADO.valueOf(estado);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("El estado proporcionado no es válido: " + estado);
+        }
+    }
 
-    String jpql = "SELECT d FROM Desaparicion d WHERE d.fecha = :fecha AND d.estado = :estado AND d.persona.nombre LIKE :nombre";
-    TypedQuery<Desaparicion> query = entityManager.createQuery(jpql, Desaparicion.class);
-
-    query.setParameter("fecha", fecha);
-    query.setParameter("estado", estadoEnum);  // Usar el valor Enum
-    query.setParameter("nombre", "%" + nombre + "%");  // Usar "%" para la búsqueda parcial
-
-    return query.getResultList();
+    if(fecha== null){
+        return desaparicionRepositorio.buscarPorEstadoYNombre(estadoEnum,nombre);
+    }else{
+        return desaparicionRepositorio.buscarPorFechaEstadoYNombre(fecha,estadoEnum,nombre);
+    }
 }
+
+
+
 }
 

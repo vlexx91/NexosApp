@@ -3,10 +3,7 @@ package com.example.nexosapp.controladores;
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.enumerados.ESTADO;
 import com.example.nexosapp.enumerados.Sexo;
-import com.example.nexosapp.modelos.Autoridad;
-import com.example.nexosapp.modelos.Desaparicion;
-import com.example.nexosapp.modelos.Lugar;
-import com.example.nexosapp.modelos.Persona;
+import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.repositorios.AutoridadRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.servicios.AutoridadServicio;
@@ -26,6 +23,7 @@ import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/desaparicion")
@@ -127,12 +125,31 @@ public class DesaparicionControlador {
         return desaparicionServicio.getSinAprobar();
     }
     @GetMapping("/filtrar")
-    public List<Desaparicion> buscarPorFechaEstadoYNombre(
-            @RequestParam LocalDate fecha,
-            @RequestParam String estado,
-            @RequestParam String nombre) {
+    public ResponseEntity<?> buscarPorFechaEstadoYNombre(
+            @RequestParam(required = false) String estado,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+            @RequestParam(required = false) String nombre) {
 
-        return desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
+        if (estado == null && nombre == null) {
+            return ResponseEntity.badRequest().body("Debe proporcionar al menos un criterio de búsqueda.");
+        }
+
+        List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
+
+        List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
+            Map<String, Object> result = new HashMap<>();
+            result.put("nombre", desaparicion.getPersona().getNombre());
+            result.put("apellidos", desaparicion.getPersona().getApellido());
+            result.put("fecha", desaparicion.getFecha());
+            result.put("foto", desaparicion.getPersona().getFotos()
+                    .stream()
+                    .findFirst()
+                    .map(Foto::getUrl)
+                    .orElse("default.jpg"));
+            return result;
+        }).toList();
+
+        return ResponseEntity.ok(resultados);
     }
 
     @GetMapping("/eliminadas")
@@ -144,6 +161,8 @@ public class DesaparicionControlador {
     public ResponseEntity<String> recuperarDesaparicion(@RequestParam Integer id){
         return desaparicionServicio.recuperarEliminacion(id);
     }
+
+
 
 
 }
