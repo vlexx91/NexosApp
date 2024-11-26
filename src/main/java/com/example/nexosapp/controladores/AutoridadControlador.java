@@ -1,5 +1,6 @@
 package com.example.nexosapp.controladores;
 
+import com.example.nexosapp.DTO.CrearAutoridadDTO;
 import com.example.nexosapp.modelos.Autoridad;
 import com.example.nexosapp.servicios.AutoridadServicio;
 import lombok.AllArgsConstructor;
@@ -33,4 +34,7 @@ public class AutoridadControlador {
     public String eliminar(@RequestParam Integer id) {
         return autoridadServicio.eliminar(id);
     }
+
+    @PostMapping("/crearAutoridad")
+    public Autoridad crearAutoridad (@RequestBody CrearAutoridadDTO crearAutoridadDTO) {return autoridadServicio.crearAutoridad(crearAutoridadDTO);}
 }
