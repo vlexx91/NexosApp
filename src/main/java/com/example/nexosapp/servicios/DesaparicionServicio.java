@@ -3,16 +3,25 @@ package com.example.nexosapp.servicios;
 import com.example.nexosapp.DTO.*;
 import com.example.nexosapp.enumerados.ESTADO;
 import com.example.nexosapp.enumerados.ROL;
+import com.example.nexosapp.enumerados.Sexo;
 import com.example.nexosapp.mapeadores.DesaparicionMapeador;
 import com.example.nexosapp.mapeadores.LugarMapeador;
 import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.recursos.OpenCageService;
+import com.example.nexosapp.repositorios.ComentarioRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import com.example.nexosapp.seguridad.JWTservice;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -23,6 +32,7 @@ import java.util.List;
 import java.util.Map;
 import java.io.IOException;
 import java.util.*;
+import java.util.function.Predicate;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +44,9 @@ public class DesaparicionServicio {
     private CloudinaryService cloudinaryService;
     private UsuarioRepositorio usuarioRepositorio;
     private JWTservice jwtService;
+    @PersistenceContext
+    private EntityManager entityManager;
+    private ComentarioRepositorio comentarioRepositorio;
 
     /**
      * Método que devuelve una lista de desapariciones
@@ -80,6 +93,10 @@ public class DesaparicionServicio {
                 u.getDesapariciones().remove(desaparicion);
                 usuarioRepositorio.save(u);
             }
+
+            List<Comentario> comentarios = comentarioRepositorio.findByDesaparicionId(id);
+            comentarioRepositorio.deleteAll(comentarios);
+
             desaparicionRepositorio.deleteById(id);
             desaparicion = getDesaparicionId(id);
             if (desaparicion!= null){
@@ -378,5 +395,54 @@ public class DesaparicionServicio {
         desaparicionRepositorio.save(desaparicion);
         return ResponseEntity.ok("Desaparición recuperada");
     }
+//    public List<Desaparicion> filtrarDesapariciones(LocalDate fecha, ESTADO estado, String provincia,
+//                                                    String dni, String nombrePersona, String apellidoPersona, Sexo sexo) {
+//        if (estado == null) {
+//            estado = ESTADO.DESAPARECIDO;
+//        }
+//
+//        if (sexo == null) {
+//            sexo = Sexo.HOMBRE;
+//        }
+//        return desaparicionRepositorio.buscarDesapariciones(fecha, estado.ordinal(), provincia, dni, nombrePersona, apellidoPersona,sexo.ordinal());
+//    }
+//public List<Desaparicion> buscarDesapariciones(LocalDate fecha, Integer estadoOrdinal, String provincia,
+//                                               String dni, String nombrePersona, String apellidoPersona, Integer sexo) {
+//    ESTADO estado = estadoOrdinal != null ? ESTADO.values()[estadoOrdinal] : null;
+//    return desaparicionRepositorio.buscarDesapariciones(fecha, estadoOrdinal, provincia, dni, nombrePersona, apellidoPersona, sexo);
+//}
+
+//public List<Desaparicion> buscarConFiltros(FiltroDTO filtro) {
+//    return desaparicionRepositorio.buscarConFiltros(
+//            filtro.getDni(),
+//            filtro.getNombre(),
+//            filtro.getApellidos(),
+//            filtro.getSexo(),
+//            filtro.getComplexion(),
+//            filtro.getEstado(),
+//            filtro.getProvincia(),
+//            filtro.getLocalidad(),
+//            filtro.getFecha()
+//    );
+//}
+public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String estado, String nombre) {
+    ESTADO estadoEnum = null;
+    if (estado != null && !estado.isEmpty()) {
+        try {
+            estadoEnum = ESTADO.valueOf(estado);
+        } catch (IllegalArgumentException e) {
+            throw new IllegalArgumentException("El estado proporcionado no es válido: " + estado);
+        }
+    }
+
+    if(fecha== null){
+        return desaparicionRepositorio.buscarPorEstadoYNombre(estadoEnum,nombre);
+    }else{
+        return desaparicionRepositorio.buscarPorFechaEstadoYNombre(fecha,estadoEnum,nombre);
+    }
+}
+
+
+
 }
 
