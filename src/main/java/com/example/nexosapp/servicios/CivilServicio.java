@@ -169,7 +169,6 @@ public class CivilServicio {
 
     /**
      * Método que devuelve una lista de desapariciones que sigue un usuario
-     * @param id
      * @return
      */
 
@@ -220,7 +219,6 @@ public class CivilServicio {
 
     /**
      * Método que verifica un usuario
-     * @param id
      * @throws MessagingException
      */
     public ResponseEntity<String> verificarUsuario(Integer id) throws MessagingException {
