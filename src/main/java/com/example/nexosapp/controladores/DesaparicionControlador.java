@@ -166,6 +166,10 @@ public ResponseEntity<?> buscarPorFechaEstadoYNombre(
 
     List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
 
+    if (desapariciones.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron resultados.");
+    }
+
     List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
         Map<String, Object> result = new HashMap<>();
         result.put("id", desaparicion.getId());
@@ -182,6 +186,7 @@ public ResponseEntity<?> buscarPorFechaEstadoYNombre(
 
     return ResponseEntity.ok(resultados);
 }
+
 
 
 
