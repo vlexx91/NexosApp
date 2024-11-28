@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -127,11 +128,11 @@ public class AvisoServicio {
         Aviso avisosave = new Aviso();
         Integer id = jwTservice.extraerDatosHeader(request).getIdUsuario();
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fecha = LocalDate.parse(avisoDTO.getFecha(), formatter);
+//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+//        LocalDate fecha = LocalDate.parse(avisoDTO.getFecha(), formatter);
 
 
-        avisosave.setFecha(fecha);
+        avisosave.setFecha(LocalDateTime.now());
         avisosave.setTexto(avisoDTO.getTexto());
         avisosave.setUsuario(usuarioService.getUsuarioId(id));
 
@@ -165,7 +166,7 @@ public class AvisoServicio {
 
         for (Aviso a : avisos){
             AvisoDTOAutoridadAdmin avisoDTO = new AvisoDTOAutoridadAdmin();
-            avisoDTO.setFecha(a.getFecha());
+            avisoDTO.setFecha(a.getFecha().toLocalDate());
             avisoDTO.setTexto(a.getTexto());
             avisoDTO.setId(a.getId());
             avisoDTO.setUsername(usuarioService.getUsuarioId(a.getUsuario().getId()).getUsername());
