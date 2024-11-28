@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
