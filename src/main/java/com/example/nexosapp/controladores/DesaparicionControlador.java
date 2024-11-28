@@ -123,34 +123,69 @@ public class DesaparicionControlador {
     public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
         return desaparicionServicio.getSinAprobar();
     }
-    @GetMapping("/filtrar")
-    public ResponseEntity<?> buscarPorFechaEstadoYNombre(
-            @RequestParam(required = false) String estado,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
-            @RequestParam(required = false) String nombre) {
+//    @GetMapping("/filtrar")
+//    public ResponseEntity<?> buscarPorCriterios(
+//            @RequestParam(required = false) String estado,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+//            @RequestParam(required = false) String nombre,
+//            @RequestParam(required = false, defaultValue = "false") boolean ultimas24) {
+//
+//        List<Desaparicion> desapariciones = desaparicionServicio.buscarPorCriterios(fecha, estado, nombre, ultimas24);
+//
+//        if (desapariciones.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body("No se encontraron desapariciones con los criterios proporcionados.");
+//        }
+//
+//        // Transformar los resultados para la respuesta
+//        List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
+//            Map<String, Object> result = new HashMap<>();
+//            result.put("id", desaparicion.getId());
+//            result.put("nombre", desaparicion.getPersona().getNombre());
+//            result.put("apellidos", desaparicion.getPersona().getApellido());
+//            result.put("fecha", desaparicion.getFecha());
+//            result.put("foto", desaparicion.getPersona().getFotos()
+//                    .stream()
+//                    .findFirst()
+//                    .map(Foto::getUrl)
+//                    .orElse("default.jpg"));
+//            return result;
+//        }).toList();
+//
+//        return ResponseEntity.ok(resultados);
+//    }
+@GetMapping("/filtrar")
+public ResponseEntity<?> buscarPorFechaEstadoYNombre(
+        @RequestParam(required = false) String estado,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+        @RequestParam(required = false) String nombre) {
 
-        if (estado == null && nombre == null) {
-            return ResponseEntity.badRequest().body("Debe proporcionar al menos un criterio de búsqueda.");
-        }
-
-        List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
-
-        List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
-            Map<String, Object> result = new HashMap<>();
-            result.put("id", desaparicion.getId());
-            result.put("nombre", desaparicion.getPersona().getNombre());
-            result.put("apellidos", desaparicion.getPersona().getApellido());
-            result.put("fecha", desaparicion.getFecha());
-            result.put("foto", desaparicion.getPersona().getFotos()
-                    .stream()
-                    .findFirst()
-                    .map(Foto::getUrl)
-                    .orElse("default.jpg"));
-            return result;
-        }).toList();
-
-        return ResponseEntity.ok(resultados);
+    if (estado == null && nombre == null) {
+        return ResponseEntity.badRequest().body("Debe proporcionar al menos un criterio de búsqueda.");
     }
+
+    List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
+
+    List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", desaparicion.getId());
+        result.put("nombre", desaparicion.getPersona().getNombre());
+        result.put("apellidos", desaparicion.getPersona().getApellido());
+        result.put("fecha", desaparicion.getFecha());
+        result.put("foto", desaparicion.getPersona().getFotos()
+                .stream()
+                .findFirst()
+                .map(Foto::getUrl)
+                .orElse("default.jpg"));
+        return result;
+    }).toList();
+
+    return ResponseEntity.ok(resultados);
+}
+
+
+
+
 
     @GetMapping("/eliminadas")
     public List<DesaparicionSinVerificarDTO> getDesaparicionesEliminadas(){

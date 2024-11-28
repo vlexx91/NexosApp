@@ -21,6 +21,8 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Root;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -442,7 +444,16 @@ public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String es
     }
 }
 
-
-
+    public List<Desaparicion> obtenerUltimas30() {
+        Pageable pageable = PageRequest.of(0, 30); // Crear una paginación para las últimas 30 desapariciones verificadas
+        return desaparicionRepositorio.findLast30Verified(pageable).getContent();
+    }
 }
+
+
+
+
+
+
+
 
