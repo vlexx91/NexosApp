@@ -13,9 +13,9 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class DesaparicionEditarAutoridadDTO {
+    private String descripcion;
     @Enumerated(EnumType.ORDINAL)
     private ESTADO estado;
-    private String descripcion;
     private LugarLatLongDTO lugarLatLongDTO;
     private List<Foto> fotos;
 

@@ -470,7 +470,7 @@ public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String es
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
 
         if (desaparicion == null) {
-            return null;
+            return ResponseEntity.ok("Fallo al encontrar la desaparición");
         }
 
         if (!Objects.equals(desaparicion.getLugar().getProvincia(), dto.getLugarLatLongDTO().getProvincia()) || !Objects.equals(desaparicion.getLugar().getLocalidad(), dto.getLugarLatLongDTO().getLocalidad()) || !Objects.equals(desaparicion.getLugar().getCalle(), dto.getLugarLatLongDTO().getCalle())){
@@ -482,10 +482,22 @@ public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String es
             desaparicion.getLugar().setCalle(dto.getLugarLatLongDTO().getCalle());
             lugarServicio.guardar(desaparicion.getLugar());
         }
+        Set<Foto> fotos = new HashSet<>(desaparicion.getPersona().getFotos());
+        if (fotos.size() != dto.getFotos().size()){
+            fotos.retainAll(dto.getFotos());
+        }
+        if (!files.isEmpty()){
+            for (MultipartFile f : files){
+                Foto foto = new Foto();
+                foto.setUrl(cloudinaryService.uploadImage(f));
+                foto.setEsCara(false);
+                fotos.add(foto);
+            }
+
+        }
         desaparicion.setEstado(dto.getEstado());
         desaparicion.setDescripcion(dto.getDescripcion());
-        // terminar con el set de fotos del files
-        desaparicion.getPersona().setFotos(new HashSet<>(dto.getFotos()));
+        desaparicion.getPersona().setFotos(fotos);
 
         desaparicionRepositorio.save(desaparicion);
 

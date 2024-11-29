@@ -170,7 +170,7 @@ public class DesaparicionControlador {
 
     @PutMapping("/editarDesaparicionGestion")
     public ResponseEntity<String> editarDesaparicionGestion(
-            @RequestParam Integer id,
+            @RequestParam("id") Integer id,
             @RequestParam("desaparicion") String desaparicionJson,
             @RequestParam("files") List<MultipartFile> files) {
         try {
