@@ -37,7 +37,7 @@ public interface DesaparicionRepositorio extends JpaRepository<Desaparicion, Int
     @Query("SELECT d FROM Desaparicion d JOIN FETCH d.persona p LEFT JOIN FETCH p.fotos " +
             "WHERE (d.fecha = :fecha) " +
             "AND (:estado IS NULL OR d.estado = :estado) " +
-            "AND (:nombre IS NULL OR p.nombre LIKE %:nombre%)" +
+            "AND (:nombre IS NULL OR p.nombre ILIKE %:nombre%)" +
             "AND d.aprobada = true")
     List<Desaparicion> buscarPorFechaEstadoYNombre(
             @Param("fecha") LocalDate fecha,
@@ -48,7 +48,7 @@ public interface DesaparicionRepositorio extends JpaRepository<Desaparicion, Int
     @Query("SELECT d FROM Desaparicion d JOIN FETCH d.persona p LEFT JOIN FETCH p.fotos " +
             "WHERE " +
             "(:estado IS NULL OR d.estado = :estado) " +
-            "AND (:nombre IS NULL OR p.nombre LIKE %:nombre%)"+
+            "AND (:nombre IS NULL OR p.nombre ILIKE %:nombre%)"+
             "AND d.aprobada = true")
     List<Desaparicion> buscarPorEstadoYNombre(
             @Param("estado") ESTADO estado,
