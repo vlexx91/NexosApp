@@ -290,6 +290,24 @@ public class DesaparicionServicio {
         dto.setEstado(desaparicion.getEstado());
         return dto;
     }
+    public DesaparicionEditarAutoridadDTO getDesaparicionEditarAutoridadDTO(Integer id){
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+        if (desaparicion == null){
+            return null;
+        }
+        DesaparicionEditarAutoridadDTO dto = new DesaparicionEditarAutoridadDTO();
+        LugarLatLongDTO lugar = new LugarLatLongDTO();
+        lugar.setProvincia(desaparicion.getLugar().getProvincia());
+        lugar.setLocalidad(desaparicion.getLugar().getLocalidad());
+        lugar.setCalle(desaparicion.getLugar().getCalle());
+        lugar.setLatitud(desaparicion.getLugar().getLatitud());
+        lugar.setLongitud(desaparicion.getLugar().getLongitud());
+        dto.setLugarLatLongDTO(lugar);
+        dto.setDescripcion(desaparicion.getDescripcion());
+        dto.setEstado(desaparicion.getEstado());
+        dto.setFotos(desaparicion.getPersona().getFotos().stream().toList());
+        return dto;
+    }
 
 
     /**
@@ -450,7 +468,48 @@ public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String es
         return desaparicionRepositorio.findLast30Verified(pageable).getContent();
     }
 }
+    public List<DesaparicionGestionDTO> getDesaparicionesGestion(){
+            List<Desaparicion> desaparicionesNoEliminadas = desaparicionRepositorio.findAllByEliminadaIsFalse();
+            return desaparicionesNoEliminadas.stream().map(d -> new DesaparicionGestionDTO(d.getId(),d.getPersona().getNombre(), d.getPersona().getApellido(), d.getFecha().toString())).toList();
 
+    }
+    public ResponseEntity<String> editarDesaparicionGestion(Integer id ,DesaparicionEditarAutoridadDTO dto, List<MultipartFile> files) throws IOException {
+        Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
+
+        if (desaparicion == null) {
+            return ResponseEntity.ok("Fallo al encontrar la desaparición");
+        }
+
+        if (!Objects.equals(desaparicion.getLugar().getProvincia(), dto.getLugarLatLongDTO().getProvincia()) || !Objects.equals(desaparicion.getLugar().getLocalidad(), dto.getLugarLatLongDTO().getLocalidad()) || !Objects.equals(desaparicion.getLugar().getCalle(), dto.getLugarLatLongDTO().getCalle())){
+            Map<String,Double> coordenadas = openCageService.getLatLon(dto.getLugarLatLongDTO().getCalle()+ ", "+ dto.getLugarLatLongDTO().getLocalidad() + ", " + dto.getLugarLatLongDTO().getProvincia() + ", España");
+            desaparicion.getLugar().setLatitud(coordenadas.get("lat"));
+            desaparicion.getLugar().setLongitud(coordenadas.get("lon"));
+            desaparicion.getLugar().setProvincia(dto.getLugarLatLongDTO().getProvincia());
+            desaparicion.getLugar().setLocalidad(dto.getLugarLatLongDTO().getLocalidad());
+            desaparicion.getLugar().setCalle(dto.getLugarLatLongDTO().getCalle());
+            lugarServicio.guardar(desaparicion.getLugar());
+        }
+        Set<Foto> fotos = new HashSet<>(desaparicion.getPersona().getFotos());
+        if (fotos.size() != dto.getFotos().size()){
+            fotos.retainAll(dto.getFotos());
+        }
+        if (!files.isEmpty()){
+            for (MultipartFile f : files){
+                Foto foto = new Foto();
+                foto.setUrl(cloudinaryService.uploadImage(f));
+                foto.setEsCara(false);
+                fotos.add(foto);
+            }
+
+        }
+        desaparicion.setEstado(dto.getEstado());
+        desaparicion.setDescripcion(dto.getDescripcion());
+        desaparicion.getPersona().setFotos(fotos);
+
+        desaparicionRepositorio.save(desaparicion);
+
+        return ResponseEntity.ok("Desaparición editada con éxito");
+    }
 
 
 
