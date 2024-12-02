@@ -206,13 +206,12 @@ public class CivilServicio {
 
     /**
      * Método que devuelve un DTO con los datos del usuario para mostrarlo en su menu de usuario
-     * @param id
+     *
      * @return
      */
 
     public UsuarioMenuDTO menUsuario(HttpServletRequest request){
-        Civil civil = civilRepositorio.findTopByUsuarioId(jwtService.extraerDatosHeader(request).getIdUsuario());
-        Usuario usuario = civil.getUsuario();
+        Usuario usuario = usuarioService.getUsuarioId(jwtService.extraerDatosHeader(request).getIdUsuario());
         UsuarioMenuDTO dto = new UsuarioMenuDTO(usuario.getUsuario(), usuario.getEmail());
         return dto;
     }

@@ -60,7 +60,6 @@ public class DesaparicionControlador {
 
             desaparicionServicio.guardarDesaparicion(request, desaparicionDTO, files);
 
-
             return ResponseEntity.status(HttpStatus.CREATED).body("Desaparición creada con éxito");
         } catch (IOException e) {
 
@@ -88,15 +87,17 @@ public class DesaparicionControlador {
     public List<DesaparicionPrincipalDTO> principal(){
         return desaparicionServicio.paginaPrincipal();
     }
-
     @PostMapping("/editarAutoridadDesaparicion")
     public ResponseEntity<String> editarDesaparicionAutoridad(@RequestParam Integer id, @RequestBody EditarDesaparicionDTO editarDesaparicionDTO){
         return desaparicionServicio.editarDesaparicion(id, editarDesaparicionDTO);
     }
-
     @GetMapping("/getDesaparicionEditar")
     public EditarDesaparicionDTO getDesaparicionEditar(@RequestParam Integer id){
         return desaparicionServicio.getEditarDesaparicionDTO(id);
+    }
+    @GetMapping("/getDesaparicionEditarAutoridad")
+    public DesaparicionEditarAutoridadDTO getDesaparicionEditarAutoridad(@RequestParam Integer id){
+        return desaparicionServicio.getDesaparicionEditarAutoridadDTO(id);
     }
 
     @PutMapping("/aprobar")
@@ -162,10 +163,28 @@ public class DesaparicionControlador {
         return desaparicionServicio.recuperarEliminacion(id);
     }
 
+    @GetMapping("/desaparicionesGestion")
+    public List<DesaparicionGestionDTO> getDesaparicionesGestion(){
+        return desaparicionServicio.getDesaparicionesGestion();
+    }
 
-
+    @PutMapping("/editarDesaparicionGestion")
+    public ResponseEntity<String> editarDesaparicionGestion(
+            @RequestParam("id") Integer id,
+            @RequestParam("desaparicion") String desaparicionJson,
+            @RequestParam("files") List<MultipartFile> files) {
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            DesaparicionEditarAutoridadDTO desaparicionEditarAutoridadDTO = objectMapper.readValue(desaparicionJson, DesaparicionEditarAutoridadDTO.class);
+            desaparicionServicio.editarDesaparicionGestion(id, desaparicionEditarAutoridadDTO, files);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Desaparición creada con éxito");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body("Error al procesar los datos de la desaparición: " + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error interno al guardar la desaparición: " + e.getMessage());
+        }
+    }
 
 }
-
-
-
