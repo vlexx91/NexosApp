@@ -28,7 +28,7 @@ public class Aviso {
     @Column(name = "fecha", nullable = false)
     private LocalDate fecha;
 
-    @ManyToOne( cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
