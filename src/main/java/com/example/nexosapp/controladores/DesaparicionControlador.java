@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/desaparicion")
@@ -212,12 +209,16 @@ public ResponseEntity<?> buscarPorFechaEstadoYNombre(
     public ResponseEntity<String> editarDesaparicionGestion(
             @RequestParam("id") Integer id,
             @RequestParam("desaparicion") String desaparicionJson,
-            @RequestParam("files") List<MultipartFile> files) {
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             DesaparicionEditarAutoridadDTO desaparicionEditarAutoridadDTO = objectMapper.readValue(desaparicionJson, DesaparicionEditarAutoridadDTO.class);
-            desaparicionServicio.editarDesaparicionGestion(id, desaparicionEditarAutoridadDTO, files);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Desaparición creada con éxito");
+
+            List<MultipartFile> fileList = files != null ? files : Collections.emptyList();
+
+            ResponseEntity<String> result = desaparicionServicio.editarDesaparicionGestion(id, desaparicionEditarAutoridadDTO, fileList);
+
+            return ResponseEntity.status(HttpStatus.OK).body(result.getBody());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error al procesar los datos de la desaparición: " + e.getMessage());
