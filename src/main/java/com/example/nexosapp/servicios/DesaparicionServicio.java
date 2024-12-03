@@ -527,8 +527,8 @@ public class DesaparicionServicio {
         return ResponseEntity.ok("Desaparición editada con éxito");
     }
 
-
 }
+
 
 
 
