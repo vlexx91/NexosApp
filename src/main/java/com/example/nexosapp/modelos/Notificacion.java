@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "notificacion", schema = "nexo_app", catalog = "postgres")
@@ -20,7 +21,7 @@ public class Notificacion {
     private Integer id;
 
     @Column(name = "fecha")
-    private LocalDate fecha;
+    private LocalDateTime fecha;
 
     @Column(name = "tipo")
     private String tipo;

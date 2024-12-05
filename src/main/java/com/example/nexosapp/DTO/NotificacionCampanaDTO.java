@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class NotificacionCampana {
+public class NotificacionCampanaDTO {
     private Integer id;
     private Integer idDesaparicion;
     private String tipo;

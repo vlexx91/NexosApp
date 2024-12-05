@@ -1,6 +1,6 @@
 package com.example.nexosapp.servicios;
 
-import com.example.nexosapp.DTO.NotificacionCampana;
+import com.example.nexosapp.DTO.NotificacionCampanaDTO;
 import com.example.nexosapp.modelos.Notificacion;
 import com.example.nexosapp.modelos.Usuario;
 import com.example.nexosapp.repositorios.NotificacionRepositorio;
@@ -21,12 +21,23 @@ public class NotificacionServicio {
     public Notificacion getNotificacion(Integer id) {
         return notificacionRepositorio.findById(id).orElse(null);
     }
-    public Notificacion saveNotificacion(Notificacion notificacion) {
-        return notificacionRepositorio.save(notificacion);
+    public void saveNotificacion(Notificacion notificacion) {
+        notificacionRepositorio.save(notificacion);
     }
-    public List<NotificacionCampana> getNotificacionesCampana(HttpServletRequest request) {
+    public List<NotificacionCampanaDTO> getNotificacionesCampana(HttpServletRequest request) {
         Usuario usuario = usuarioService.getUsuarioId(jwTservice.extraerDatosHeader(request).getIdUsuario());
         List<Notificacion> notificaciones = notificacionRepositorio.findAllByUsuarioAndLeidaFalseOrderByFechaAsc(usuario);
-        return notificaciones.stream().map(notificacion -> new NotificacionCampana(notificacion.getId(), notificacion.getDesaparicion().getId(), notificacion.getTipo(), notificacion.getFecha().toString(), notificacion.getTexto())).toList();
+        return notificaciones.stream().map(notificacion -> new NotificacionCampanaDTO(notificacion.getId(), notificacion.getDesaparicion().getId(), notificacion.getTipo(), notificacion.getFecha().toString(), notificacion.getTexto())).toList();
+    }
+    public String notificaionLeida(Integer idNotificacion){
+        Notificacion notificacion = notificacionRepositorio.getReferenceById(idNotificacion);
+        notificacion.setLeida(true);
+        try {
+            notificacionRepositorio.save(notificacion);
+            return "Notificacion modificada";
+        } catch (Exception e){
+            return "Error al modificar notificacion";
+        }
+
     }
 }
