@@ -185,11 +185,6 @@ public ResponseEntity<?> buscarPorFechaEstadoYNombre(
     return ResponseEntity.ok(resultados);
 }
 
-
-
-
-
-
     @GetMapping("/eliminadas")
     public List<DesaparicionSinVerificarDTO> getDesaparicionesEliminadas(){
         return desaparicionServicio.listaEliminadas();
