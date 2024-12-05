@@ -144,6 +144,7 @@ public class DesaparicionServicio {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
         desaparicion.setUsuario(usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null));
         desaparicion.setAprobada(desaparicion.getUsuario().getRol() == ROL.AUTORIDAD);
+        desaparicion.getPersona().setDescripcion(dto.getPersonaDTO().getDescripcionFisica());
         LocalDate fechaHoy = LocalDate.now();
         if (desaparicion.getFecha().isAfter(fechaHoy)) {
             throw new IllegalArgumentException("La fecha de desaparición no puede ser posterior a la fecha actual.");
@@ -365,7 +366,7 @@ public class DesaparicionServicio {
         persona.setNombre(desaparicion.getPersona().getNombre());
         persona.setDni(desaparicion.getPersona().getDni());
         persona.setApellido(desaparicion.getPersona().getApellido());
-        persona.setDescripcion(desaparicion.getPersona().getDescripcion());
+        persona.setDescripcionFisica(desaparicion.getPersona().getDescripcion());
         persona.setFechaNacimiento(desaparicion.getPersona().getFechaNacimiento().toString());
         persona.setAltura(desaparicion.getPersona().getAltura());
         persona.setComplexion(desaparicion.getPersona().getComplexion());
