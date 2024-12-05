@@ -174,6 +174,8 @@ public class AvisoServicio {
 
             avisoDTOS.add(avisoDTO);
         }
+
+        avisoDTOS.sort((a1, a2) -> a2.getFecha().compareTo(a1.getFecha()));
         return avisoDTOS;
     }
 
