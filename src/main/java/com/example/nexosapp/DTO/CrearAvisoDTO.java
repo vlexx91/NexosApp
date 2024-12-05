@@ -12,7 +12,7 @@ import java.util.List;
 public class CrearAvisoDTO {
 
     private String texto;
-    private String fecha;
+//    private String fecha;
     private Integer idUsuario;
 
 }

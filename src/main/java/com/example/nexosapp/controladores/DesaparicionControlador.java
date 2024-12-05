@@ -20,10 +20,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 @RestController
 @RequestMapping("/desaparicion")
@@ -124,34 +121,74 @@ public class DesaparicionControlador {
     public List<DesaparicionSinVerificarDTO> getDesaparicionesNoAprobadas(){
         return desaparicionServicio.getSinAprobar();
     }
-    @GetMapping("/filtrar")
-    public ResponseEntity<?> buscarPorFechaEstadoYNombre(
-            @RequestParam(required = false) String estado,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
-            @RequestParam(required = false) String nombre) {
+//    @GetMapping("/filtrar")
+//    public ResponseEntity<?> buscarPorCriterios(
+//            @RequestParam(required = false) String estado,
+//            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+//            @RequestParam(required = false) String nombre,
+//            @RequestParam(required = false, defaultValue = "false") boolean ultimas24) {
+//
+//        List<Desaparicion> desapariciones = desaparicionServicio.buscarPorCriterios(fecha, estado, nombre, ultimas24);
+//
+//        if (desapariciones.isEmpty()) {
+//            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                    .body("No se encontraron desapariciones con los criterios proporcionados.");
+//        }
+//
+//        // Transformar los resultados para la respuesta
+//        List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
+//            Map<String, Object> result = new HashMap<>();
+//            result.put("id", desaparicion.getId());
+//            result.put("nombre", desaparicion.getPersona().getNombre());
+//            result.put("apellidos", desaparicion.getPersona().getApellido());
+//            result.put("fecha", desaparicion.getFecha());
+//            result.put("foto", desaparicion.getPersona().getFotos()
+//                    .stream()
+//                    .findFirst()
+//                    .map(Foto::getUrl)
+//                    .orElse("default.jpg"));
+//            return result;
+//        }).toList();
+//
+//        return ResponseEntity.ok(resultados);
+//    }
+@GetMapping("/filtrar")
+public ResponseEntity<?> buscarPorFechaEstadoYNombre(
+        @RequestParam(required = false) String estado,
+        @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fecha,
+        @RequestParam(required = false) String nombre) {
 
-        if (estado == null && nombre == null) {
-            return ResponseEntity.badRequest().body("Debe proporcionar al menos un criterio de búsqueda.");
-        }
-
-        List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
-
-        List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
-            Map<String, Object> result = new HashMap<>();
-            result.put("id", desaparicion.getId());
-            result.put("nombre", desaparicion.getPersona().getNombre());
-            result.put("apellidos", desaparicion.getPersona().getApellido());
-            result.put("fecha", desaparicion.getFecha());
-            result.put("foto", desaparicion.getPersona().getFotos()
-                    .stream()
-                    .findFirst()
-                    .map(Foto::getUrl)
-                    .orElse("default.jpg"));
-            return result;
-        }).toList();
-
-        return ResponseEntity.ok(resultados);
+    if (estado == null && nombre == null) {
+        return ResponseEntity.badRequest().body("Debe proporcionar al menos un criterio de búsqueda.");
     }
+
+    List<Desaparicion> desapariciones = desaparicionServicio.buscarPorFechaEstadoYNombre(fecha, estado, nombre);
+
+    if (desapariciones.isEmpty()) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("No se encontraron resultados.");
+    }
+
+    List<Map<String, Object>> resultados = desapariciones.stream().map(desaparicion -> {
+        Map<String, Object> result = new HashMap<>();
+        result.put("id", desaparicion.getId());
+        result.put("nombre", desaparicion.getPersona().getNombre());
+        result.put("apellidos", desaparicion.getPersona().getApellido());
+        result.put("fecha", desaparicion.getFecha());
+        result.put("foto", desaparicion.getPersona().getFotos()
+                .stream()
+                .findFirst()
+                .map(Foto::getUrl)
+                .orElse("default.jpg"));
+        return result;
+    }).toList();
+
+    return ResponseEntity.ok(resultados);
+}
+
+
+
+
+
 
     @GetMapping("/eliminadas")
     public List<DesaparicionSinVerificarDTO> getDesaparicionesEliminadas(){
@@ -172,12 +209,16 @@ public class DesaparicionControlador {
     public ResponseEntity<String> editarDesaparicionGestion(
             @RequestParam("id") Integer id,
             @RequestParam("desaparicion") String desaparicionJson,
-            @RequestParam("files") List<MultipartFile> files) {
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
         try {
             ObjectMapper objectMapper = new ObjectMapper();
             DesaparicionEditarAutoridadDTO desaparicionEditarAutoridadDTO = objectMapper.readValue(desaparicionJson, DesaparicionEditarAutoridadDTO.class);
-            desaparicionServicio.editarDesaparicionGestion(id, desaparicionEditarAutoridadDTO, files);
-            return ResponseEntity.status(HttpStatus.CREATED).body("Desaparición creada con éxito");
+
+            List<MultipartFile> fileList = files != null ? files : Collections.emptyList();
+
+            ResponseEntity<String> result = desaparicionServicio.editarDesaparicionGestion(id, desaparicionEditarAutoridadDTO, fileList);
+
+            return ResponseEntity.status(HttpStatus.OK).body(result.getBody());
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                     .body("Error al procesar los datos de la desaparición: " + e.getMessage());

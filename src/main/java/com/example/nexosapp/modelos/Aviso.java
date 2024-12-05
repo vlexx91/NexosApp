@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
 
@@ -26,9 +27,9 @@ public class Aviso {
     private String texto;
 
     @Column(name = "fecha", nullable = false)
-    private LocalDate fecha;
+    private LocalDateTime fecha;
 
-    @ManyToOne()
+    @ManyToOne
     @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
