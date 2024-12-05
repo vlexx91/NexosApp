@@ -182,7 +182,7 @@ public class UsuarioService implements UserDetailsService {
 
     /**
      * Obtiene el rol de un usuario
-     * @param usuario
+     * @param  request
      * @return
      */
 
