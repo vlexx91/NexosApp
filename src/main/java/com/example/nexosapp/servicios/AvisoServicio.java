@@ -117,6 +117,9 @@ public class AvisoServicio {
 
             avisoDTOS.add(avisoDTO);
         }
+
+        avisoDTOS.sort((a1, a2) -> a2.getFecha().compareTo(a1.getFecha()));
+
         return avisoDTOS;
     }
 
@@ -127,9 +130,7 @@ public class AvisoServicio {
     public ResponseEntity<String> nuevoAviso(HttpServletRequest request, CrearAvisoDTO avisoDTO, List<MultipartFile> files) throws IOException {
         Aviso avisosave = new Aviso();
         Integer id = jwTservice.extraerDatosHeader(request).getIdUsuario();
-
-//        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-//        LocalDate fecha = LocalDate.parse(avisoDTO.getFecha(), formatter);
+        
 
 
         avisosave.setFecha(LocalDateTime.now());
