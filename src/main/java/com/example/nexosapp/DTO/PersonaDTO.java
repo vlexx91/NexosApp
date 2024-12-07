@@ -19,5 +19,5 @@ public class PersonaDTO {
     private Sexo sexo;
     private float altura;
     private Complexion complexion;
-    private String descripcion;
+    private String descripcionFisica;
 }

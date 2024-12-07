@@ -116,3 +116,29 @@ INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (
 INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (3, 3);
 INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (3, 8);
 INSERT INTO nexo_app.usuario_desaparicion (id_usuario, id_desaparicion) VALUES (4, 9);
+-- inserciones 2
+-- lugares
+INSERT INTO lugar (provincia, localidad, calle, lat, lon) VALUES
+                                                              ('Madrid', 'Madrid', 'Gran Vía 45', '40.42028', '-3.70577'),
+                                                              ('Barcelona', 'Barcelona', 'Passeig de Gràcia 58', '41.39123', '2.16489'),
+                                                              ('Valencia', 'Valencia', 'Carrer de Colom 12', '39.46975', '-0.37597'),
+                                                              ('Sevilla', 'Sevilla', 'Calle Sierpes 17', '37.38863', '-5.99534'),
+                                                              ('Bilbao', 'Bilbao', 'Calle Gran Vía 12', '43.26301', '-2.93500'),
+                                                              ('Málaga', 'Málaga', 'Calle Larios 6', '36.72126', '-4.42127'),
+                                                              ('Zaragoza', 'Zaragoza', 'Paseo de la Independencia 22', '41.64882', '-0.88909'),
+                                                              ('Granada', 'Granada', 'Calle Recogidas 25', '37.17651', '-3.59793'),
+                                                              ('Alicante', 'Alicante', 'Rambla Méndez Núñez 7', '38.34517', '-0.48149'),
+                                                              ('Oviedo', 'Oviedo', 'Calle Uría 10', '43.36191', '-5.84939');
+
+-- personas
+INSERT INTO persona (dni, nombre, apellido, fecha_nacimiento, sexo, altura, complexion, descripcion) VALUES
+                                                                                                         ('12345678A', 'Carlos', 'Gómez Pérez', '1985-03-14 00:00:00', 1, 1.75, 2, 'Ojos marrones, pelo castaño corto.'),
+                                                                                                         ('23456789B', 'Laura', 'Fernández López', '1992-07-23 00:00:00', 2, 1.62, 1, 'Ojos verdes, pelo largo rubio.'),
+                                                                                                         ('34567890C', 'Manuel', 'Sánchez García', '1978-11-10 00:00:00', 1, 1.80, 3, 'Ojos negros, calvo.'),
+                                                                                                         ('45678901D', 'Ana', 'Martínez Ruiz', '2000-01-01 00:00:00', 2, 1.70, 2, 'Pelo ondulado moreno, delgada.'),
+                                                                                                         ('56789012E', 'Javier', 'López Torres', '1988-05-05 00:00:00', 1, 1.82, 2, 'Barba, ojos azules.'),
+                                                                                                         ('67890123F', 'Elena', 'Díaz Moreno', '1995-10-20 00:00:00', 2, 1.65, 1, 'Ojos grises, cabello corto.'),
+                                                                                                         ('78901234G', 'Raúl', 'Jiménez Suárez', '1973-09-09 00:00:00', 1, 1.78, 3, 'Complexión fuerte, pelo canoso.'),
+                                                                                                         ('89012345H', 'Isabel', 'García López', '1980-06-30 00:00:00', 2, 1.72, 2, 'Sonrisa prominente, pelo rizado.'),
+                                                                                                         ('90123456I', 'Sergio', 'Pérez Gutiérrez', '1990-12-15 00:00:00', 1, 1.68, 1, 'Lentes, pelo castaño claro.'),
+                                                                                                         ('01234567J', 'Marta', 'Rodríguez Díaz', '1998-03-03 00:00:00', 2, 1.75, 1, 'Piercing en la nariz, tatuaje visible.');
