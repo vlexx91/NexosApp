@@ -8,6 +8,8 @@ import com.example.nexosapp.seguridad.JWTservice;
 import com.example.nexosapp.servicios.CivilServicio;
 import com.example.nexosapp.servicios.TokenServicio;
 import com.example.nexosapp.servicios.UsuarioService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,7 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDateTime;
-
+@Tag(name = "Auth", description = "Operaciones relacionadas con la autenticación")
 @RestController
 @RequestMapping("/auth")
 @AllArgsConstructor
@@ -26,6 +28,7 @@ public class AuthController {
     private TokenServicio tokenServicio;
     private CivilServicio civilServicio;
 
+    @Operation(summary = "Iniciar sesión")
     @PostMapping("/login")
     public AuthDTO login(@RequestBody UsuarioLogDTO usuarioDTO) {
         Usuario usuario = usuarioService.buscarPorUsername(usuarioDTO.getUsuario());
@@ -73,6 +76,7 @@ public class AuthController {
                 .verificado(vereificado)
                 .build();
     }
+    @Operation(summary = "Registrar un usuario de tipo civil")
     @PostMapping("/register")
     public AuthDTO register(@RequestBody CivilCrearDTO dto) throws MessagingException {
 
