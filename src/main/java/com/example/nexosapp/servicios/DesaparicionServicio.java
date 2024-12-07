@@ -422,6 +422,11 @@ public class DesaparicionServicio {
         return devolucion;
     }
 
+    /**
+     * Método que permite recuperar una eliminacion que se ha eliminado poniendo eliminada en true
+     * @param id
+     * @return
+     */
     public ResponseEntity<String> recuperarEliminacion(Integer id) {
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
         if (desaparicion == null) {
@@ -461,6 +466,14 @@ public class DesaparicionServicio {
 //            filtro.getFecha()
 //    );
 //}
+
+    /**
+     * Método que permite buscar desapariciones por feecha, estado y nombre
+     * @param fecha
+     * @param estado
+     * @param nombre
+     * @return
+     */
     public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String estado, String nombre) {
         ESTADO estadoEnum = null;
         if (estado != null && !estado.isEmpty()) {
@@ -478,17 +491,33 @@ public class DesaparicionServicio {
         }
     }
 
+    /**
+     * Método que permite obtener las ultimas 30 desapariciones verificadas
+     * @return
+     */
     public List<Desaparicion> obtenerUltimas30() {
         Pageable pageable = PageRequest.of(0, 30); // Crear una paginación para las últimas 30 desapariciones verificadas
         return desaparicionRepositorio.findLast30Verified(pageable).getContent();
     }
 
+    /**
+     * Método que obtiene una lista de desapaiciones para su gestión
+     * @return
+     */
     public List<DesaparicionGestionDTO> getDesaparicionesGestion() {
         List<Desaparicion> desaparicionesNoEliminadas = desaparicionRepositorio.findAllByEliminadaIsFalse();
         return desaparicionesNoEliminadas.stream().map(d -> new DesaparicionGestionDTO(d.getId(), d.getPersona().getNombre(), d.getPersona().getApellido(), d.getFecha().toString())).toList();
 
     }
 
+    /**
+     * Método que permite editar una desaparición
+     * @param id
+     * @param dto
+     * @param files
+     * @return
+     * @throws IOException
+     */
     public ResponseEntity<String> editarDesaparicionGestion(Integer id, DesaparicionEditarAutoridadDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
 

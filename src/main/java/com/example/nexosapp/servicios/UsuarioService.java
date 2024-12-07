@@ -172,10 +172,23 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepositorio.findTopByUsuario(username).orElse(null);
     }
 
+    /**
+     * Obtiene el usurio por su username
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }
+
+    /**
+     * Valida la contraseña de un usuario
+     * @param usuario
+     * @param passwordSinEncriptar
+     * @return
+     */
     public boolean validarContrasenya(Usuario usuario, String passwordSinEncriptar){
         return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
     }
@@ -211,6 +224,10 @@ public class UsuarioService implements UserDetailsService {
 //        return "Usuario creado correctamente";
 //    }
 
+    /**
+     * Obtiene una lista de usuarios para el administrador
+     * @return
+     */
     public List<UsuarioAdminListaDTO> usuarioAdminLista() {
         List<UsuarioAdminListaDTO> usuarioAdminLista = new ArrayList<>();
         List<Usuario> usuario = usuarioRepositorio.findAll();
@@ -227,6 +244,12 @@ public class UsuarioService implements UserDetailsService {
 
         return usuarioAdminLista;
     }
+
+    /**
+     * Elimina un usuario por su id
+     * @param id
+     * @return
+     */
     public String eliminaUsuarioId(Integer id){
         try {
             usuarioRepositorio.deleteById(id);
@@ -237,6 +260,11 @@ public class UsuarioService implements UserDetailsService {
         }
     }
 
+    /**
+     * Verifica un usuario
+     * @param id
+     * @return
+     */
     public String verificaUsuarioId(Integer id) {
         try {
             Usuario u = usuarioRepositorio.findById(id).orElse(null);

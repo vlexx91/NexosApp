@@ -20,7 +20,7 @@ public class FotoServicio {
 
     /**
      * Guarda una foto en la base de datos, sea nueva o actualiza una existente
-     * @param foto
+     *
      */
     public Foto guardar(MultipartFile file) throws IOException {
         Foto foto = new Foto();
