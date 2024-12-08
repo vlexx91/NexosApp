@@ -1,6 +1,5 @@
 package com.example.nexosapp.repositorios;
 
-import com.example.nexosapp.enumerados.ROL;
 import com.example.nexosapp.modelos.Usuario;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;

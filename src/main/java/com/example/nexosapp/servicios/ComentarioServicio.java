@@ -115,6 +115,12 @@ public class ComentarioServicio {
         return ResponseEntity.ok("Comentario creado");
     }
 
+    /**
+     * Obtiene los comentarios de una desaparición por su id y los prepara en una dto
+     * @param desaparicionId
+     * @return
+     */
+
     public List<ComentarioListarDTO> obtenerComentariosPorDesaparicionId(Integer desaparicionId) {
         List<Comentario> comentarios = comentarioRepositorio.findByDesaparicionId(desaparicionId);
         List<ComentarioListarDTO> comentariosListarDTO = new ArrayList<>();

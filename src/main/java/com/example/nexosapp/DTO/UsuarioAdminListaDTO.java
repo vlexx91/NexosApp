@@ -4,15 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrearAvisoDTO {
-
-    private String texto;
-//    private String fecha;
-    private Integer idUsuario;
-
+public class UsuarioAdminListaDTO {
+    private Integer id;
+    private String usuario;
+    private Boolean verificado;
 }

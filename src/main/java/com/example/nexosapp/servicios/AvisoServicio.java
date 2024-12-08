@@ -1,6 +1,7 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.AvisoDTO;
+import com.example.nexosapp.DTO.AvisoDTOAutoridadAdmin;
 import com.example.nexosapp.DTO.CrearAvisoDTO;
 import com.example.nexosapp.DTO.FotoUrlDTO;
 import com.example.nexosapp.modelos.Aviso;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -37,14 +39,28 @@ public class AvisoServicio {
 
     private CloudinaryService cloudinaryService;
 
+    /**
+     * Obtener todos los avisos
+     * @return
+     */
     public List<Aviso> getAvisos(){
         return avisoRepositorio.findAll();
     }
 
+    /**
+     * Obtener aviso por id
+     * @param id
+     * @return
+     */
     public Aviso getAvisoId(Integer id){
         return avisoRepositorio.findById(id).orElse(null);
     }
 
+    /**
+     * Guardar aviso
+     * @param aviso
+     * @return
+     */
     public Aviso guardar(Aviso aviso){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // Asegurarse de que hay una autenticación válida
@@ -59,7 +75,11 @@ public class AvisoServicio {
     }
 
 
-
+    /**
+     * Eliminar aviso por id
+     * @param id
+     * @return
+     */
     public String eliminar(Integer id) {
         String mensaje;
 
@@ -94,8 +114,6 @@ public class AvisoServicio {
     /**
      * Muestra todos los avisos para la pagina principal
      */
-
-
     public List<AvisoDTO> getAll(){
         List<AvisoDTO> avisoDTOS= new ArrayList<>();
         List<Aviso> avisos = avisoRepositorio.findAll();
@@ -111,10 +129,13 @@ public class AvisoServicio {
                 fotoUrlDTO.add(fotoDTO);
             }
             avisoDTO.setFotos(fotoUrlDTO);
-            avisoDTO.setUsuarioId(a.getUsuario().getId());
+            avisoDTO.setId_usuario(a.getUsuario().getId());
 
             avisoDTOS.add(avisoDTO);
         }
+
+        avisoDTOS.sort((a1, a2) -> a2.getFecha().compareTo(a1.getFecha()));
+
         return avisoDTOS;
     }
 
@@ -125,12 +146,10 @@ public class AvisoServicio {
     public ResponseEntity<String> nuevoAviso(HttpServletRequest request, CrearAvisoDTO avisoDTO, List<MultipartFile> files) throws IOException {
         Aviso avisosave = new Aviso();
         Integer id = jwTservice.extraerDatosHeader(request).getIdUsuario();
-
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fecha = LocalDate.parse(avisoDTO.getFecha(), formatter);
+        
 
 
-        avisosave.setFecha(fecha);
+        avisosave.setFecha(LocalDateTime.now());
         avisosave.setTexto(avisoDTO.getTexto());
         avisosave.setUsuario(usuarioService.getUsuarioId(id));
 
@@ -152,4 +171,26 @@ public class AvisoServicio {
 
         return ResponseEntity.ok("Aviso creado con éxito") ;
     }
+
+
+    /**
+     * Lista avisos para AvisoDTOAutoridad
+     */
+
+    public List<AvisoDTOAutoridadAdmin> listarAdminAvisos(){
+        List<AvisoDTOAutoridadAdmin> avisoDTOS= new ArrayList<>();
+        List<Aviso> avisos = avisoRepositorio.findAll();
+
+        for (Aviso a : avisos){
+            AvisoDTOAutoridadAdmin avisoDTO = new AvisoDTOAutoridadAdmin();
+            avisoDTO.setFecha(a.getFecha().toLocalDate());
+            avisoDTO.setTexto(a.getTexto());
+            avisoDTO.setId(a.getId());
+            avisoDTO.setUsername(usuarioService.getUsuarioId(a.getUsuario().getId()).getUsername());
+
+            avisoDTOS.add(avisoDTO);
+        }
+        return avisoDTOS;
+    }
+
 }

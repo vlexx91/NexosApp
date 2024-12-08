@@ -1,9 +1,11 @@
 package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.DesaparicionPrincipalDTO;
+import com.example.nexosapp.DTO.UsuarioAdminListaDTO;
 import com.example.nexosapp.modelos.Civil;
 import com.example.nexosapp.modelos.Desaparicion;
 import com.example.nexosapp.modelos.Usuario;
+import com.example.nexosapp.repositorios.AvisoRepositorio;
 import com.example.nexosapp.repositorios.CivilRepositorio;
 import com.example.nexosapp.repositorios.DesaparicionRepositorio;
 import com.example.nexosapp.repositorios.UsuarioRepositorio;
@@ -170,22 +172,35 @@ public class UsuarioService implements UserDetailsService {
         return usuarioRepositorio.findTopByUsuario(username).orElse(null);
     }
 
+    /**
+     * Obtiene el usurio por su username
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return null;
     }
+
+    /**
+     * Valida la contraseña de un usuario
+     * @param usuario
+     * @param passwordSinEncriptar
+     * @return
+     */
     public boolean validarContrasenya(Usuario usuario, String passwordSinEncriptar){
         return passwordEncoder.matches(passwordSinEncriptar, usuario.getPassword());
     }
 
     /**
      * Obtiene el rol de un usuario
-     * @param usuario
+     * @param
      * @return
      */
 
-    public String getRol(String usuario){
-        Usuario usuario1 = usuarioRepositorio.findTopByUsuario(usuario).orElse(null);
+    public String getRol(HttpServletRequest request){
+        Usuario usuario1 = usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null);
         if (usuario1 == null){
             return "Usuario no encontrado";
         }
@@ -208,5 +223,57 @@ public class UsuarioService implements UserDetailsService {
 //        usuarioRepositorio.save(usuario);
 //        return "Usuario creado correctamente";
 //    }
+
+    /**
+     * Obtiene una lista de usuarios para el administrador
+     * @return
+     */
+    public List<UsuarioAdminListaDTO> usuarioAdminLista() {
+        List<UsuarioAdminListaDTO> usuarioAdminLista = new ArrayList<>();
+        List<Usuario> usuario = usuarioRepositorio.findAll();
+
+        for (Usuario u : usuario){
+            UsuarioAdminListaDTO usuarioAdminListaDTO = new UsuarioAdminListaDTO();
+
+            usuarioAdminListaDTO.setId(u.getId());
+            usuarioAdminListaDTO.setVerificado(u.getVerificado());
+            usuarioAdminListaDTO.setUsuario(u.getUsuario());
+
+            usuarioAdminLista.add(usuarioAdminListaDTO);
+        }
+
+        return usuarioAdminLista;
+    }
+
+    /**
+     * Elimina un usuario por su id
+     * @param id
+     * @return
+     */
+    public String eliminaUsuarioId(Integer id){
+        try {
+            usuarioRepositorio.deleteById(id);
+            return "Usuario eliminado.";
+
+        } catch (Exception e){
+            return "No se ha podido elimar.";
+        }
+    }
+
+    /**
+     * Verifica un usuario
+     * @param id
+     * @return
+     */
+    public String verificaUsuarioId(Integer id) {
+        try {
+            Usuario u = usuarioRepositorio.findById(id).orElse(null);
+            u.setVerificado(true);
+            usuarioRepositorio.save(u);
+            return "Usuario verificado";
+        } catch (Exception e){
+            return "No se ha podido verificar el usuario";
+        }
+    }
 }
 

@@ -1,18 +1,16 @@
 package com.example.nexosapp.DTO;
 
+
+import com.example.nexosapp.enumerados.ROL;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CrearAvisoDTO {
+public class CrearAutoridadDTO {
 
-    private String texto;
-//    private String fecha;
-    private Integer idUsuario;
-
+    private String identificador;
+    private UsuarioCrearDTO usuarioCrearDTO;
 }

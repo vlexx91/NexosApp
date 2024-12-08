@@ -11,5 +11,6 @@ import java.util.List;
 @Repository
 public interface CivilRepositorio extends JpaRepository<Civil, Integer> {
     Civil findTopByUsuarioId(Integer id);
-    List<Civil> findByUsuarioVerificadoFalse();
+    @Query("select c from Civil c where c.usuario.verificado = false")
+    List<Civil> findUsuariosNoVerificados();
 }
