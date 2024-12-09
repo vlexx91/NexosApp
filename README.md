@@ -69,7 +69,7 @@ Este es el backend de una aplicación dedicada a la gestión de información sob
    mvn spring-boot:run
 
 5. **Acceder a Swagger UI**:
-   Una vez ejecutado el proyecto, puedes acceder a la documentación en http://localhost:8080/swagger-ui/index.html.
+   Una vez ejecutado el proyecto, puedes acceder a la documentación en http://localhost:8081/swagger-ui/index.html.
 
 ## Endpoints Principales
 
