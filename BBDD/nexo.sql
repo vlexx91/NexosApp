@@ -138,6 +138,16 @@ create table if not exists token_acceso(
     constraint fk_usuario_token_acceso foreign key (id_usuario) references usuario(id)
     );
 
-
+create table if not exists notificacion (
+    id serial primary key,
+    id_usuario int not null,
+    id_desaparicion int,
+    tipo varchar(100) not null,
+    texto varchar(1000) not null,
+    leida bool default false,
+    fecha timestamp(6) default now(),
+    constraint fk_usuario_notificacion foreign key (id_usuario) references usuario(id),
+    constraint fk_desaparicion_notificacion foreign key (id_desaparicion) references desaparicion(id)
+);
 
 

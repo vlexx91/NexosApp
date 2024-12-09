@@ -195,7 +195,7 @@ public class UsuarioService implements UserDetailsService {
 
     /**
      * Obtiene el rol de un usuario
-     * @param
+     * @param  request
      * @return
      */
 
@@ -274,6 +274,10 @@ public class UsuarioService implements UserDetailsService {
         } catch (Exception e){
             return "No se ha podido verificar el usuario";
         }
+    }
+
+    public List<Usuario> getUsariosByDesaparicionId(Integer desaparicionId){
+        return usuarioRepositorio.findByDesapariciones_Id(desaparicionId);
     }
 }
 

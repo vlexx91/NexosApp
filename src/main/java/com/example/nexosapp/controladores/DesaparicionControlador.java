@@ -199,11 +199,7 @@ public ResponseEntity<?> buscarPorFechaEstadoYNombre(
     }).toList();
 
     return ResponseEntity.ok(resultados);
-}
-
-
-
-
+    }
 
     @Operation(summary = "Obtener desapariciones eliminadas")
     @GetMapping("/eliminadas")

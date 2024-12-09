@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,9 @@ public class DesaparicionServicio {
     private OpenCageService openCageService;
     private CloudinaryService cloudinaryService;
     private UsuarioRepositorio usuarioRepositorio;
+    private UsuarioService usuarioService;
     private JWTservice jwtService;
+    private NotificacionServicio notificacionServicio;
     @PersistenceContext
     private EntityManager entityManager;
     private ComentarioRepositorio comentarioRepositorio;
@@ -552,6 +555,18 @@ public class DesaparicionServicio {
         desaparicion.getPersona().setFotos(fotos);
 
         desaparicionRepositorio.save(desaparicion);
+
+        List<Usuario> listaSeguidos = usuarioService.getUsariosByDesaparicionId(id);
+        for (Usuario u : listaSeguidos){
+            Notificacion n = new Notificacion();
+            n.setDesaparicion(desaparicion);
+            n.setUsuario(u);
+            n.setTipo("MODIFICACION");
+            n.setTexto("Se ha modificado desaparicion de " + desaparicion.getPersona().getNombre() + " " + desaparicion.getPersona().getApellido());
+            n.setFecha(LocalDateTime.now());
+            n.setLeida(false);
+            notificacionServicio.saveNotificacion(n);
+        }
 
         return ResponseEntity.ok("Desaparición editada con éxito");
     }
