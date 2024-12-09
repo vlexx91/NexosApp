@@ -15,6 +15,12 @@ public class CloudinaryService {
     @Autowired
     private Cloudinary cloudinary;
 
+    /**
+     * Método para subir una imagen a Cloudinary
+     * @param file
+     * @return
+     * @throws IOException
+     */
     public String uploadImage(MultipartFile file) throws IOException {
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
         return uploadResult.get("url").toString();

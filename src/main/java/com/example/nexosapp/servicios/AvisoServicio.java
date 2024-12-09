@@ -39,14 +39,28 @@ public class AvisoServicio {
 
     private CloudinaryService cloudinaryService;
 
+    /**
+     * Obtener todos los avisos
+     * @return
+     */
     public List<Aviso> getAvisos(){
         return avisoRepositorio.findAll();
     }
 
+    /**
+     * Obtener aviso por id
+     * @param id
+     * @return
+     */
     public Aviso getAvisoId(Integer id){
         return avisoRepositorio.findById(id).orElse(null);
     }
 
+    /**
+     * Guardar aviso
+     * @param aviso
+     * @return
+     */
     public Aviso guardar(Aviso aviso){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         // Asegurarse de que hay una autenticación válida
@@ -61,7 +75,11 @@ public class AvisoServicio {
     }
 
 
-
+    /**
+     * Eliminar aviso por id
+     * @param id
+     * @return
+     */
     public String eliminar(Integer id) {
         String mensaje;
 
@@ -96,8 +114,6 @@ public class AvisoServicio {
     /**
      * Muestra todos los avisos para la pagina principal
      */
-
-
     public List<AvisoDTO> getAll(){
         List<AvisoDTO> avisoDTOS= new ArrayList<>();
         List<Aviso> avisos = avisoRepositorio.findAll();

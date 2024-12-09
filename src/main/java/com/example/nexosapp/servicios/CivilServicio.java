@@ -89,7 +89,7 @@ public class CivilServicio {
 
     /**
      * Funcion que edita los datos de un usuario tipo civil menos dni.
-     * @param id
+     *
      * @param dto
      * @return
      */
@@ -105,7 +105,7 @@ public class CivilServicio {
 
     /**
      * Funcion que obtiene los datos de un civil para editar
-     * @param id
+     *
      * @return
      */
 
@@ -157,7 +157,7 @@ public class CivilServicio {
 
     /**
      * Método que devuelve una lista de desapariciones creadas por el usuario
-     * @param id
+     *
      * @return
      */
     public List<DesaparicionListaDTO> misDesapariciones(HttpServletRequest request){
@@ -240,6 +240,10 @@ public class CivilServicio {
         return ResponseEntity.ok("Usuario verificado");
     }
 
+    /**
+     * Método que devuelve una lista de civiles sin confirmar
+     * @return
+     */
     public List<CivilConfirmarDTO> getCivilesSinConfirmar(){
         return civilRepositorio.findUsuariosNoVerificados().stream().map(c -> new CivilConfirmarDTO(c.getNombre(),c.getApellido(), c.getDni(), c.getUsuario().getUsuario(), c.getUsuario().getId())).toList();
     }
