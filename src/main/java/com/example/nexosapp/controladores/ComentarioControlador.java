@@ -2,6 +2,7 @@ package com.example.nexosapp.controladores;
 
 import com.example.nexosapp.DTO.ComentarioDTO;
 import com.example.nexosapp.DTO.ComentarioListarDTO;
+import com.example.nexosapp.DTO.DenunciaComentarioDTO;
 import com.example.nexosapp.DTO.DesaparicionDTO;
 import com.example.nexosapp.modelos.Comentario;
 import com.example.nexosapp.modelos.Foto;
@@ -49,7 +50,7 @@ public class ComentarioControlador {
 
     @Operation(summary = "eliminar un comentario")
     @DeleteMapping()
-    public String eliminar(@RequestParam Integer id){
+    public ResponseEntity<String> eliminar(@RequestParam Integer id){
         return comentarioServicio.eliminar(id);
     }
 
@@ -65,6 +66,12 @@ public class ComentarioControlador {
     public ResponseEntity<List<ComentarioListarDTO>> obtenerComentariosPorDesaparicion(@PathVariable Integer id) {
         List<ComentarioListarDTO> comentarios = comentarioServicio.obtenerComentariosPorDesaparicionId(id);
         return ResponseEntity.ok(comentarios);
+    }
+
+    @Operation(summary = "Denunciar un comentario")
+    @PostMapping("/denunciar")
+    public ResponseEntity<String> denuncia(@RequestBody DenunciaComentarioDTO denunciaComentarioDTO) {
+        return comentarioServicio.denunciaComentario(denunciaComentarioDTO);
     }
 
 

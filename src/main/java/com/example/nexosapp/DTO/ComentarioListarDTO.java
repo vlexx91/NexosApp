@@ -10,6 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComentarioListarDTO {
+    private Integer id;
     private String texto;
     private String nombre;
     private String email;
