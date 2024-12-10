@@ -492,6 +492,7 @@ public class DesaparicionServicio {
         } else {
             return desaparicionRepositorio.buscarPorFechaEstadoYNombre(fecha, estadoEnum, nombre);
         }
+    }
 
     /**
      * Método que permite obtener las ultimas 30 desapariciones verificadas
