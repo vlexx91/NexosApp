@@ -4,16 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-public class ComentarioListarDTO {
+@AllArgsConstructor
+public class DesaparicionGestionDTO {
     private Integer id;
-    private String texto;
     private String nombre;
-    private String email;
-    private Integer telefono;
-    private List<String> fotos;
+    private String apellidos;
+    private String fecha;
 }

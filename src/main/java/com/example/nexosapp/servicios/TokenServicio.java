@@ -11,11 +11,20 @@ import org.springframework.stereotype.Service;
 public class TokenServicio {
     private final TokenRepositorio tokenRepositorio;
 
-
+    /**
+     * Obtener usuario por token
+     * @param usuario
+     * @return
+     */
     public Token getByUsuario(Usuario usuario){
         return tokenRepositorio.findTopByUsuario(usuario);
     }
 
+    /**
+     * Guardar token
+     * @param token
+     * @return
+     */
     public Token save(Token token){
         return tokenRepositorio.save(token);
     }

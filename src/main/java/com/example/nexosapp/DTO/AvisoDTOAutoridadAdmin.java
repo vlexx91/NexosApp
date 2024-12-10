@@ -13,7 +13,6 @@ import java.util.List;
 @NoArgsConstructor
 
 public class AvisoDTOAutoridadAdmin {
-
     private Integer id;
     private String texto;
     private LocalDate fecha;

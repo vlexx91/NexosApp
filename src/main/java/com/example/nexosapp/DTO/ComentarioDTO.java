@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ComentarioDTO {
-
     private String texto;
     private String nombre;
     private String email;
