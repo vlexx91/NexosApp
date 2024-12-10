@@ -192,8 +192,9 @@ public ResponseEntity<?> buscarPorFechaEstadoYNombre(
         result.put("fecha", desaparicion.getFecha());
         result.put("foto", desaparicion.getPersona().getFotos()
                 .stream()
-                .findFirst()
+                .filter(foto -> foto.getEsCara().equals(true))
                 .map(Foto::getUrl)
+                .findAny()
                 .orElse("default.jpg"));
         return result;
     }).toList();
