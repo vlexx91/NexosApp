@@ -12,8 +12,6 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class AvisoDTO {
-
-
     private LocalDateTime fecha;
     private String texto;
     private Integer id_usuario;

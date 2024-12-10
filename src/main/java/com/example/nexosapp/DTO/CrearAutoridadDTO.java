@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CrearAutoridadDTO {
-
     private String identificador;
     private UsuarioCrearDTO usuarioCrearDTO;
 }
