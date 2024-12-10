@@ -2,17 +2,21 @@ package com.example.nexosapp.servicios;
 
 import com.example.nexosapp.DTO.ComentarioDTO;
 import com.example.nexosapp.DTO.ComentarioListarDTO;
-import com.example.nexosapp.modelos.Comentario;
-import com.example.nexosapp.modelos.Foto;
+import com.example.nexosapp.DTO.DenunciaComentarioDTO;
+import com.example.nexosapp.enumerados.ROL;
+import com.example.nexosapp.modelos.*;
 import com.example.nexosapp.recursos.CloudinaryService;
 import com.example.nexosapp.repositorios.ComentarioRepositorio;
+import com.example.nexosapp.repositorios.UsuarioRepositorio;
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -27,6 +31,8 @@ public class ComentarioServicio {
     private ComentarioRepositorio comentarioRepositorio;
     private DesaparicionServicio desaparicionServicio;
     private CloudinaryService cloudinaryService;
+    private NotificacionServicio notificacionServicio;
+    private UsuarioRepositorio usuarioRepositorio;
 
     /**
      * Obtiene todas los comentarios de la base de datos
@@ -57,21 +63,23 @@ public class ComentarioServicio {
      * Obtiene un comentario por su id y lo elimina de la base de datos
      * @param id
      */
-    public String eliminar(Integer id) {
-        String mensaje;
+    public ResponseEntity<String> eliminar(Integer id) {
         Comentario comentario = getComentario(id);
 
         if (comentario == null) {
-            return "no existe ese comentario";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No existe ese comentario");
         }
+
         try {
             comentarioRepositorio.delete(comentario);
-            mensaje = "Comentario eliminado";
+            return ResponseEntity.ok("Comentario eliminado");
         } catch (Exception e) {
-            mensaje = "Error al eliminar el comentario";
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al eliminar el comentario");
         }
-        return mensaje;
     }
+
 
     /**
      * Elimina un comentario de la base de datos
@@ -89,6 +97,7 @@ public class ComentarioServicio {
      * @throws IOException
      */
     public ResponseEntity<String> crearComentario(ComentarioDTO comentarioDTO, List<MultipartFile> files) throws IOException {
+        Desaparicion desaparicion = desaparicionServicio.getDesaparicionId(comentarioDTO.getDesaparicionId());
         Comentario comentario = new Comentario();
         comentario.setNombre(comentarioDTO.getNombre());
         comentario.setTexto(comentarioDTO.getTexto());
@@ -97,7 +106,7 @@ public class ComentarioServicio {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fecha = LocalDate.parse(LocalDate.now().toString(), formatter);
         comentario.setFecha(fecha);
-        comentario.setDesaparicion(desaparicionServicio.getDesaparicionId(comentarioDTO.getDesaparicionId()));
+        comentario.setDesaparicion(desaparicion);
         if (files != null && files.stream().anyMatch(file -> !file.isEmpty())) {
             Set<Foto> listaFotos = new HashSet<>();
             for (MultipartFile file : files) {
@@ -112,6 +121,14 @@ public class ComentarioServicio {
         }
 
         comentarioRepositorio.save(comentario);
+        Notificacion n = new Notificacion();
+        n.setDesaparicion(desaparicion);
+        n.setUsuario(desaparicion.getUsuario());
+        n.setTipo("COMENTARIO");
+        n.setFecha(LocalDateTime.now());
+        n.setTexto("Se ha añadido un nuevo comentario a la desparicion de " + desaparicion.getPersona().getNombre() + " " + desaparicion.getPersona().getApellido() + ".");
+        n.setLeida(false);
+        notificacionServicio.saveNotificacion(n);
         return ResponseEntity.ok("Comentario creado");
     }
 
@@ -127,6 +144,7 @@ public class ComentarioServicio {
 
         comentarios.forEach(comentario -> {
             ComentarioListarDTO comentarioListarDTO = new ComentarioListarDTO();
+            comentarioListarDTO.setId(comentario.getId());
             comentarioListarDTO.setTexto(comentario.getTexto());
             comentarioListarDTO.setNombre(comentario.getNombre());
             comentarioListarDTO.setEmail(comentario.getEmail());
@@ -135,6 +153,27 @@ public class ComentarioServicio {
             comentariosListarDTO.add(comentarioListarDTO);
         });
         return comentariosListarDTO;
+    }
+
+    /**
+     * Denuncia un comentario y notifica a los administradores
+     * @param denunciaComentarioDTO
+     * @return
+     */
+    public ResponseEntity<String> denunciaComentario(DenunciaComentarioDTO denunciaComentarioDTO) {
+        Desaparicion desaparicion = desaparicionServicio.getDesaparicionId(denunciaComentarioDTO.getIdDesaparicion());
+        List<Usuario> listaAdmin = usuarioRepositorio.findByRol(ROL.ADMIN);
+        for (Usuario u : listaAdmin){
+            Notificacion n = new Notificacion();
+            n.setDesaparicion(desaparicion);
+            n.setUsuario(u);
+            n.setTipo("DENUNCIA");
+            n.setTexto("Se ha denunciado un comentario en la desaparicion de " + desaparicion.getPersona().getNombre() + " " + desaparicion.getPersona().getApellido() + " con el siguiente texto:\n" + denunciaComentarioDTO.getTexto());
+            n.setFecha(LocalDateTime.now());
+            n.setLeida(false);
+            notificacionServicio.saveNotificacion(n);
+        }
+        return ResponseEntity.ok("Comentario denunciado");
     }
 
 }

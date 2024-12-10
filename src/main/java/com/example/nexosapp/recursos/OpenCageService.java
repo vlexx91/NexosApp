@@ -15,6 +15,11 @@ public class OpenCageService {
 
     private final RestTemplate restTemplate = new RestTemplate();
 
+    /**
+     * Método para obtener la latitud y longitud de una dirección
+     * @param address
+     * @return
+     */
     public Map<String, Double> getLatLon(String address) {
         String url = String.format("https://api.opencagedata.com/geocode/v1/json?q=%s&key=%s", address, apiKey);
         Map response = restTemplate.getForObject(url, Map.class);

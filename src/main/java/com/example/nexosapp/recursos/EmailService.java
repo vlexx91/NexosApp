@@ -17,6 +17,13 @@ public class EmailService {
         this.mailSender = mailSender;
     }
 
+    /**
+     * Método para enviar un correo
+     * @param from
+     * @param to
+     * @param subject
+     * @param text
+     */
     public void send(String from, String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(from);
@@ -26,6 +33,16 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    /**
+     * Método para enviar un correo con un archivo adjunto
+     * @param from
+     * @param to
+     * @param subject
+     * @param text
+     * @param attachName
+     * @param inputStream
+     * @throws MessagingException
+     */
     public void sendWithAttach(String from, String to, String subject,
                                String text, String attachName,
                                InputStreamSource inputStream) throws MessagingException {
@@ -39,6 +56,14 @@ public class EmailService {
         mailSender.send(message);
     }
 
+    /**
+     * Método para enviar un correo con contenido HTML
+     * @param from
+     * @param to
+     * @param subject
+     * @param htmlContent
+     * @throws MessagingException
+     */
     public void sendWithHtml(String from, String to, String subject, String htmlContent) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(message, true, "UTF-8");

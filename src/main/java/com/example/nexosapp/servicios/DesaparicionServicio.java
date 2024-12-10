@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,7 +47,9 @@ public class DesaparicionServicio {
     private OpenCageService openCageService;
     private CloudinaryService cloudinaryService;
     private UsuarioRepositorio usuarioRepositorio;
+    private UsuarioService usuarioService;
     private JWTservice jwtService;
+    private NotificacionServicio notificacionServicio;
     @PersistenceContext
     private EntityManager entityManager;
     private ComentarioRepositorio comentarioRepositorio;
@@ -144,6 +147,7 @@ public class DesaparicionServicio {
         Desaparicion desaparicion = desaparicionMapeador.toEntity(dto);
         desaparicion.setUsuario(usuarioRepositorio.findById(jwtService.extraerDatosHeader(request).getIdUsuario()).orElse(null));
         desaparicion.setAprobada(desaparicion.getUsuario().getRol() == ROL.AUTORIDAD);
+        desaparicion.getPersona().setDescripcion(dto.getPersonaDTO().getDescripcionFisica());
         LocalDate fechaHoy = LocalDate.now();
         if (desaparicion.getFecha().isAfter(fechaHoy)) {
             throw new IllegalArgumentException("La fecha de desaparición no puede ser posterior a la fecha actual.");
@@ -365,7 +369,7 @@ public class DesaparicionServicio {
         persona.setNombre(desaparicion.getPersona().getNombre());
         persona.setDni(desaparicion.getPersona().getDni());
         persona.setApellido(desaparicion.getPersona().getApellido());
-        persona.setDescripcion(desaparicion.getPersona().getDescripcion());
+        persona.setDescripcionFisica(desaparicion.getPersona().getDescripcion());
         persona.setFechaNacimiento(desaparicion.getPersona().getFechaNacimiento().toString());
         persona.setAltura(desaparicion.getPersona().getAltura());
         persona.setComplexion(desaparicion.getPersona().getComplexion());
@@ -421,6 +425,11 @@ public class DesaparicionServicio {
         return devolucion;
     }
 
+    /**
+     * Método que permite recuperar una eliminacion que se ha eliminado poniendo eliminada en true
+     * @param id
+     * @return
+     */
     public ResponseEntity<String> recuperarEliminacion(Integer id) {
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
         if (desaparicion == null) {
@@ -460,6 +469,14 @@ public class DesaparicionServicio {
 //            filtro.getFecha()
 //    );
 //}
+
+    /**
+     * Método que permite buscar desapariciones por feecha, estado y nombre
+     * @param fecha
+     * @param estado
+     * @param nombre
+     * @return
+     */
     public List<Desaparicion> buscarPorFechaEstadoYNombre(LocalDate fecha, String estado, String nombre) {
         ESTADO estadoEnum = null;
         if (estado != null && !estado.isEmpty()) {
@@ -476,6 +493,13 @@ public class DesaparicionServicio {
             return desaparicionRepositorio.buscarPorFechaEstadoYNombre(fecha, estadoEnum, nombre);
         }
 
+    /**
+     * Método que permite obtener las ultimas 30 desapariciones verificadas
+     * @return
+     */
+    public List<Desaparicion> obtenerUltimas30() {
+        Pageable pageable = PageRequest.of(0, 30); // Crear una paginación para las últimas 30 desapariciones verificadas
+        return desaparicionRepositorio.findLast30Verified(pageable).getContent();
 
 //        public List<Desaparicion> obtenerUltimas30() {
 //            Pageable pageable = PageRequest.of(0, 30); // Crear una paginación para las últimas 30 desapariciones verificadas
@@ -483,12 +507,24 @@ public class DesaparicionServicio {
 //        }
     }
 
+    /**
+     * Método que obtiene una lista de desapaiciones para su gestión
+     * @return
+     */
     public List<DesaparicionGestionDTO> getDesaparicionesGestion() {
         List<Desaparicion> desaparicionesNoEliminadas = desaparicionRepositorio.findAllByEliminadaIsFalse();
         return desaparicionesNoEliminadas.stream().map(d -> new DesaparicionGestionDTO(d.getId(), d.getPersona().getNombre(), d.getPersona().getApellido(), d.getFecha().toString())).toList();
 
     }
 
+    /**
+     * Método que permite editar una desaparición
+     * @param id
+     * @param dto
+     * @param files
+     * @return
+     * @throws IOException
+     */
     public ResponseEntity<String> editarDesaparicionGestion(Integer id, DesaparicionEditarAutoridadDTO dto, List<MultipartFile> files) throws IOException {
         Desaparicion desaparicion = desaparicionRepositorio.findById(id).orElse(null);
 
@@ -523,6 +559,18 @@ public class DesaparicionServicio {
         desaparicion.getPersona().setFotos(fotos);
 
         desaparicionRepositorio.save(desaparicion);
+
+        List<Usuario> listaSeguidos = usuarioService.getUsariosByDesaparicionId(id);
+        for (Usuario u : listaSeguidos){
+            Notificacion n = new Notificacion();
+            n.setDesaparicion(desaparicion);
+            n.setUsuario(u);
+            n.setTipo("MODIFICACION");
+            n.setTexto("Se ha modificado desaparicion de " + desaparicion.getPersona().getNombre() + " " + desaparicion.getPersona().getApellido());
+            n.setFecha(LocalDateTime.now());
+            n.setLeida(false);
+            notificacionServicio.saveNotificacion(n);
+        }
 
         return ResponseEntity.ok("Desaparición editada con éxito");
     }
